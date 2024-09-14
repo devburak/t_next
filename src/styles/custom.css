@@ -1,0 +1,96 @@
+/* TopMenu bileşeni için stil tanımları */
+.TopMenu {
+    @media (max-width: 960px) { /* 960px'ten küçük ekranlar için */
+      flex-direction: column; /* Alt alta sıralama */
+    }
+  }
+  
+  /* ListItemButton bileşeni için stil tanımları */
+  .TopMenu .ListItemButton {
+    @media (max-width: 960px) { /* 960px'ten küçük ekranlar için */
+      width: 100%; /* Tam genişlik */
+    }
+  }
+  
+  /* Collapse bileşeni için stil tanımları */
+  .TopMenu .Collapse {
+    @media (max-width: 960px) { /* 960px'ten küçük ekranlar için */
+      border: none; /* Kenarlık gösterme */
+    }
+  }
+
+  .headerBackground {
+    background-color: #e20303; /* Kırmızı tonunu belirleyin */
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 40px;
+  }
+  
+
+  /* styles.css */
+.img-hover-grow {
+    transition: transform 0.3s ease-in-out; /* Animasyon süresi ve geçiş efekti */
+  }
+  
+  .img-hover-grow:hover {
+    transform: scale(1.4); /* Büyütme oranı */
+  }
+
+  .todayStyle {
+    border: 2px solid #1976d2; /* MUI primary rengi veya tercih ettiğiniz bir renk */
+    border-radius: 35%; /* Daire şeklinde bir border için */
+  }
+  
+
+  .eventDay {
+    background-color: #1976d2 !important; /* MUI mavisinin mat tonu */
+    color: #fff !important;
+  }
+
+  .customCalendar .react-calendar {
+    border: none;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  }
+  
+  .customCalendar .react-calendar__navigation {
+    background-color: #1976d2; /* MUI primary rengi */
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  .customCalendar .react-calendar__navigation button {
+    color: white;
+    min-width: 44px;
+    background: none;
+    font-size: 16px;
+  }
+  
+  .customCalendar .react-calendar__month-view__weekdays {
+    text-align: center;
+    color: #1976d2; /* MUI primary rengi */
+    font-weight: bold;
+  }
+  
+  .customCalendar .react-calendar__tile {
+    max-width: 100%;
+    /* background: none; */
+    color: #424242; /* MUI metin rengi */
+    font-size: 14px;
+  }
+  
+  .customCalendar .react-calendar__tile:enabled:hover,
+  .customCalendar .react-calendar__tile:enabled:focus {
+    background-color: #e3f2fd; /* MUI primary light rengi */
+  }
+  
+  .customCalendar .react-calendar__tile--active {
+    background-color: #1976d2; /* MUI primary rengi */
+    color: white;
+  }
+  
+  .customCalendar .react-calendar__tile--active:enabled:hover,
+  .customCalendar .react-calendar__tile--active:enabled:focus {
+    background-color: #1565c0; /* MUI primary dark rengi */
+  }
+ 

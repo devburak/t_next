@@ -1,0 +1,21 @@
+// pages/categories/[category].js
+
+import React from 'react';
+import { useRouter } from 'next/router';
+import CategoryResults from '../../component/Lists/categoryResults'; // CategoryResults bileşeninizi buraya import edin
+import { Container } from '@mui/material';
+import Layout from '@/component/basic/layout';
+
+const CategoryPage = () => {
+  const router = useRouter();
+  const { category } = router.query; // URL'den kategori adını al
+
+    return(<Layout>
+        <Container>
+            <CategoryResults category={category} page={1} />
+        </Container>
+    </Layout>
+  ); 
+};
+
+export default CategoryPage;

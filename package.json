@@ -6,12 +6,30 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "rsync -avz --delete --exclude='.next/cache' --exclude='node_modules' ./ .next package.json next.config.js public frtmmob@demosrv.ikon-x.com.tr:/home/frtmmob/next/"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@lexical/html": "^0.13.1",
+    "@lexical/react": "^0.13.1",
+    "@lexical/rich-text": "^0.13.1",
+    "@mui/icons-material": "^5.15.10",
+    "@mui/material": "^5.15.7",
+    "@mui/x-date-pickers": "^6.19.4",
+    "dayjs": "^1.11.10",
+    "escape-html": "^1.0.3",
+    "leaflet": "^1.9.4",
+    "leaflet-defaulticon-compatibility": "^0.1.2",
+    "lexical": "^0.13.1",
+    "next": "14.1.0",
     "react": "^18",
+    "react-calendar": "^4.8.0",
     "react-dom": "^18",
-    "next": "14.1.0"
+    "react-leaflet": "^4.2.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "eslint": "^8",
