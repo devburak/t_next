@@ -1,5 +1,5 @@
-import React,{useState,useEffect} from 'react';
-import { Grid, useTheme, useMediaQuery,Box,Typography ,Divider} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Grid, useTheme, useMediaQuery, Box, Typography, Divider } from '@mui/material';
 import Header from './header'; // Header bileşeninizin yolu
 import Chambers from './chambers';
 import Footer from './footer';
@@ -13,23 +13,30 @@ import Campaign from './campaign'
 import TwitterFeed from './twitterFeed';
 import dynamic from 'next/dynamic';
 import Link from 'next/link'; // Link bileşenini import edin
-
+import TitleComponent from './TitleComponent';
 import HomeSlider from '../HomeSlider';
-
-
+import NewsCarousel from '../news/NewsCarousel';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import FeedIcon from '@mui/icons-material/Feed';
+import EditNotificationsSharpIcon from '@mui/icons-material/EditNotificationsSharp';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const DynamicCalendar = dynamic(
-    () => import('../calendar'), // Takvim bileşeninizin yolu
-    { ssr: false } // Server-side rendering'i devre dışı bırak
-  );
+  () => import('../calendar'), // Takvim bileşeninizin yolu
+  { ssr: false } // Server-side rendering'i devre dışı bırak
+);
 // Kategorilerinizi içeren array
 const categories = [
-    { id: "65bd78b36edf77b16ef450a0", title: "BASIN AÇIKLAMALARI", slug: "basin-aciklamalari" },
-    { id: "65bd78f86edf77b16ef450b1", title: "HABERLER", slug: "haberler" },
-    { id: "65bd790e6edf77b16ef450b6", title: "ODA HABERLERİ", slug: "oda-haberleri" },
-    { id: "65bd79296edf77b16ef450bb", title: "İKK HABERLERİ", slug: "ikk-haberleri" },
-    { id: "65bd78f86edf77b16ef450b1", title: "KONUŞMALAR", slug: "konusmalar" },
-    { id: "65bd78f86edf77b16ef450b1", title: "GÖRÜŞLER", slug: "gorusler" }
-  ];
+  { id: "65bd78b36edf77b16ef450a0", title: "BASIN AÇIKLAMALARI", slug: "basin-aciklamalari" },
+  { id: "65bd78f86edf77b16ef450b1", title: "HABERLER", slug: "haberler" },
+  { id: "65bd790e6edf77b16ef450b6", title: "ODA HABERLERİ", slug: "oda-haberleri" },
+  { id: "65bd79296edf77b16ef450bb", title: "İKK HABERLERİ", slug: "ikk-haberleri" },
+  { id: "65bd78f86edf77b16ef450b1", title: "KONUŞMALAR", slug: "konusmalar" },
+  { id: "65bd78f86edf77b16ef450b1", title: "GÖRÜŞLER", slug: "gorusler" }
+];
 const videCat = { id: "65bd78f86edf77b16ef450b1", title: "VİDEOLAR", path: "/videolar" }
 
 function HomePage() {
@@ -58,76 +65,90 @@ function HomePage() {
   }, []); // Component mount olduğunda çalışır
 
   return (
-      <>
-          <Header />
-          <TopMenu />
-          <Grid container spacing={2}>
-            <Grid item xs={6} >
-            <div style={{ margin: '10px' }}>
-                      <Campaign />
-                  </div>
+    <>
+      <Header />
+      <TopMenu />
+      <Grid container spacing={2}>
+        <Grid item xs={6} >
+          <div style={{ margin: '10px' }}>
+            <Campaign />
+          </div>
+        </Grid>
+        <Grid item xs={6} >
+          <div style={{ margin: '10px' }}>
+            <Campaign />
+          </div>
+        </Grid>
+
+        <Grid item xs={12} sm={8} order={isMobile ? 1 : 2} sx={{ px: 2 }}>
+          <div style={{ padding: '12px', minHeight: 250 }}>
+            <HomeSlider slides={slides} />
+          </div>
+          <Grid container spacing={2} sx={{ px: 1 }}>
+            <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+              <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
+              <NewsCarousel categorySlug={"haberler"} />
             </Grid>
-            <Grid item xs={6} >
-            <div style={{ margin: '10px' }}>
-                      <Campaign />
-                  </div>
+            <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+              <TitleComponent icon={<FeedIcon />} title={'Basın Açıklamaları'} link={'/kategori/basin-aciklamalari'} />
+              <NewsCarousel categorySlug={"basin-aciklamalari"} />
             </Grid>
-              <Grid item xs={12} sm={9} order={isMobile ? 1 : 2} sx={{ px: 2 }}>
-                  {/* <div style={{ margin: '10px' }}>
-                      <Campaign />
-                  </div> */}
-                  {/* <div style={{ padding: '5px' }}>
-                      <CustomSlider categoryId="65bd799f6edf77b16ef450d3" limit={5} />
-                  </div> */}
-                    {/* Ana Sayfa Slider */}
-                  <div style={{ padding: '5px', minHeight:250}}>
-                      <HomeSlider slides={slides} />
-                  </div>
-                  <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                          <VideoSection category={videCat} />
-                      </Grid>
-                      <Grid item xs={12}  order={isMobile ? 2 : 1}>
-                          <div style={{ padding: '10px' }}>
-                              <NewsSection categories={categories} />
-                          </div>
-                      </Grid>
-                  </Grid>
-                  
-              </Grid>
-             
-             
-              <Grid item xs={12} sm={3} order={isMobile ? 3 : 3}>
-              <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
-                      <Box mb={1}>
-                          <img
-                              src="https://storage.ikon-x.com.tr/2024/02/bosunamiokuduk.png" // Görselin yolu
-                              alt="Kampanya"
-                              style={{ maxWidth: '100%', height: 'auto', marginBottom: '20px' }} // Stilleri ayarlayın
-                          />
-                      </Box>
-
-                      <Box mb={1}>
-
-                          <Link href={"Etkinlikler"} passHref>
-                              <Typography variant="h6" sx={{ textDecoration: 'none', color: 'primary.main', cursor: 'pointer' }}>
-                                  ETKİNLLİKLER
-                              </Typography>
-                          </Link>
-                          <Divider sx={{ mb: 1 }} />
-
-                          <DynamicCalendar />
-                      </Box>
-
-                  </div>
-                  <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
-                      <TwitterFeed username="TMMOB1954" />
-                  </div>
-              </Grid>
+            <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+              <TitleComponent icon={<ExtensionIcon />} title={'Oda Haberleri'} link={'/kategori/oda-haberleri'} />
+              <NewsCarousel categorySlug={"oda-haberleri"} />
+            </Grid>
+            <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+              <TitleComponent icon={<EditNotificationsSharpIcon />} title={'İKK Haberleri'} link={'/kategori/ikk'} />
+              <NewsCarousel categorySlug={"ikk"} />
+            </Grid>
+            <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+              <TitleComponent icon={<CampaignIcon />} title={'Görüş ve Konuşmalar'} link={'/kategori/gorusler-ve-konusmalar'} />
+              <NewsCarousel categorySlug={"Görüş ve Konuşmalar"} />
+            </Grid>
           </Grid>
-          <Chambers />
-          <Footer />
-      </>
+
+        </Grid>
+
+
+        <Grid item xs={12} sm={4} order={isMobile ? 3 : 3}>
+          <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
+            <Box mb={1}>
+              <img
+                src="https://storage.ikon-x.com.tr/2024/02/bosunamiokuduk.png" // Görselin yolu
+                alt="Kampanya"
+                style={{ maxWidth: '100%', height: 'auto', marginBottom: '20px' }} // Stilleri ayarlayın
+              />
+            </Box>
+
+            <Box mb={1}>
+              <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/kategori/etkinlikler'} />
+              <DynamicCalendar />
+            </Box>
+
+          </div>
+          {/* <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
+            <TwitterFeed username="TMMOB1954" />
+          </div> */}
+        </Grid>
+
+      </Grid>
+      <Grid container spacing={2} sx={{ px: 2 }}>
+        <Grid item xs={12} sm={4}>
+          <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/kategori/birlik-haberleri'} />
+          <NewsCarousel categorySlug={"birlik-haberleri"} />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TitleComponent icon={<MenuBookIcon />} title={'TMMOB Kitapları'} link={'/kategori/kitap'} />
+          <NewsCarousel categorySlug={"kitap"} />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+        <TitleComponent icon={<OndemandVideoIcon />} title={'Videolar'} link={'/kategori/videolar'} />
+        <NewsCarousel categorySlug={"kitap"} />
+        </Grid>
+      </Grid>
+      <Chambers />
+      <Footer />
+    </>
   );
 }
 

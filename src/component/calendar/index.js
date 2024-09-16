@@ -1,113 +1,109 @@
+// components/CustomCalendar.js
 import React, { useState } from 'react';
 import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css'; // Default stil dosyasını içe aktar
 import { Popper, Box, Typography } from '@mui/material';
+import 'react-calendar/dist/Calendar.css'; // Default stil dosyasını içe aktar
 
+const CustomCalendar = ({ value = new Date(), onChange, events = [] }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [popperEtkinlik, setPopperEtkinlik] = useState(null);
+  const open = Boolean(anchorEl);
 
-const fakeEtkinlikler = [
-    {
-        baslik: 'Etkinlik 1',
-        date: new Date('2024-02-23T02:56:38.338+00:00'),
-        time: "14:30",
-        yer: 'Ankara',
-        link: 'https://www.etkinlik1.com',
-    },
-    {
-        baslik: 'Etkinlik 2',
-        date: new Date('2024-02-03T02:56:38.338+00:00'),
-        time: "16:30",
-        yer: 'İstanbul',
-        link: 'https://www.etkinlik2.com',
-    },
-    // Diğer fake etkinlikler buraya eklenebilir...
-];
+  // Etkinlik tarihlerini kontrol ederken güvenli kontrol ekleyin
+  const etkinlikTarihleri = events
+    .map(event => new Date(event.startDate)) // startDate'i Date nesnesine dönüştür
+    .filter(date => date instanceof Date && !isNaN(date)); // Geçerli Date nesnelerini filtreleyin
 
-function CustomCalendar() {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [popperEtkinlik, setPopperEtkinlik] = useState(null);
-    const open = Boolean(anchorEl);
+  const tileClassName = ({ date, view }) => {
+    const today = new Date();
+    if (view === 'month') {
+      // Bugünün tarihini özel stil ile göster
+      if (
+        date.getFullYear() === today.getFullYear() &&
+        date.getMonth() === today.getMonth() &&
+        date.getDate() === today.getDate()
+      ) {
+        return 'todayStyle';
+      }
 
-    const etkinlikTarihleri = fakeEtkinlikler.map(etkinlik => etkinlik.date);
+      // Etkinlik günlerini özel stil ile göster
+      const hasEvent = etkinlikTarihleri.some(eventDate => {
+        return (
+          eventDate instanceof Date && // eventDate'in geçerli bir Date olduğundan emin olun
+          date.getFullYear() === eventDate.getFullYear() &&
+          date.getMonth() === eventDate.getMonth() &&
+          date.getDate() === eventDate.getDate()
+        );
+      });
 
-    const tileClassName = ({ date, view }) => {
-        const today = new Date();
-        // Check if we are in the month view
-        if (view === 'month') {
-          // Special style for today's date
-          if (
-            date.getFullYear() === today.getFullYear() &&
-            date.getMonth() === today.getMonth() &&
-            date.getDate() === today.getDate()
-          ) {
-            return 'todayStyle';
-          }
-      
-          // Special style for event days
-          const hasEvent = etkinlikTarihleri.some(
-            eventDate =>
-              date.getFullYear() === eventDate.getFullYear() &&
-              date.getMonth() === eventDate.getMonth() &&
-              date.getDate() === eventDate.getDate()
-          );
-      
-          if (hasEvent) {
-            return 'eventDay'; // This class should be predefined and styled
-          }
-        }
-      };
-      
+      if (hasEvent) {
+        return 'eventDay';
+      }
+    }
+  };
 
-    const handleMouseEnter = (event, etkinlik) => {
-        setAnchorEl(event.currentTarget);
-        setPopperEtkinlik(etkinlik);
-    };
+  const handleMouseEnter = (event, etkinlik) => {
+    setAnchorEl(event.currentTarget);
+    setPopperEtkinlik(etkinlik);
+  };
 
-    const handleMouseLeave = () => {
-        setAnchorEl(null);
-        setPopperEtkinlik(null);
-    };
-    const tileContent = ({ date, view }) => {
-        if (view === 'month') {
-            const etkinlik = fakeEtkinlikler.find(etkinlik =>
-                date.getFullYear() === etkinlik.date.getFullYear() &&
-                date.getMonth() === etkinlik.date.getMonth() &&
-                date.getDate() === etkinlik.date.getDate()
-            );
-    
-            if (etkinlik) {
-                return (
-                    <div
-                        onMouseEnter={(e) => handleMouseEnter(e, etkinlik)}
-                        onMouseLeave={handleMouseLeave}
-                    >
-                        <span style={{ color: 'white' }}>•</span>
-                    </div>
-                );
-            }
-        }
-    };
-    
+  const handleMouseLeave = () => {
+    setAnchorEl(null);
+    setPopperEtkinlik(null);
+  };
 
-    return (
-        <>
-            <Calendar
-             className="customCalendar"
-                tileClassName={tileClassName}
-                tileContent={tileContent}
-            />
-            <Popper open={open} anchorEl={anchorEl} placement="top">
-                <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-                    {popperEtkinlik && (
-                        <>
-                            <Typography>{popperEtkinlik.baslik}</Typography>
-                            <Typography>{popperEtkinlik.yer}</Typography>
-                            <Typography>{popperEtkinlik.time}</Typography>
-                        </>
-                    )}
-                </Box>
-            </Popper>
-        </>
-    );
-}
+  const tileContent = ({ date, view }) => {
+    if (view === 'month') {
+      const etkinlik = events.find(event =>
+        event.startDate && // startDate kontrolü ekleyin
+        new Date(event.startDate) instanceof Date && // event.startDate'in geçerli bir Date olduğundan emin olun
+        date.getFullYear() === new Date(event.startDate).getFullYear() &&
+        date.getMonth() === new Date(event.startDate).getMonth() &&
+        date.getDate() === new Date(event.startDate).getDate()
+      );
+
+      if (etkinlik) {
+        return (
+          <div
+            onMouseEnter={(e) => handleMouseEnter(e, etkinlik)}
+            onMouseLeave={handleMouseLeave}
+          >
+            <span style={{ color: 'white' }}>•</span>
+          </div>
+        );
+      }
+    }
+  };
+
+  return (
+    <>
+      <Calendar
+        className="customCalendar"
+        value={value} // Seçili tarih
+        onChange={onChange} // Tarih değişikliklerini yönetir
+        tileClassName={tileClassName}
+        tileContent={tileContent}
+      />
+      <Popper open={open} anchorEl={anchorEl} placement="top">
+        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
+          {popperEtkinlik && (
+            <>
+              <Typography>{popperEtkinlik.title}</Typography>
+              <Typography>{popperEtkinlik.location}</Typography>
+              <Typography>{new Date(popperEtkinlik.startDate).toLocaleTimeString()}</Typography>
+            </>
+          )}
+        </Box>
+      </Popper>
+    </>
+  );
+};
+
+// Varsayılan props değerleri
+CustomCalendar.defaultProps = {
+  value: new Date(), // Varsayılan olarak bugünün tarihi
+  onChange: () => {}, // Boş fonksiyon (kullanıcıdan beklenen)
+  events: [], // Varsayılan olarak boş etkinlik listesi
+};
 
 export default CustomCalendar;

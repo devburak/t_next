@@ -10,6 +10,16 @@ import NewsSection from '../Lists/newsSection';
 import TwitterFeed from './twitterFeed';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import TitleComponent from './TitleComponent';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import NewsCarousel from '../news/NewsCarousel';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import FeedIcon from '@mui/icons-material/Feed';
+import EditNotificationsSharpIcon from '@mui/icons-material/EditNotificationsSharp';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const DynamicCalendar = dynamic(
   () => import('../calendar'), // Takvim bileşeninizin yolu
@@ -34,19 +44,26 @@ function Layout({ children , LeftSide , RigthSide}) {
       <Header />
       <TopMenu />
       <Grid container spacing={2}>
-        {<Grid item xs={12} sm={3} order={isMobile ? 2 : 1}>{LeftSide ? LeftSide :
-          <div style={{ padding: '10px', position: 'sticky', top: 0, zIndex: 1000 }}>
-            <NewsSection categories={categories} />
+        <Grid item xs={12} sm={3} order={isMobile ? 2 : 1} sx={{ pl: 2 }}>{LeftSide ? LeftSide :
+          <div style={{ padding: '8px', position: 'sticky', top: 0, zIndex: 1000 }}>
+            <Grid container>
+             
+              <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+              <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
+              <NewsCarousel categorySlug={"haberler"} one={true} />
+            </Grid>
+      
+            </Grid>
           </div>}
-        </Grid>}
-        <Grid item xs={12} sm={RigthSide? 6:9} order={isMobile ? 1 : 2} sx={{ px: 2 }}>
+        </Grid>
+        <Grid item xs={12} sm={RigthSide ? 6:9} order={isMobile ? 1 : 2} sx={{ px: 2 }}>
           <div style={{ padding: '5px' }}>
             {children}
           </div>
         </Grid>
-        <Grid item xs={12} sm={3} order={isMobile ? 3 : 3}>
+        <Grid item xs={12} sm={3} order={isMobile ? 3 : 3} sx={{pr:2}}>
         {RigthSide &&<>
-          <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
+          <div style={{ backgroundColor: 'inherit' }}>
             <Box mb={1}>
               <img
                 src="https://storage.ikon-x.com.tr/2024/02/bosunamiokuduk.png" // Görselin yolu
@@ -54,16 +71,8 @@ function Layout({ children , LeftSide , RigthSide}) {
                 style={{ maxWidth: '100%', height: 'auto', marginBottom: '20px' }} // Stilleri ayarlayın
               />
             </Box>
-
             <Box mb={1}>
-
-              <Link href={"Etkinlikler"} passHref>
-                <Typography variant="h6" sx={{ textDecoration: 'none', color: 'primary.main', cursor: 'pointer' }}>
-                  ETKİNLLİKLER
-                </Typography>
-              </Link>
-              <Divider sx={{ mb: 1 }} />
-
+              <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/kategori/etkinlikler'} />
               <DynamicCalendar />
             </Box>
 

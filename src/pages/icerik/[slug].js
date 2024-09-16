@@ -1,9 +1,6 @@
 import Layout from '../../component/basic/layout'
-import { serialize } from '../../component/LX/NewRichTextParser'; 
 import { Typography, Box } from '@mui/material';  
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import PlaygroundEditorTheme from "../../component/editor/themes/PlaygroundEditorTheme"; // Tema dosyanızı ekleyin
-import ReadOnlyEditor from '../../component/editor/ReadOnlyEditor';
+
 
 function IcerikPage({ htmlContent,data }) {
 
@@ -14,7 +11,7 @@ function IcerikPage({ htmlContent,data }) {
   });
 
   return (
-    <Layout>
+    <Layout RigthSide={true}>
       <h1>{data.title}</h1>
       {data.featuredMedia && data.featuredMedia.url && (
         <img src={data.featuredMedia.url} alt={data.title} style={{ maxWidth: '100%' }} />
@@ -24,19 +21,10 @@ function IcerikPage({ htmlContent,data }) {
       <Typography variant="body2" align="right" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
         {formattedDate}
       </Typography>
-      <LexicalComposer
-        initialConfig={{
-          namespace: 'ReadOnlyEditor',
-          theme: PlaygroundEditorTheme,
-          nodes: [], // Gerekli Lexical Node'ları ekleyin
-          onError: (error) => {
-            console.error('Editor hatası:', error);
-          },
-          editable: false,  // Okuma modu
-        }}
-      >
-        <ReadOnlyEditor htmlContent={htmlContent} />
-      </LexicalComposer>
+     
+      <div>
+        <div key={data.title} dangerouslySetInnerHTML={{ __html: htmlContent }} />
+      </div>
     </Layout>
   );
 }

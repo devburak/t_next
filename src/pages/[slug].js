@@ -4,6 +4,7 @@ import { Typography, Box } from '@mui/material';
 // import PlaygroundEditorTheme from "../component/editor/themes/PlaygroundEditorTheme"; // Tema dosyanızı ekleyin
 // import ReadOnlyEditor from '../component/editor/ReadOnlyEditor';
 // import PlaygroundNodes from '../component/editor/nodes/PlaygroundNodes';
+import dayjs from 'dayjs';
 
 function DynamicContentPage({ htmlContent, data }) {
     const formattedDate = new Date(data.publishDate).toLocaleDateString('tr-TR', {
@@ -13,10 +14,22 @@ function DynamicContentPage({ htmlContent, data }) {
       });
       
   return (
-    <Layout>
+    <Layout RigthSide={true}>
       <h1>{data.title}</h1>
       {data.featuredMedia && data.featuredMedia.url && (
-        <img src={data.featuredMedia.url} alt={data.title} style={{ maxWidth: '900px' , maxHeight:'650px;' }} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
+          {/* Görseli bir Box bileşeni içine alarak stil uyguluyoruz */}
+          <img
+            src={data.featuredMedia.url}
+            alt={data.title}
+            style={{
+              maxWidth: '100%',  // Görselin genişliği kapsayıcıyı aşmayacak
+              maxHeight: '550px',  // Görselin yüksekliği 550px'i aşmayacak
+              height: 'auto',  // Yükseklik otomatik ayarlanacak
+              width: 'auto',   // Genişlik otomatik ayarlanacak
+            }}
+          />
+        </Box>
       )}
      {/* Yayınlanma Tarihi */}
      <Typography variant="body2" align="right" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
@@ -54,7 +67,19 @@ const apiBaseUrl = process.env.API_BASE_URL;
 
 export async function getServerSideProps({ params }) {
   const { slug } = params;  // URL'den 'slug' parametresini al
+  // Eğer 'takvim' slug'ı gelirse, takvim rotasına yönlendir
 
+  if (slug === 'takvim') {
+    const currentYear = dayjs().year(); // Geçerli yılı al
+    const currentMonth = dayjs().month() + 1; // Geçerli ayı al (0-11 aralığında olduğu için +1 ekliyoruz)
+    
+    return {
+      redirect: {
+        destination: `/takvim/${currentYear}/${currentMonth}`,
+        permanent: false,
+      },
+    };
+  }
   try {
     // API'den veri çekme işlemi
     const res = await fetch(`${apiBaseUrl}/contents/slug/${slug}`);

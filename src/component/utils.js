@@ -6,3 +6,11 @@ export function normalizeText(text) {
       .toLowerCase();
   }
   
+
+  export  function formattedDate (publishDate){
+   return new Date(publishDate).toLocaleDateString('tr-TR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  } 
