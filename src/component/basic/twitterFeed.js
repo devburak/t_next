@@ -7,7 +7,7 @@ const TwitterFeed = ({ username }) => {
       <Head>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </Head>
-          <div style={{ maxHeight: '370px', overflow: 'auto' }}>
+          <div style={{ maxHeight: '370px', overflow: 'auto', width: '100%' }}>
               <a className="twitter-timeline" href={`https://twitter.com/${username}?ref_src=twsrc%5Etfw`}>
                   Tweets by @{username}
               </a>

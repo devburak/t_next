@@ -14,3 +14,12 @@ export function normalizeText(text) {
       year: 'numeric',
     });
   } 
+
+
+  export const getImageUrlFromBodyHtml = (bodyHtml) => {
+    if (!bodyHtml) return null;
+  
+    // İlk img etiketinin src'sini bulmak için regex
+    const imgTagMatch = bodyHtml.match(/<img[^>]*src="([^"]*)"/);
+    return imgTagMatch ? imgTagMatch[1] : null;
+  };

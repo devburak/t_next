@@ -121,7 +121,7 @@ function HomePage() {
             </Box>
 
             <Box mb={1}>
-              <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/kategori/etkinlikler'} />
+              <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/takvim'} />
               <DynamicCalendar />
             </Box>
 

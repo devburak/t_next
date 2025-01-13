@@ -21,7 +21,8 @@ export default function NewsCard({ image, title, url,publishDate }) {
           >
             <Box sx={{ position: 'relative' }}> {/* Relative pozisyonlandırma için bir Box eklendi */}
               <CardMedia
-                sx={{ height: 190, maxHeight: 190, objectFit: 'cover' }} // Sabit yükseklik ve max yükseklik ayarı
+              
+                sx={{ height: 140, maxHeight: 140, objectFit: 'cover' }} // Sabit yükseklik ve max yükseklik ayarı
                 image={image}
                 title={title}
               />

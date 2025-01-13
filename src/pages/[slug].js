@@ -1,64 +1,64 @@
 import Layout from '../component/basic/layout';  // Layout bileşeninin yolu
-import { Typography, Box } from '@mui/material';  
-// import { LexicalComposer } from '@lexical/react/LexicalComposer';
-// import PlaygroundEditorTheme from "../component/editor/themes/PlaygroundEditorTheme"; // Tema dosyanızı ekleyin
-// import ReadOnlyEditor from '../component/editor/ReadOnlyEditor';
-// import PlaygroundNodes from '../component/editor/nodes/PlaygroundNodes';
+import ContentContainer from '../component/ContentContainer';
+import Script from 'next/script';
+import Head from 'next/head';
 import dayjs from 'dayjs';
 
-function DynamicContentPage({ htmlContent, data }) {
-    const formattedDate = new Date(data.publishDate).toLocaleDateString('tr-TR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-      
+function DynamicContentPage({ htmlContent, data, jsonContent = null }) {
+
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+  const canonicalUrl = `${SITE_URL}/${data.slug}`;
+  const description = data?.spot || data?.metaDescription || 'TMMOB, Türk Mühendis ve Mimar Odaları Birliği';
+  const keywords = data?.keywords?.length > 0 ? data.keywords.join(', ') : 'TMMOB, içerikler, mühendislik, mimarlık';
+
+
   return (
     <Layout RigthSide={true}>
-      <h1>{data.title}</h1>
-      {data.featuredMedia && data.featuredMedia.url && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-          {/* Görseli bir Box bileşeni içine alarak stil uyguluyoruz */}
-          <img
-            src={data.featuredMedia.url}
-            alt={data.title}
-            style={{
-              maxWidth: '100%',  // Görselin genişliği kapsayıcıyı aşmayacak
-              maxHeight: '550px',  // Görselin yüksekliği 550px'i aşmayacak
-              height: 'auto',  // Yükseklik otomatik ayarlanacak
-              width: 'auto',   // Genişlik otomatik ayarlanacak
-            }}
-          />
-        </Box>
-      )}
-     {/* Yayınlanma Tarihi */}
-     <Typography variant="body2" align="right" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-          {formattedDate}
-        </Typography>
-       {/* Spot (Kalın Metin) */}
-       {data.spot && (
-        <Typography variant="h6" component="p" sx={{ fontWeight: 'bold', marginBottom: '20px' }}>
-          {data.spot}
-        </Typography>
-      )}
+      <Head>
+        <title>{data?.title || 'TMMOB içerik'}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        <meta name="author" content={data?.author?.name || 'TMMOB'} />
+        <link rel="canonical" href={canonicalUrl} />
 
-      <div>
-        <div key={data.title} dangerouslySetInnerHTML={{ __html: htmlContent }} />
-      </div>
-       {/* LexicalEditor içeriği gösteren okuma modu bileşeni */}
-       {/* <LexicalComposer
-        initialConfig={{
-          namespace: 'ReadOnlyEditor',
-          theme: PlaygroundEditorTheme,
-          nodes: [...PlaygroundNodes], // Gerekli Lexical Node'ları ekleyin
-          onError: (error) => {
-            console.error('Editor hatası:', error);
-          },
-          editable: false,  // Okuma modu
-        }}
-      >
-        <ReadOnlyEditor htmlContent={htmlContent} />
-      </LexicalComposer> */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={data?.title || 'TMMOB içerik'} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={data?.featuredMedia?.url || 'https://storage.ikon-x.com.tr/default.png'} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="article:published_time" content={data?.publishDate} />
+        <meta property="article:author" content={data?.author?.name || 'TMMOB'} />
+
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": data?.title || 'TMMOB içerik',
+            "description": description,
+            "image": data?.featuredMedia?.url || "https://storage.ikon-x.com.tr/default.png",
+            "author": {
+              "@type": "Organization",
+              "name": "TMMOB",
+              "url": "https://tmmob.org.tr",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://storage.ikon-x.com.tr/default.png"
+              }
+            },
+            "datePublished": data?.publishDate,
+            "dateModified": data?.updatedAt,
+          })}
+        </script>
+      </Head>
+
+      <ContentContainer
+        title={data?.title || ""}
+        featuredMedia={data.featuredMedia}
+        publishDate={data.publishDate}
+        spot={data?.spot || ""}
+        htmlContent={htmlContent}
+      />
+      <Script id="carusel-js" type="text/javascript" src="/js/carousel.js" strategy="lazyOnload" />
     </Layout>
   );
 }
@@ -72,7 +72,7 @@ export async function getServerSideProps({ params }) {
   if (slug === 'takvim') {
     const currentYear = dayjs().year(); // Geçerli yılı al
     const currentMonth = dayjs().month() + 1; // Geçerli ayı al (0-11 aralığında olduğu için +1 ekliyoruz)
-    
+
     return {
       redirect: {
         destination: `/takvim/${currentYear}/${currentMonth}`,
@@ -94,7 +94,7 @@ export async function getServerSideProps({ params }) {
 
     // HTML içeriğini serialize ederek dönüştür
     // const htmlContent = serialize(data.bodyHtml);
-    const htmlContent = data.bodyHtml ||'';
+    const htmlContent = data.bodyHtml || '';
     return {
       props: { htmlContent, data },  // Sayfa bileşenine veriyi aktar
     };

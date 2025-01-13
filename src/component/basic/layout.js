@@ -26,16 +26,6 @@ const DynamicCalendar = dynamic(
   { ssr: false } // Server-side rendering'i devre dışı bırak
 );
 
-// Kategorilerinizi içeren array
-const categories = [
-  { id: "65bd78b36edf77b16ef450a0", title: "BASIN AÇIKLAMALARI", path: "/basin-aciklamalari" },
-  { id: "65bd78f86edf77b16ef450b1", title: "HABERLER", path: "/haberler" },
-  { id: "65bd790e6edf77b16ef450b6", title: "ODA HABERLERİ", path: "/oda-haberleri" },
-  { id: "65bd79296edf77b16ef450bb", title: "İKK HABERLERİ", path: "/ikk-haberleri" },
-  { id: "65bd78f86edf77b16ef450b1", title: "KONUŞMALAR", path: "/konusmalar" },
-  { id: "65bd78f86edf77b16ef450b1", title: "GÖRÜŞLER", path: "/gorusler" }
-];
-
 function Layout({ children , LeftSide , RigthSide}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -47,12 +37,23 @@ function Layout({ children , LeftSide , RigthSide}) {
         <Grid item xs={12} sm={3} order={isMobile ? 2 : 1} sx={{ pl: 2 }}>{LeftSide ? LeftSide :
           <div style={{ padding: '8px', position: 'sticky', top: 0, zIndex: 1000 }}>
             <Grid container>
-             
               <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
-              <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
-              <NewsCarousel categorySlug={"haberler"} one={true} />
-            </Grid>
-      
+                <TitleComponent icon={<CampaignIcon />} title={'Basın Açıklamaları'} link={'/kategori/basin-aciklamalari'} />
+                <NewsCarousel categorySlug={"basin-aciklamalari"} one={true} />
+              </Grid>
+              <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+                <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
+                <NewsCarousel categorySlug={"haberler"} one={true} />
+              </Grid>
+              <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+                <TitleComponent icon={<NewspaperIcon />} title={'İKK Haberleri'} link={'/kategori/ikk-haberleri'} />
+                <NewsCarousel categorySlug={"ikk-haberleri"} one={true} />
+              </Grid>
+              <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
+                <TitleComponent icon={<NewspaperIcon />} title={'Oda Haberleri'} link={'/kategori/oda-haberleri'} />
+                <NewsCarousel categorySlug={"oda-haberleri"} one={true} />
+              </Grid>
+
             </Grid>
           </div>}
         </Grid>
@@ -72,12 +73,12 @@ function Layout({ children , LeftSide , RigthSide}) {
               />
             </Box>
             <Box mb={1}>
-              <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/kategori/etkinlikler'} />
+              <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/takvim'} />
               <DynamicCalendar />
             </Box>
 
           </div>
-          <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
+          <div style={{ backgroundColor: 'inherit', padding: '4px' , marginTop: '16px'}}>
             <TwitterFeed username="TMMOB1954" />
           </div></>
           }
