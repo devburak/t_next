@@ -59,8 +59,8 @@ const CategoryContentList = ({ category, limit }) => {
                 </CardContent>
               </Grid>
              
-                    {contents.slice(1).map((content) => (
-                      <Grid item xs={12} sm={12} sx={{marginTop:2}}>
+                    {contents.slice(1).map((content,i) => (
+                      <Grid key={i + (content?.slug || 'cont')} item xs={12} sm={12} sx={{marginTop:2}}>
                         <CardContent key={content.slug} sx={{padding:'4px'}}>
                             <Link href={`/${content.slug}`} passHref>
                               <Typography variant="h6" component="a"

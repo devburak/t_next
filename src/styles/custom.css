@@ -50,7 +50,7 @@
 
   .customCalendar .react-calendar {
     border: none;
-    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-family: sans-serif;
   }
   
   .customCalendar .react-calendar__navigation {

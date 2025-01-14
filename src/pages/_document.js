@@ -1,5 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
-
+import Script from "next/script";
 export default function Document() {
   return (
     <Html lang="en">
@@ -8,7 +8,7 @@ export default function Document() {
             href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap"
             rel="stylesheet"
           />
-            <script src="/js/carousel.js" strategy="lazyOnload" ></script>
+            <Script src="/js/carousel.js" strategy="beforeInteractive" ></Script>
       </Head>
       <body>
         <Main />

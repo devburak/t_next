@@ -12,7 +12,8 @@ export default function NewsCarousel({ categorySlug , one=false }) {
   const [loading, setLoading] = useState(true);
 
   // Ekran boyutuna göre limit ayarlaması
-  const isMobile = one ? true: useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:600px)');
+  const isMobile = one ? true: matches;
   const newsLimit = isMobile ? 3 : 6; // Mobilde 3, geniş ekranlarda 6 haber çek
 
   // Veriyi API'den çekme işlemi

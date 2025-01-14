@@ -223,7 +223,7 @@ export default function StickyComponent({ x, y, nodeKey, color, caption }) {
             }
             placeholder={
               <Placeholder className="StickyNode__placeholder">
-                What's up?
+                holder
               </Placeholder>
             }
             ErrorBoundary={LexicalErrorBoundary}
