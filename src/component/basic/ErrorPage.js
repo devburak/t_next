@@ -21,19 +21,18 @@ const ErrorPage = ({ statusCode = 500, message = "" }) => {
             }}
         >
             <Typography variant="h3" component="h1" gutterBottom>
-                {statusCode
-                    ? `Bir şeylerde sorun oluştu (Hata ${statusCode})`
-                    : 'Bir şeylerde sorun oluştu'}
+            {statusCode ? `Bir şeylerde sorun oluştu (Hata ${statusCode})` : "Bir şeylerde sorun oluştu"}
+
             </Typography>
             <Typography variant="body1" gutterBottom>
-                {message || 'Ulaşmak istediğiniz yere arama ile gidebilirsiniz '}
+                {message || "Ulaşmak istediğiniz yere arama ile gidebilirsiniz "}
                 <SearchInput /> 
-                {' ya da ana sayfa üzerinden tekrar kendiniz gitmeyi deneyebilirsiniz.'}
+                {" ya da ana sayfa üzerinden tekrar kendiniz gitmeyi deneyebilirsiniz."}
             </Typography>
             <Box sx={{ mt: 4 }}>
                 <Link href="/" passHref>
                     <Button  variant="contained" color="primary">
-                        Ana Sayfa'ya Dön
+                        Ana Sayfa&apos;ya Dön
                     </Button>
                 </Link>
             </Box>

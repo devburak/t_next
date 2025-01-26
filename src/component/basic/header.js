@@ -30,22 +30,22 @@ function Header() {
 
             {/* Sosyal Medya İkonları Bölümü */}
             <div className="socialIcons">
-                <a href="https://www.facebook.com/yourpage" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.facebook.com/tmmob1954/" target="_blank" rel="noopener noreferrer">
                     <IconButton aria-label="Facebook" color="inherit" size='small'>
                         <FacebookIcon />
                     </IconButton>
                 </a>
-                <a href="https://twitter.com/yourprofile" target="_blank" rel="noopener noreferrer">
+                <a href="https://x.com/tmmob1954" target="_blank" rel="noopener noreferrer">
                     <IconButton aria-label="X" color="inherit"  size='small'>
                         <XIcon />
                     </IconButton>
                 </a>
-                <a href="https://www.instagram.com/yourprofile" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.instagram.com/tmmob1954/" target="_blank" rel="noopener noreferrer">
                     <IconButton aria-label="Instagram" color="inherit"  size='small'>
                         <InstagramIcon />
                     </IconButton>
                 </a>
-                <a href="https://www.youtube.com/yourchannel" target="_blank" rel="noopener noreferrer">
+                <a href="https://www.youtube.com/channel/UCcueF3RXjWfm0koMg1OnAXQ" target="_blank" rel="noopener noreferrer">
                     <IconButton aria-label="YouTube" color="inherit" size='small'>
                         <YouTubeIcon />
                     </IconButton>
