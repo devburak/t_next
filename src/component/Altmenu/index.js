@@ -3,12 +3,12 @@ import styles from './AltMenu.module.css';
 
 const AltMenu = () => {
   const menuItems = [
-    { href: '/basin-aciklamalari', title: 'BASIN AÇIKLAMALARI' },
-    { href: '/haberler', title: 'HABERLER' },
-    { href: '/oda-haberleri', title: 'ODA HABERLERİ' },
-    { href: '/ikk-haberleri', title: 'İKK HABERLERİ' },
-    { href: '/etkinlik-acilis-konusmalari', title: 'KONUŞMALAR' },
-    { href: '/gorusler', title: 'GÖRÜŞLER' },
+    { href: '/kategori/basin-aciklamalari', title: 'BASIN AÇIKLAMALARI' },
+    { href: '/kategori/haberler', title: 'HABERLER' },
+    { href: '/kategori/oda-haberleri', title: 'ODA HABERLERİ' },
+    { href: '/kategori/ikk-haberleri', title: 'İKK HABERLERİ' },
+    { href: '/kategori/etkinlik-acilis-konusmalari', title: 'KONUŞMALAR' },
+    { href: '/kategori/gorusler', title: 'GÖRÜŞLER' },
   ];
 
   return (
