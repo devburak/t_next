@@ -3,12 +3,24 @@ import React from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Card, CardMedia, CardContent, Typography, Box, Grid } from '@mui/material';
 import Link from 'next/link';
+import { useMediaQuery } from '@mui/material';
 
 const HomeSlider = ({ slides = [] }) => {
 
+  const isMobile = useMediaQuery('(max-width:600px)'); // Mobil için
+  const isTablet = useMediaQuery('(min-width:601px) and (max-width:1024px)'); // Tablet için
+  const isDesktop = useMediaQuery('(min-width:1025px)'); // Bilgisayar için
+
+  const getCarouselHeight = () => {
+    if (isMobile) return '380px'; // Mobil ekran yüksekliği
+    if (isTablet) return '300px'; // Tablet ekran yüksekliği
+    if (isDesktop) return '400px'; // Bilgisayar ekran yüksekliği
+    return '380px'; // Varsayılan
+  };
+
   return (
     <Carousel
-      height="360px"
+       height={getCarouselHeight()}
       // navButtonsAlwaysVisible={true} // Kaydırma düğmelerinin her zaman görünür olmasını sağlar
       indicators={true} // Alt noktalı göstergeler
       animation="slide" // Slayt animasyonu
@@ -17,7 +29,21 @@ const HomeSlider = ({ slides = [] }) => {
       {slides.map((slide) => (
         <Link href={slide.slug} passHref key={slide.title} legacyBehavior>
           <a style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Card sx={{ display: 'flex', alignItems: 'center', maxWidth: '980px', maxHeight: '500px', margin: '0 auto' }}>
+            <Card sx={{
+              display: 'flex',
+              alignItems: 'center',
+              margin: '0 auto',
+              maxWidth: {
+                xs: '100%', // Mobilde tam genişlik
+                sm: '720px', // Tabletlerde 720px
+                md: '100%', // Bilgisayarlarda 980px
+              },
+              maxHeight: {
+                xs: '360px', // Mobilde daha küçük yükseklik
+                sm: '440px', // Tabletlerde daha büyük yükseklik
+                md: '100%', // Bilgisayarlarda orijinal yükseklik
+              },
+            }}>
               <Grid container>
                 {/* Resim bölümü */}
                 <Grid item xs={12} sm={6}>
@@ -25,20 +51,58 @@ const HomeSlider = ({ slides = [] }) => {
                     component="img"
                     image={slide.featuredMedia.url}
                     alt={slide.title}
-                    sx={{ maxHeight: '380px', objectFit: 'cover' }}
+                    // sx={{ maxHeight: '380px', objectFit: 'cover' }}
+                    sx={{
+                      width: '100%', // Genişliği tamamen kaplaması
+                      height: '100%', // Yüksekliği tamamen kaplaması
+                      height: {
+                        xs: '320px', // Mobilde daha küçük yükseklik
+                        sm: '440px', // Tabletlerde daha büyük yükseklik
+                        md: '100%', // Bilgisayarlarda orijinal yükseklik
+                      }, // Mobilde daha küçük bir yükseklik
+                      objectFit: 'contain', // Resmin kırpılmasını önler
+                      objectPosition: 'center', // Görünümü ortalar
+                      maxHeight: {
+                        xs: '360px', // Mobilde daha küçük yükseklik
+                        sm: '320px', // Tabletlerde daha büyük yükseklik
+                        md: '100%', // Bilgisayarlarda orijinal yükseklik
+                      },
+                    }}
                   />
                 </Grid>
-
                 {/* Metin bölümü */}
                 <Grid item xs={12} sm={6}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{fontWeight:600 }} gutterBottom>
+                  <CardContent
+                    sx={{
+                      padding: {
+                        xs: '4px', // Mobil cihazlarda daha az padding
+                        sm: '8px', // Tabletlerde orta padding
+                        md: '12px', // Bilgisayarlarda varsayılan padding
+                      },
+                      '& .MuiTypography-h6': {
+                        fontSize: {
+                          xs: '12px', // Mobil cihazlarda daha küçük başlık boyutu
+                          sm: '14px', // Tabletlerde orta başlık boyutu
+                          md: '28px', // Bilgisayarlarda varsayılan başlık boyutu
+                        },
+                      },
+                      '& .MuiTypography-body1': {
+                        fontSize: {
+                          xs: '8px', // Mobil cihazlarda daha küçük metin boyutu
+                          sm: '12px', // Tabletlerde orta metin boyutu
+                          md: '16px', // Bilgisayarlarda varsayılan metin boyutu
+                        },
+                      },
+                    }}
+                  >
+                    <Typography variant="h6" gutterBottom>
                       {slide.title}
                     </Typography>
-                    <Typography variant="body1" sx={{ fontSize: '14px'}}>
+                    <Typography variant="body1">
                       {slide.spot}
                     </Typography>
                   </CardContent>
+
                 </Grid>
               </Grid>
             </Card>

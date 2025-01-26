@@ -20,11 +20,16 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import QuickAccessMenu from '../QuickAccessMenu';
 
 const DynamicCalendar = dynamic(
   () => import('../calendar'), // Takvim bileşeninizin yolu
   { ssr: false } // Server-side rendering'i devre dışı bırak
 );
+
+// Dynamically import Campaign with SSR disabled
+const Campaign = dynamic(() => import('../campaign'), { ssr: false });
+
 
 function Layout({ children , LeftSide , RigthSide}) {
   const theme = useTheme();
@@ -64,13 +69,13 @@ function Layout({ children , LeftSide , RigthSide}) {
         </Grid>
         <Grid item xs={12} sm={3} order={isMobile ? 3 : 3} sx={{pr:2}}>
         {RigthSide &&<>
+         
           <div style={{ backgroundColor: 'inherit' }}>
-            <Box mb={1}>
-              <img
-                src="https://storage.ikon-x.com.tr/2024/02/bosunamiokuduk.png" // Görselin yolu
-                alt="Kampanya"
-                style={{ maxWidth: '100%', height: 'auto', marginBottom: '20px' }} // Stilleri ayarlayın
-              />
+            <Box sx={{m:2 , p:'4px'}}>
+            <Campaign displayOnDetail layoutType="square" />
+            </Box>
+            <Box sx={{m:1}}>
+            <QuickAccessMenu />
             </Box>
             <Box mb={1}>
               <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/takvim'} />
@@ -78,9 +83,12 @@ function Layout({ children , LeftSide , RigthSide}) {
             </Box>
 
           </div>
+         
           <div style={{ backgroundColor: 'inherit', padding: '4px' , marginTop: '16px'}}>
             <TwitterFeed username="TMMOB1954" />
-          </div></>
+          </div>
+
+          </>
           }
         </Grid>
       </Grid>

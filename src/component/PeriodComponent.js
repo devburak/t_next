@@ -62,6 +62,7 @@ function PeriodComponent( ) {
       value={periods.find((period) => period._id === periodId) || null} // Default olarak URL'deki periodId'yi seç
       onChange={handlePeriodChange}
       loading={loading}
+      size='small'
       renderInput={(params) => (
         <TextField
           {...params}

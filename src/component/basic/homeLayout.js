@@ -9,7 +9,7 @@ import TopMenu from './topMenu';
 import NewsSection from '../Lists/newsSection';
 import VideoSection from '../Lists/videoSection'
 import CustomSlider from './customSlider'
-import Campaign from './campaign'
+// import Campaign from '../campaign'
 import TwitterFeed from './twitterFeed';
 import dynamic from 'next/dynamic';
 import Link from 'next/link'; // Link bileşenini import edin
@@ -24,10 +24,15 @@ import ExtensionIcon from '@mui/icons-material/Extension';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import QuickAccessMenu from '../QuickAccessMenu';
+import AltMenu from '../Altmenu';
 const DynamicCalendar = dynamic(
   () => import('../calendar'), // Takvim bileşeninizin yolu
   { ssr: false } // Server-side rendering'i devre dışı bırak
 );
+
+// Dynamically import Campaign with SSR disabled
+const Campaign = dynamic(() => import('../campaign'), { ssr: false });
 // Kategorilerinizi içeren array
 const categories = [
   { id: "65bd78b36edf77b16ef450a0", title: "BASIN AÇIKLAMALARI", slug: "basin-aciklamalari" },
@@ -42,8 +47,10 @@ const videCat = { id: "65bd78f86edf77b16ef450b1", title: "VİDEOLAR", path: "/vi
 function HomePage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
   const [slides, setSlides] = useState([]); // Slider verisi için state
+
+  const [horizontalCampaigns, setHorizontalCampaigns] = useState([]);
+  const [squareCampaigns, setSquareCampaigns] = useState([]);
 
   useEffect(() => {
     // İstemci tarafında veri çekme
@@ -60,29 +67,44 @@ function HomePage() {
         console.error('Veri çekme hatası:', error.message);
       }
     };
+    const fetchCampaigns = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns/active`);
+        if (!response.ok) throw new Error('Kampanyalar yüklenemedi');
+        const data = await response.json();
+        console.log('Kampanyalar:', data);
+        // `displayOnHome` ve `isActive` koşullarını filtreleyin
+        const filteredCampaigns = data.filter(
+          (campaign) => campaign.displayOnHome && campaign.isActive
+        );
+        console.log('Filtrelenmiş kampanyalar:', filteredCampaigns);
+        // Yatay ve kare kampanyaları ayırın
+        setHorizontalCampaigns(filteredCampaigns.filter((campaign) => campaign.horizontalMedia));
+        setSquareCampaigns(filteredCampaigns.filter((campaign) => campaign.squareMedia));
+        console.log('Kampanyalar:', squareCampaigns, horizontalCampaigns);
+      } catch (error) {
+        console.error('Kampanyalar alınırken hata oluştu:', error);
+      }
+    };
 
+    fetchCampaigns();
     fetchSlides(); // Veri çekme işlemini başlat
+
   }, []); // Component mount olduğunda çalışır
 
   return (
     <>
       <Header />
       <TopMenu />
-      <Grid container spacing={2}>
-        <Grid item xs={6} >
-          <div style={{ margin: '10px' }}>
-            <Campaign />
-          </div>
+      <Grid container spacing={1}>
+        <Grid item xs={12} >
+        <Campaign displayOnHome layoutType="horizontal" />
         </Grid>
-        <Grid item xs={6} >
-          <div style={{ margin: '10px' }}>
-            <Campaign />
-          </div>
-        </Grid>
-
-        <Grid item xs={12} sm={8} order={isMobile ? 1 : 2} sx={{ px: 2 }}>
-          <div style={{ padding: '12px', minHeight: 250 }}>
+       
+        <Grid item xs={12} sm={9} order={isMobile ? 1 : 2} sx={{ px: 1 }}>
+          <div style={{ padding: '8px', minHeight: 250 }}>
             <HomeSlider slides={slides} />
+            <AltMenu />
           </div>
           <Grid container spacing={2} sx={{ px: 1 }}>
             <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
@@ -110,22 +132,19 @@ function HomePage() {
         </Grid>
 
 
-        <Grid item xs={12} sm={4} order={isMobile ? 3 : 3}>
-          <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
-            <Box mb={1}>
-              <img
-                src="https://storage.ikon-x.com.tr/2024/02/bosunamiokuduk.png" // Görselin yolu
-                alt="Kampanya"
-                style={{ maxWidth: '100%', height: 'auto', marginBottom: '20px' }} // Stilleri ayarlayın
-              />
-            </Box>
-
+        <Grid item xs={12} sm={3} order={isMobile ? 3 : 3} sx={{paddingTop:"1px"}}>
+          <div style={{ backgroundColor: 'inherit', padding: '4px' }}>
+         {/* Kare Kampanyalar */}
+         <Campaign displayOnHome layoutType="square" />
             <Box mb={1}>
               <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/takvim'} />
               <DynamicCalendar />
             </Box>
 
           </div>
+          <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
+            <QuickAccessMenu />
+            </div>
           {/* <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
             <TwitterFeed username="TMMOB1954" />
           </div> */}

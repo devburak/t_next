@@ -1,0 +1,30 @@
+/* component/QuickAccessMenu/QuickAccessMenu.module.css */
+
+  .menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px; /* İkonlar arasında boşluk bırakır */
+    justify-content: flex-start;
+  }
+  
+  .nav {
+    width: 100%;
+  }
+  
+  .leaf {
+    list-style: none;
+    box-shadow: 0 7px 7px -4px rgba(0, 0, 0, 0.44);
+    margin-bottom: 10px;
+  }
+  
+  
+  .menuImage {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+ 

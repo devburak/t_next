@@ -4,6 +4,8 @@
       flex-direction: column; /* Alt alta sıralama */
     }
   }
+
+  
   
   /* ListItemButton bileşeni için stil tanımları */
   .TopMenu .ListItemButton {
@@ -19,15 +21,25 @@
     }
   }
 
-  .headerBackground {
-    background-color: #e20303; /* Kırmızı tonunu belirleyin */
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    padding-left: 40px;
-  }
+  /* Header Background için mevcut stiller */
+.headerBackground {
+  background-color: #e20303; /* Kırmızı tonunu belirleyin */
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 40px;
+  padding-right: 40px; /* Sağ tarafa da padding ekleyerek ikonların yerleşimini kolaylaştırır */
+  border-bottom: 4px solid #ffff00; /* Eklenen sarı border */
+}
   
-
+/* Sosyal Medya İkonları için yeni sınıf */
+.socialIcons {
+  color: #fff;
+  margin-left: auto; /* Sosyal ikonları sağ tarafa iter */
+  display: flex;
+  gap: 4px; /* İkonlar arasında boşluk bırakır */
+}
   /* styles.css */
 .img-hover-grow {
     transition: transform 0.3s ease-in-out; /* Animasyon süresi ve geçiş efekti */
@@ -93,4 +105,14 @@
   .customCalendar .react-calendar__tile--active:enabled:focus {
     background-color: #1565c0; /* MUI primary dark rengi */
   }
- 
+  @media (max-width: 960px) {
+    .socialIcons {
+      display: grid; /* Flex yerine grid kullanıyoruz */
+      grid-template-columns: repeat(2, 40px); /* 2 kolon oluşturuyoruz, ikon boyutuna göre ayarlayın */
+      grid-template-rows: repeat(2, 40px); /* 2 satır oluşturuyoruz */
+      gap: 6px; /* İkonlar arasında boşluk bırakır */
+      margin-right: 0; /* Margin'i sıfırlar */
+      margin-top: 16px; /* Logodan biraz boşluk bırakır */
+      justify-content: center; /* Grid'i ortalar */
+  }
+}

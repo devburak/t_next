@@ -1,39 +1,83 @@
-import { useState } from 'react';
-import { TextField, Button, InputAdornment , IconButton} from '@mui/material';
+// components/SearchInput.js
+import React, { useState } from 'react';
+import { TextField, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import SearchIcon from '@mui/icons-material/Search';
+import { styled } from '@mui/material/styles';
 
-function SearchInput() {
+// Stil Özelleştirmeleri için styled API kullanımı
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: theme.palette.primary.main,
+    },
+    '&:hover fieldset': {
+      borderColor: theme.palette.primary.dark,
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: theme.palette.primary.dark,
+    },
+  },
+}));
+
+const SearchInput = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState('');
 
   const handleSearch = () => {
-    // Arama terimini URL'e ekleyerek arama sayfasına yönlendir
-    if(searchTerm)
-    router.push(`/search?s=${encodeURIComponent(searchTerm)}`);
+    const trimmedSearchTerm = searchTerm.trim();
+    if (trimmedSearchTerm) {
+      // Arama terimini URL'e ekleyerek arama sayfasına yönlendir
+      router.push(`/search?s=${encodeURIComponent(trimmedSearchTerm)}`);
+    } else {
+      // Hata mesajı göster
+      setError('Lütfen aramak istediğiniz terimi giriniz.');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
   };
 
   return (
-    <div>
-      <TextField
-        variant="outlined"
-        label="Ara"
-        size="small"
-        fullWidth={true}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleSearch} size="small">
-                  <SearchIcon /> {/* Arama ikonunu kullan */}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-      />
-    </div>
+    <StyledTextField
+      variant="outlined"
+      label={error? error:"Ara"}
+      size="small"
+      fullWidth
+      value={searchTerm}
+      onChange={(e) => {
+        setSearchTerm(e.target.value);
+        if (error) setError('');
+      }}
+      onKeyDown={handleKeyDown}
+      aria-label="Arama Yap"
+      error={!!error}
+      // helperText={error}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <Tooltip title="Ara">
+              <IconButton
+                onClick={handleSearch}
+                size="small"
+                aria-label="Ara"
+                edge="end"
+              >
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+          </InputAdornment>
+        ),
+      }}
+    />
   );
-}
+};
 
 export default SearchInput;

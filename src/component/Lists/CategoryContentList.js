@@ -50,7 +50,7 @@ const CategoryContentList = ({ category, limit }) => {
               <Grid item xs={12} sm={8}>
                 <CardContent>
                   <Link href={`/${contents[0].slug}`} passHref>
-                    <Typography variant="h6" component="a" sx={{ textDecoration: 'none', color: 'inherit', fontSize:12, fontWeight:600}}>
+                    <Typography variant="h6"  sx={{ textDecoration: 'none', color: 'inherit', fontSize:12, fontWeight:600}}>
                       {contents[0].title}
                     </Typography>
                   </Link>
@@ -63,7 +63,7 @@ const CategoryContentList = ({ category, limit }) => {
                       <Grid key={i + (content?.slug || 'cont')} item xs={12} sm={12} sx={{marginTop:2}}>
                         <CardContent key={content.slug} sx={{padding:'4px'}}>
                             <Link href={`/${content.slug}`} passHref>
-                              <Typography variant="h6" component="a"
+                              <Typography variant="h6" 
                                 sx={{ textDecoration: 'none', color: 'inherit', fontSize: 12 ,fontWeight:600}} // Font boyutunu ayarladık
                               >
                                  {content.title}

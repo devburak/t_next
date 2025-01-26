@@ -16,11 +16,14 @@ function FeaturedImage({ url, alt }) {
       <Image
         src={url}
         alt={alt || 'Featured Image'}
-        width={550} // İstediğiniz genişlik
-        height={400} // İstediğiniz yükseklik
+        width={600} // Maksimum genişlik
+        height={450} // Maksimum yükseklik
         style={{
-          objectFit: 'contain', // Görselin içeriği "contain" olacak şekilde düzenlenir
+          objectFit: 'contain',
+          maxWidth: '600px',
+          maxHeight: '450px',
         }}
+        layout="responsive" // Doğru oranda render alması için kullanılır
       />
     </Box>
   );
