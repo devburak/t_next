@@ -25,8 +25,6 @@ const CategoryPage = ({ categorySlug, initialContents, initialTotalPages, catego
       page,
       ...(periodId && { periodId }),
     });
-
-    console.log("queryParams",queryParams , `${process.env.NEXT_PUBLIC_API_BASE_URL}/contents/category/${categorySlug}?${queryParams}`)
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/contents/category/${categorySlug}?${queryParams}`);
       const data = await res.json();

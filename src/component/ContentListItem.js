@@ -12,14 +12,14 @@ const ContentListItem = ({ title, publishDate, featuredMedia, spot, link }) => {
   });
 
   return (
-    <Card sx={{ display: 'flex', marginBottom: 2 }}>
-      <Grid container>
+    <Card sx={{ display: 'flex', marginBottom: 2, width:"100%"}} >
+      <Grid container spacing={2} alignItems="stretch" >
         {/* Sol tarafta resim */}
         {featuredMedia?.url && (
           <Grid item xs={12} sm={4}>
             <CardMedia
               component="img"
-              sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              sx={{ width: '100%', height: '100%', maxHeight:260, maxWidth:260, objectFit: 'contain', paddingLeft:1, }}
               image={featuredMedia.url}
               alt={title}
             />
@@ -28,7 +28,7 @@ const ContentListItem = ({ title, publishDate, featuredMedia, spot, link }) => {
         
         {/* Sağ tarafta içerik */}
         <Grid item xs={12} sm={8}>
-          <CardContent>
+          <CardContent  sx={{ minHeight: 200,  width  : '100%' }}>
              {/* Tarih */}
             <Typography variant="body2" color="text.secondary" align="right">
               {formattedDate}
