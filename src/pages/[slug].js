@@ -32,6 +32,15 @@ export async function getServerSideProps({ params }) {
       },
     };
   }
+  // Eğer slug "video-galeri" ise, statik sayfaya yönlendir
+  if (slug === 'video-galeri') {
+    return {
+      redirect: {
+        destination: '/video-galeri',
+        permanent: false,
+      },
+    };
+  }
   try {
     // API'den veri çekme işlemi
     const res = await fetch(`${apiBaseUrl}/contents/slug/${slug}`);

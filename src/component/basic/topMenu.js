@@ -131,7 +131,7 @@ const menuItems = [
         { name: 'Birlik Haberleri', path: '/yayin-turu/birlik-haberleri' },
         { name: 'TMMOB Bülteni', path: '/yayin-turu/tmmob-bulteni' },
         { name: 'Kitaplar', path: '/yayin-turu/kitap' },
-        { name: 'Video Galerisi', path: 'https://www.tmmob.org.tr/video-galeri' },
+        { name: 'Video Galerisi', path: '/video-galeri' },
       ],
     },
     { name: 'ODALAR', prfx: '/odalar', path: '/odalar' },

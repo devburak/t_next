@@ -1,0 +1,18 @@
+.videoGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    text-align: center;
+}
+
+.videoItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.pagination {
+    margin-top: 16px;
+    text-align: center;
+}
