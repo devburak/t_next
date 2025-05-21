@@ -8,6 +8,7 @@ import TopMenu from './topMenu';
 // import CustomCalendar from '../calendar'
 import NewsSection from '../Lists/newsSection';
 import VideoSection from '../Lists/videoSection'
+import VideoCarousel from '../news/VideoCarousel';
 import CustomSlider from './customSlider'
 // import Campaign from '../campaign'
 import TwitterFeed from './twitterFeed';
@@ -161,8 +162,8 @@ function HomePage() {
           <NewsCarousel categorySlug={"kitap"} />
         </Grid>
         <Grid item xs={12} sm={4}>
-        <TitleComponent icon={<OndemandVideoIcon />} title={'Videolar'} link={'/kategori/videolar'} />
-        <NewsCarousel categorySlug={"kitap"} />
+        <TitleComponent icon={<OndemandVideoIcon />} title={'Videolar'} link={'/video-galeri'} />
+        <VideoCarousel />
         </Grid>
       </Grid>
       <Chambers />
