@@ -34,7 +34,7 @@ export default function VideoCarousel({ limit = 3 }) {
       }
     }
     fetchData();
-  }, [limit]); // limit değişirse tekrar fetch
+  }, [limit]); 
 
   if (loading) return <Typography>Yükleniyor...</Typography>;
   if (!videoData || videoData.length === 0)

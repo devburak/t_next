@@ -27,6 +27,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import QuickAccessMenu from '../QuickAccessMenu';
 import AltMenu from '../Altmenu';
+import PublicationCarousel from '../publications/PublicationCarusel';
 const DynamicCalendar = dynamic(
   () => import('../calendar'), // Takvim bileşeninizin yolu
   { ssr: false } // Server-side rendering'i devre dışı bırak
@@ -121,12 +122,12 @@ function HomePage() {
               <NewsCarousel categorySlug={"oda-haberleri"} />
             </Grid>
             <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
-              <TitleComponent icon={<EditNotificationsSharpIcon />} title={'İKK Haberleri'} link={'/kategori/ikk'} />
-              <NewsCarousel categorySlug={"ikk"} />
+              <TitleComponent icon={<EditNotificationsSharpIcon />} title={'İKK Haberleri'} link={'/kategori/ikk-haberleri'} />
+              <NewsCarousel categorySlug={"ikk-haberleri"} />
             </Grid>
             <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
               <TitleComponent icon={<CampaignIcon />} title={'Görüş ve Konuşmalar'} link={'/kategori/gorusler-ve-konusmalar'} />
-              <NewsCarousel categorySlug={"Görüş ve Konuşmalar"} />
+              <NewsCarousel categorySlug={"gorusler-ve-konusmalar"} />
             </Grid>
           </Grid>
 
@@ -146,20 +147,20 @@ function HomePage() {
           <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
             <QuickAccessMenu />
             </div>
-          {/* <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
+           <div style={{ backgroundColor: 'inherit', padding: '16px' }}>
             <TwitterFeed username="TMMOB1954" />
-          </div> */}
+          </div> 
         </Grid>
 
       </Grid>
       <Grid container spacing={2} sx={{ px: 2 }}>
         <Grid item xs={12} sm={4}>
-          <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/kategori/birlik-haberleri'} />
-          <NewsCarousel categorySlug={"birlik-haberleri"} />
+          <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/yayin/birlik-haberleri'} />
+          <PublicationCarousel one={true} categorySlug={"birlik-haberleri"} />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TitleComponent icon={<MenuBookIcon />} title={'TMMOB Kitapları'} link={'/kategori/kitap'} />
-          <NewsCarousel categorySlug={"kitap"} />
+          <TitleComponent icon={<MenuBookIcon />} title={'TMMOB Kitapları'} link={'/yayin/kitap'} />
+          <PublicationCarousel one={true} categorySlug={"kitap"} />
         </Grid>
         <Grid item xs={12} sm={4}>
         <TitleComponent icon={<OndemandVideoIcon />} title={'Videolar'} link={'/video-galeri'} />
