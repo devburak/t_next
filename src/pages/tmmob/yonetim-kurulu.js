@@ -66,10 +66,9 @@ const YonetimKuruluPage = ({ initialContent, initialPeriods, initialPeriodId }) 
   body {
     margin: 0;
     color: rgba(0, 0, 0, 0.87);
-    font-size: 0.6rem;
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-size: 0.7rem;
     font-weight: 400;
-    line-height: 1.1;
+    line-height: 1rem;
     letter-spacing: 0.00938em;
     background-color: #ffffff;
   }

@@ -123,7 +123,11 @@
   overflow-x: scroll;
   table-layout: fixed;
   width: max-content;
-  margin: 30px 0;
+  margin: 20px 0;
+}
+table.PlaygroundEditorTheme__table {
+  font-size: 0.7rem;
+  line-height: 0.9;
 }
 .PlaygroundEditorTheme__tableSelection *::selection {
   background-color: transparent;

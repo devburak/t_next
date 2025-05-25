@@ -18,6 +18,7 @@ export default function ContentPageRenderer({ htmlContent, data }) {
 
   return (
     <Layout RigthSide={true}>
+     
       <Head>
         <title>{data?.title || 'TMMOB içerik'}</title>
         <meta name="description" content={description} />
@@ -53,6 +54,7 @@ export default function ContentPageRenderer({ htmlContent, data }) {
             "dateModified": data?.updatedAt,
           })
         }} />
+        
       </Head>
 
       <ContentContainer
