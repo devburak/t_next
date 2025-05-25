@@ -95,7 +95,7 @@ export default function PublicationCard({ publication, hideCategories = false })
                             {publication.categories.map((cat) => (
                                 <Link
                                     key={cat._id}
-                                    href={`/yayin/${cat.slug}`}
+                                    href={`/yayin-turu/${cat.slug}`}
                                     passHref
                                     legacyBehavior
                                 >

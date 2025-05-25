@@ -105,7 +105,7 @@ const menuItems = [
       name: 'BELGELER',
       prfx: '/belgeler',
       subItems: [
-        { name: 'Genel Kurul Sonuç Bildirgesi', path: '/belgeler/genel-kurul-sonuc-bildirgesi' },
+        { name: 'Genel Kurul Sonuç Bildirgesi', path: '/belgeler/liste/genel-kurul-sonuc-bildirgesi' },
         { name: 'Sonuç Bildirgeleri', path: '/sonuc-bildirgeleri' },
         { name: 'Çalışma Programı', path: '/belgeler/calisma-programi' },
         { name: 'Yönetim Kurulu Kararları', path: '/belgeler/yonetim-kurulu-kararlari' },

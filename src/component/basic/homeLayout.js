@@ -151,15 +151,14 @@ function HomePage() {
             <TwitterFeed username="TMMOB1954" />
           </div> 
         </Grid>
-
       </Grid>
       <Grid container spacing={2} sx={{ px: 2 }}>
         <Grid item xs={12} sm={4}>
-          <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/yayin/birlik-haberleri'} />
+          <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/yayin-turu/birlik-haberleri'} />
           <PublicationCarousel one={true} categorySlug={"birlik-haberleri"} />
         </Grid>
         <Grid item xs={12} sm={4}>
-          <TitleComponent icon={<MenuBookIcon />} title={'TMMOB Kitapları'} link={'/yayin/kitap'} />
+          <TitleComponent icon={<MenuBookIcon />} title={'TMMOB Kitapları'} link={'/yayin-turu/kitap'} />
           <PublicationCarousel one={true} categorySlug={"kitap"} />
         </Grid>
         <Grid item xs={12} sm={4}>
