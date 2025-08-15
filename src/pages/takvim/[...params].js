@@ -100,9 +100,10 @@ const CalendarPage = ({ initialEvents, initialView, initialSelectedDate }) => {
           {/* Sol taraf - Tarih Seçici */}
           <Box sx={{ width: '20%', padding: 2, borderRight: '1px solid #ddd', overflowY: 'auto' }}>
             <DynamicCalendar
-              // events={events}
-              value={currentDate}
+              events={events}
+              value={currentDate.toDate()}
               onChange={(date) => setCurrentDate(dayjs(date))}
+              onMonthChange={(activeStartDate) => setCurrentDate(dayjs(activeStartDate))}
             />
             <CalendarSubscription />
           </Box>

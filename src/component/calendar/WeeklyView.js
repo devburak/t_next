@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
@@ -11,6 +11,16 @@ import dayjs from 'dayjs';
 
 const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 const daysOfWeek = ['PZT', 'SAL', 'ÇAR', 'PER', 'CUM', 'CMT', 'PAZ'];
+
+const typeColorMap = {
+  meeting: { bg: '#E3F2FD', text: '#0D47A1', border: '#90CAF9' },
+  webinar: { bg: '#E8F5E9', text: '#1B5E20', border: '#A5D6A7' },
+  training: { bg: '#FFF8E1', text: '#E65100', border: '#FFE082' },
+  workshop: { bg: '#F3E5F5', text: '#4A148C', border: '#CE93D8' },
+  conference: { bg: '#E0F7FA', text: '#006064', border: '#80DEEA' },
+  default: { bg: '#ECEFF1', text: '#263238', border: '#CFD8DC' },
+};
+const getTypeColors = (type) => typeColorMap[type] || typeColorMap.default;
 
 const WeeklyView = ({ selectedDate, events = [] }) => {
   const router = useRouter();
@@ -138,36 +148,39 @@ const WeeklyView = ({ selectedDate, events = [] }) => {
                 // Piksel olarak 1 saat = 30px
                 // height: 30 * duration
                 const topPosition = startHour * 30;
-                const boxHeight =30;
+                const boxHeight = 30;
+                const colors = getTypeColors(event.eventType);
+                const tooltip = `${event.title}${event.spot ? ' — ' + event.spot : ''}`;
 
                 return (
-                  <Box
-                    key={event._id}
-                    sx={{
-                      position: 'absolute',
-                      top: topPosition,
-                      left: 8,
-                      right: 8,
-                      height: boxHeight,
-                      bgcolor: 'purple',
-                      color: 'white',
-                      padding: 1,
-                      borderRadius: 1,
-                      zIndex: 2,
-                      fontSize: 10,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      overflow: 'hidden',
-                    }}
-                    onClick={() => handleClick(event._id)}
-                  >
-                    {/* Başlık çok uzunsa kısalt */}
-                    {event.title.length > 20
-                      ? `${event.title.slice(0, 20)}...`
-                      : event.title}
-                  </Box>
+                  <Tooltip key={event._id} title={tooltip} arrow>
+                    <Box
+                      onClick={() => handleClick(event._id)}
+                      sx={{
+                        position: 'absolute',
+                        top: topPosition,
+                        left: 8,
+                        right: 8,
+                        height: boxHeight,
+                        bgcolor: colors.bg,
+                        color: colors.text,
+                        border: `1px solid ${colors.border}`,
+                        padding: 1,
+                        borderRadius: 1,
+                        zIndex: 2,
+                        fontSize: 10,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                      }}
+                    >
+                      {event.title}
+                    </Box>
+                  </Tooltip>
                 );
               })}
           </Grid>

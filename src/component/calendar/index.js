@@ -33,17 +33,28 @@ const updateEventsForMonth = (date, lastFetchedDateRef, fetchEvents) => {
 };
 
 
-const CustomCalendar = ({ value = new Date(), onChange }) => {
+const CustomCalendar = ({ value = new Date(), onChange, events: externalEvents, onMonthChange }) => {
   const [currentDate, setCurrentDate] = useState(value); // Seçili tarih
-  const [events, setEvents] = useState([]); // Etkinlikler
+  const [events, setEvents] = useState([]); // Etkinlikler (dahili)
   const [isLoading, setIsLoading] = useState(false); // Yüklenme durumu
   const [anchorEl, setAnchorEl] = useState(null);
   const [popperEtkinlik, setPopperEtkinlik] = useState(null);
   const lastFetchedDateRef = useRef(null); // En son çekilen ay ve yıl bilgisi
+  const lastActiveMonthRef = useRef({ y: null, m: null });
   const open = Boolean(anchorEl);
+
+  const isSameDay = (a, b) => {
+    if (!(a instanceof Date) || !(b instanceof Date)) return false;
+    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+  };
 
  // Etkinlikleri API'den çekme
  const fetchEvents = async (startDate, endDate) => {
+  // Eğer dışarıdan events veriliyorsa dahili fetch yapma
+  if (externalEvents && Array.isArray(externalEvents)) {
+    setEvents(externalEvents);
+    return;
+  }
   setIsLoading(true);
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/list?startDate=${startDate}&endDate=${endDate}`);
@@ -63,7 +74,26 @@ const CustomCalendar = ({ value = new Date(), onChange }) => {
 
 // İlk render ve tarih değişiminde etkinlikleri kontrol et
 useEffect(() => {
+  // Dışarıdan gelen events her değiştiğinde güncelle
+  if (externalEvents && Array.isArray(externalEvents)) {
+    setEvents(externalEvents);
+  }
+}, [externalEvents]);
+
+// Ebeveyn value değiştiğinde senkronize et
+useEffect(() => {
+  if (value instanceof Date && !isNaN(value)) {
+    // Gün bazında karşılaştırma; aynı günse state güncellemeyelim
+    if (!isSameDay(currentDate, value)) {
+      setCurrentDate(value);
+    }
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [value]);
+
+useEffect(() => {
   updateEventsForMonth(currentDate, lastFetchedDateRef, fetchEvents);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [currentDate]);
 
 // const updateEventsForMonth = (date) => {
@@ -89,6 +119,26 @@ useEffect(() => {
     }
   };
 
+  // Ay navigasyonu (react-calendar içi oklar veya swipe) yakalamak için
+  const handleActiveStartDateChange = ({ activeStartDate, view }) => {
+    if (view === 'month' && activeStartDate instanceof Date) {
+      const y = activeStartDate.getFullYear();
+      const m = activeStartDate.getMonth();
+      const last = lastActiveMonthRef.current;
+      // Sadece yıl/ay değiştiyse işlem yap
+      if (last.y !== y || last.m !== m) {
+        lastActiveMonthRef.current = { y, m };
+        if (typeof onMonthChange === 'function') {
+          onMonthChange(activeStartDate);
+        }
+        // Ay başlangıcını seçili tarih olarak atarken gün bazında gereksiz güncellemeyi önle
+        if (!isSameDay(currentDate, activeStartDate)) {
+          setCurrentDate(activeStartDate);
+        }
+      }
+    }
+  };
+
   const tileClassName = ({ date, view }) => {
     if (view === 'month') {
       const today = new Date();
@@ -103,19 +153,15 @@ useEffect(() => {
       }
 
       // Etkinlik günlerini özel stil ile göster
-      const hasEvent = events.some(event => {
-        const eventDate = new Date(event.startDate);
-        return (
-          eventDate instanceof Date &&
-          date.getFullYear() === eventDate.getFullYear() &&
-          date.getMonth() === eventDate.getMonth() &&
-          date.getDate() === eventDate.getDate()
-        );
-      });
-
-      if (hasEvent) {
-        return 'eventDay';
-      }
+  // Gün içinde etkinlik var mı? Sadece noktayı göstereceğiz, sınıf döndürmeyeceğiz
+  // const hasEvent = events.some(event => {
+  //   const start = new Date(event.startDate);
+  //   const end = event.endDate ? new Date(event.endDate) : start;
+  //   const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  //   return d >= new Date(start.getFullYear(), start.getMonth(), start.getDate()) &&
+  //          d <= new Date(end.getFullYear(), end.getMonth(), end.getDate());
+  // });
+  // if (hasEvent) return 'eventDay';
     }
   };
 
@@ -134,13 +180,11 @@ useEffect(() => {
       // Seçili tarih için etkinlikleri kontrol et
       const etkinlik = events.find(event => {
         if (!event.startDate) return false; // startDate yoksa kontrolü atla
-        const eventDate = new Date(event.startDate); // startDate'i Date nesnesine dönüştür
-        return (
-          eventDate instanceof Date && // eventDate'in geçerli bir Date olduğundan emin olun
-          date.getFullYear() === eventDate.getFullYear() &&
-          date.getMonth() === eventDate.getMonth() &&
-          date.getDate() === eventDate.getDate()
-        );
+        const start = new Date(event.startDate);
+        const end = event.endDate ? new Date(event.endDate) : start;
+        const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        return d >= new Date(start.getFullYear(), start.getMonth(), start.getDate()) &&
+               d <= new Date(end.getFullYear(), end.getMonth(), end.getDate());
       });
 
       if (etkinlik) {
@@ -173,6 +217,7 @@ useEffect(() => {
         onChange={handleDateChange} // Tarih değişikliklerini yönetir
         tileClassName={tileClassName}
         tileContent={tileContent}
+        onActiveStartDateChange={handleActiveStartDateChange}
         locale='tr-TR'
       />
       <Popper open={open} anchorEl={anchorEl} placement="top">

@@ -1,8 +1,18 @@
 // components/DailyView.js
 import React from 'react';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Tooltip } from '@mui/material';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
+const typeColorMap = {
+  meeting: { bg: '#E3F2FD', text: '#0D47A1', border: '#90CAF9' },
+  webinar: { bg: '#E8F5E9', text: '#1B5E20', border: '#A5D6A7' },
+  training: { bg: '#FFF8E1', text: '#E65100', border: '#FFE082' },
+  workshop: { bg: '#F3E5F5', text: '#4A148C', border: '#CE93D8' },
+  conference: { bg: '#E0F7FA', text: '#006064', border: '#80DEEA' },
+  default: { bg: '#ECEFF1', text: '#263238', border: '#CFD8DC' },
+};
+const getTypeColors = (type) => typeColorMap[type] || typeColorMap.default;
+
 
 const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 
@@ -53,30 +63,35 @@ const DailyView = ({ selectedDate, events = [] }) => {
           {filteredEvents.map((event) => {
             const eventStart = dayjs(event.startDate);
             const startHour = eventStart.hour(); // 0-23
+            const colors = getTypeColors(event.eventType);
+            const tooltip = `${event.title}${event.spot ? ' — ' + event.spot : ''}`;
             // Başlangıç dakikasını da hesaba katmak isterseniz: const startMinute = eventStart.minute();
             // Örnek: top: startHour * 60 + startMinute
 
             return (
-              <Box
-                key={event._id}
-                onClick={() => handleClick(event._id)}
-                sx={{
-                  position: 'absolute',
-                  top: startHour * 60, // 1 saat = 60px
-                  left: 0,
-                  right: 0,
-                  bgcolor: 'purple',
-                  color: 'white',
-                  padding: 1,
-                  borderRadius: 1,
-                  margin: '5px 0',
-                  fontSize: 12
-                  
-                  // height: 20, // Sadece bir satır görünmesini isterseniz sabit küçük bir yükseklik verebilirsiniz
-                }}
-              >
-                {event.title}
-              </Box>
+              <Tooltip key={event._id} title={tooltip} arrow>
+                <Box
+                  onClick={() => handleClick(event._id)}
+                  sx={{
+                    position: 'absolute',
+                    top: startHour * 60, // 1 saat = 60px
+                    left: 0,
+                    right: 0,
+                    bgcolor: colors.bg,
+                    color: colors.text,
+                    border: `1px solid ${colors.border}`,
+                    padding: 1,
+                    borderRadius: 1,
+                    margin: '5px 0',
+                    fontSize: 12,
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {event.title}
+                </Box>
+              </Tooltip>
             );
           })}
         </Box>
