@@ -21,6 +21,7 @@ import ExtensionIcon from '@mui/icons-material/Extension';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import QuickAccessMenu from '../QuickAccessMenu';
+import UpcomingEvents from '../calendar/UpcomingEvents';
 
 const DynamicCalendar = dynamic(
   () => import('../calendar'), // Takvim bileşeninizin yolu
@@ -80,6 +81,9 @@ function Layout({ children , LeftSide , RigthSide}) {
             <Box mb={1}>
               <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/takvim'} />
               <DynamicCalendar />
+              <Box sx={{ mt: 1 }}>
+                <UpcomingEvents limit={10} />
+              </Box>
             </Box>
 
           </div>
