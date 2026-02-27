@@ -1,24 +1,118 @@
-// components/Campaign.js
-
-import React, { useContext } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Dialog,
+  DialogContent,
+  IconButton
+} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
 import { CampaignContext } from './CampaignContext';
 
+const getCampaignPages = (campaign) => {
+  if (Array.isArray(campaign?.targetPages) && campaign.targetPages.length > 0) {
+    return campaign.targetPages;
+  }
+
+  const fallback = [];
+  if (campaign?.displayOnHome) fallback.push('home');
+  if (campaign?.displayOnDetail) fallback.push('detail');
+  return fallback;
+};
+
+const shouldDisplayOnPage = (campaign, pageType) => {
+  const pages = getCampaignPages(campaign);
+  if (!pages.length) return false;
+  if (pages.includes('all')) return true;
+  return pages.includes(pageType);
+};
+
+const canShowPopup = (campaign) => {
+  if (typeof window === 'undefined') return false;
+  const frequency = campaign?.popupFrequency || 'every_login';
+  const key = `campaign_popup_${campaign._id}`;
+
+  if (frequency === 'every_login') {
+    return sessionStorage.getItem(key) !== 'shown';
+  }
+
+  if (frequency === 'daily') {
+    const lastShownAt = Number(localStorage.getItem(key) || 0);
+    const oneDayMs = 24 * 60 * 60 * 1000;
+    return !lastShownAt || Date.now() - lastShownAt >= oneDayMs;
+  }
+
+  if (frequency === 'once') {
+    return localStorage.getItem(key) !== 'shown';
+  }
+
+  return true;
+};
+
+const markPopupAsShown = (campaign) => {
+  if (typeof window === 'undefined') return;
+  const frequency = campaign?.popupFrequency || 'every_login';
+  const key = `campaign_popup_${campaign._id}`;
+
+  if (frequency === 'every_login') {
+    sessionStorage.setItem(key, 'shown');
+    return;
+  }
+
+  if (frequency === 'daily') {
+    localStorage.setItem(key, String(Date.now()));
+    return;
+  }
+
+  if (frequency === 'once') {
+    localStorage.setItem(key, 'shown');
+  }
+};
+
 function Campaign({
   displayOnHome = false,
   displayOnDetail = false,
-  layoutType = 'horizontal', // 'horizontal' or 'square'
+  pageType = 'all',
+  placement = 'banner',
+  layoutType = 'horizontal'
 }) {
   const { campaigns, loading, error } = useContext(CampaignContext);
+  const [activePopup, setActivePopup] = useState(null);
 
-  // Filter campaigns based on props
-  const filteredCampaigns = campaigns.filter((campaign) => {
-    if (displayOnHome && !campaign.displayOnHome) return false;
-    if (displayOnDetail && !campaign.displayOnDetail) return false;
-    return true;
-  });
+  const normalizedPageType = useMemo(() => {
+    if (displayOnHome) return 'home';
+    if (displayOnDetail) return 'detail';
+    return pageType;
+  }, [displayOnHome, displayOnDetail, pageType]);
+
+  const filteredCampaigns = useMemo(() => {
+    return (campaigns || []).filter((campaign) => {
+      if (!campaign?.isActive) return false;
+      if (!shouldDisplayOnPage(campaign, normalizedPageType)) return false;
+      if ((campaign?.placement || 'banner') !== placement) return false;
+      return true;
+    });
+  }, [campaigns, normalizedPageType, placement]);
+
+  useEffect(() => {
+    if (placement !== 'popup') return;
+    const popupCandidate = filteredCampaigns.find((campaign) => canShowPopup(campaign));
+    if (popupCandidate) {
+      setActivePopup(popupCandidate);
+    } else {
+      setActivePopup(null);
+    }
+  }, [filteredCampaigns, placement]);
+
+  const handlePopupClose = () => {
+    if (activePopup) {
+      markPopupAsShown(activePopup);
+    }
+    setActivePopup(null);
+  };
 
   if (loading) {
     return (
@@ -29,7 +123,7 @@ function Campaign({
           alignItems: 'center',
           width: '100%',
           height: '100%',
-          padding: 2,
+          padding: 2
         }}
       >
         <CircularProgress />
@@ -45,23 +139,77 @@ function Campaign({
     );
   }
 
-  if (filteredCampaigns.length === 0) {
-    return null; // Do not render anything if no campaigns match the criteria
+  if (!filteredCampaigns.length) {
+    return null;
+  }
+
+  if (placement === 'popup') {
+    if (!activePopup) return null;
+    const popupMedia = activePopup.squareMedia?.url
+      ? activePopup.squareMedia
+      : activePopup.horizontalMedia;
+
+    if (!popupMedia?.url) return null;
+
+    const isImage = popupMedia.mediaType === 'image';
+
+    return (
+      <Dialog open onClose={handlePopupClose} maxWidth="md" fullWidth>
+        <DialogContent sx={{ p: 1, position: 'relative' }}>
+          <IconButton
+            onClick={handlePopupClose}
+            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, bgcolor: 'rgba(255,255,255,.8)' }}
+          >
+            <CloseIcon />
+          </IconButton>
+          {activePopup.link ? (
+            <a href={activePopup.link} target="_blank" rel="noopener noreferrer">
+              {isImage ? (
+                <Box sx={{ position: 'relative', width: '100%', height: { xs: 240, sm: 420 } }}>
+                  <Image
+                    src={popupMedia.url}
+                    alt={activePopup.title}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    sizes="100vw"
+                  />
+                </Box>
+              ) : (
+                <iframe
+                  src={popupMedia.url}
+                  title={activePopup.title}
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                  style={{ width: '100%', height: 420, border: 'none' }}
+                />
+              )}
+            </a>
+          ) : isImage ? (
+            <Box sx={{ position: 'relative', width: '100%', height: { xs: 240, sm: 420 } }}>
+              <Image src={popupMedia.url} alt={activePopup.title} fill style={{ objectFit: 'contain' }} sizes="100vw" />
+            </Box>
+          ) : (
+            <iframe
+              src={popupMedia.url}
+              title={activePopup.title}
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+              style={{ width: '100%', height: 420, border: 'none' }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+    );
   }
 
   return (
     <>
       {filteredCampaigns.map((campaign) => {
-        // Select media based on layoutType
         const media = layoutType === 'horizontal' ? campaign.horizontalMedia : campaign.squareMedia;
 
-        if (!media || !media.url) return null; // Skip if media is missing
+        if (!media || !media.url) return null;
 
         const isImage = media.mediaType === 'image';
-
-        // Dynamically set the sizes attribute based on layoutType
-        const imageSizes =
-          layoutType === 'horizontal' ? '100vw' : '100vw'; // Both layouts use full width
 
         return (
           <Box key={campaign._id} sx={{ mb: 2, width: '100%' }}>
@@ -73,12 +221,9 @@ function Campaign({
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '100%',
-                // Use padding-top to maintain aspect ratio
-                // For horizontal: approximate 4:1 aspect ratio
-                // For square: 1:1 aspect ratio
                 paddingTop: layoutType === 'horizontal' ? '25%' : '100%',
                 overflow: 'hidden',
-                borderRadius: 1,
+                borderRadius: 1
               }}
             >
               {campaign.link ? (
@@ -92,9 +237,9 @@ function Campaign({
                     <Image
                       src={media.url}
                       alt={campaign.title}
-                      layout="fill"
-                      objectFit={layoutType === 'horizontal' ? 'contain' : 'fill'}
-                      sizes={imageSizes}
+                      fill
+                      style={{ objectFit: layoutType === 'horizontal' ? 'contain' : 'fill' }}
+                      sizes="100vw"
                     />
                   ) : (
                     <iframe
@@ -110,9 +255,9 @@ function Campaign({
                 <Image
                   src={media.url}
                   alt={campaign.title}
-                  layout="fill"
-                  objectFit={layoutType === 'horizontal' ? 'contain' : 'fill'}
-                  sizes={imageSizes}
+                  fill
+                  style={{ objectFit: layoutType === 'horizontal' ? 'contain' : 'fill' }}
+                  sizes="100vw"
                 />
               ) : (
                 <iframe
@@ -134,7 +279,9 @@ function Campaign({
 Campaign.propTypes = {
   displayOnHome: PropTypes.bool,
   displayOnDetail: PropTypes.bool,
-  layoutType: PropTypes.oneOf(['horizontal', 'square']),
+  pageType: PropTypes.oneOf(['home', 'all', 'detail']),
+  placement: PropTypes.oneOf(['popup', 'banner', 'footer', 'left_menu']),
+  layoutType: PropTypes.oneOf(['horizontal', 'square'])
 };
 
 export default Campaign;

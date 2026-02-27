@@ -51,9 +51,6 @@ function HomePage() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [slides, setSlides] = useState([]); // Slider verisi için state
 
-  const [horizontalCampaigns, setHorizontalCampaigns] = useState([]);
-  const [squareCampaigns, setSquareCampaigns] = useState([]);
-
   useEffect(() => {
     // İstemci tarafında veri çekme
     const fetchSlides = async () => {
@@ -69,27 +66,6 @@ function HomePage() {
         console.error('Veri çekme hatası:', error.message);
       }
     };
-    const fetchCampaigns = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns/active`);
-        if (!response.ok) throw new Error('Kampanyalar yüklenemedi');
-        const data = await response.json();
-        console.log('Kampanyalar:', data);
-        // `displayOnHome` ve `isActive` koşullarını filtreleyin
-        const filteredCampaigns = data.filter(
-          (campaign) => campaign.displayOnHome && campaign.isActive
-        );
-        console.log('Filtrelenmiş kampanyalar:', filteredCampaigns);
-        // Yatay ve kare kampanyaları ayırın
-        setHorizontalCampaigns(filteredCampaigns.filter((campaign) => campaign.horizontalMedia));
-        setSquareCampaigns(filteredCampaigns.filter((campaign) => campaign.squareMedia));
-        console.log('Kampanyalar:', squareCampaigns, horizontalCampaigns);
-      } catch (error) {
-        console.error('Kampanyalar alınırken hata oluştu:', error);
-      }
-    };
-
-    fetchCampaigns();
     fetchSlides(); // Veri çekme işlemini başlat
 
   }, []); // Component mount olduğunda çalışır
@@ -100,7 +76,8 @@ function HomePage() {
       <TopMenu />
       <Grid container spacing={1}>
         <Grid item xs={12} >
-        <Campaign displayOnHome layoutType="horizontal" />
+        <Campaign pageType="home" placement="banner" layoutType="horizontal" />
+        <Campaign pageType="home" placement="popup" />
         </Grid>
        
         <Grid item xs={12} sm={9} order={isMobile ? 1 : 2} sx={{ px: 1 }}>
@@ -137,7 +114,7 @@ function HomePage() {
         <Grid item xs={12} sm={3} order={isMobile ? 3 : 3} sx={{paddingTop:"1px"}}>
           <div style={{ backgroundColor: 'inherit', padding: '4px' }}>
          {/* Kare Kampanyalar */}
-         <Campaign displayOnHome layoutType="square" />
+         <Campaign pageType="home" placement="left_menu" layoutType="square" />
             <Box mb={1}>
               <TitleComponent icon={<CalendarMonthIcon />} title={'Etkinlikler'} link={'/takvim'} />
               <DynamicCalendar />
@@ -166,6 +143,9 @@ function HomePage() {
         <VideoCarousel />
         </Grid>
       </Grid>
+      <Box sx={{ px: 2 }}>
+        <Campaign pageType="home" placement="footer" layoutType="horizontal" />
+      </Box>
       <Chambers />
       <Footer />
     </>

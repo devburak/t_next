@@ -40,7 +40,7 @@ export default function KategoriYayinlari({ kategori, page, limit, data }) {
   }
 
   const handlePageChange = (event, value) => {
-    router.push(`/yayinlar/${kategori}?page=${value}`);
+    router.push(`/yayin-turu/${kategori}?page=${value}`);
   };
 
   return (

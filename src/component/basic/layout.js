@@ -42,6 +42,9 @@ function Layout({ children , LeftSide , RigthSide}) {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={3} order={isMobile ? 2 : 1} sx={{ pl: 2 }}>{LeftSide ? LeftSide :
           <div style={{ padding: '8px', position: 'sticky', top: 0, zIndex: 1000 }}>
+            <Box sx={{ mb: 2 }}>
+              <Campaign pageType="detail" placement="left_menu" layoutType="square" />
+            </Box>
             <Grid container>
               <Grid item xs={12} sx={{ marginLeft: 1, marginRight: 1, marginTop: 0, marginBottom: 0 }}>
                 <TitleComponent icon={<CampaignIcon />} title={'Basın Açıklamaları'} link={'/kategori/basin-aciklamalari'} />
@@ -73,7 +76,7 @@ function Layout({ children , LeftSide , RigthSide}) {
          
           <div style={{ backgroundColor: 'inherit' }}>
             <Box sx={{m:2 , p:'4px'}}>
-            <Campaign displayOnDetail layoutType="square" />
+            <Campaign pageType="detail" placement="banner" layoutType="square" />
             </Box>
             <Box sx={{m:1}}>
             <QuickAccessMenu />
@@ -96,6 +99,10 @@ function Layout({ children , LeftSide , RigthSide}) {
           }
         </Grid>
       </Grid>
+      <Campaign pageType="detail" placement="popup" />
+      <Box sx={{ px: 2 }}>
+        <Campaign pageType="detail" placement="footer" layoutType="horizontal" />
+      </Box>
       <Chambers />
       <Footer />
     </div>

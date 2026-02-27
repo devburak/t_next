@@ -15,13 +15,7 @@ export const CampaignProvider = ({ children }) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/campaigns/active`);
         if (!response.ok) throw new Error('Failed to fetch campaigns');
         const data = await response.json();
-
-        // Filter campaigns that are active and should be displayed on home or detail pages
-        const filteredCampaigns = data.filter(
-          (campaign) => campaign.isActive && (campaign.displayOnHome || campaign.displayOnDetail)
-        );
-
-        setCampaigns(filteredCampaigns);
+        setCampaigns(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error fetching campaigns:', err);
         setError(err.message);
