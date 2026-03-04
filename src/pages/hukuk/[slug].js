@@ -1,32 +1,104 @@
-import Layout from '../../component/basic/layout'
-import { serialize } from '../../component/LX/NewRichTextParser'; 
+import ContentPageRenderer from '../../component/basic/ContentPageRenderer';
+import SectionCategoryListPage from '../../component/basic/SectionCategoryListPage';
+import {
+  fetchSectionCategoryPayload,
+  shouldResolveSectionCategory,
+} from '../../lib/sectionRouting';
 
-function IcerikPage({ htmlContent,data }) {
+const apiBaseUrl = process.env.API_BASE_URL;
+const SECTION = 'hukuk';
+
+function HukukContentPage({
+  pageType = 'content',
+  htmlContent,
+  data,
+  slug = '',
+  category = {},
+  initialContents = [],
+  initialTotalPages = 1,
+}) {
+  if (pageType === 'category') {
+    return (
+      <SectionCategoryListPage
+        section={SECTION}
+        slug={slug}
+        category={category}
+        initialContents={initialContents}
+        initialTotalPages={initialTotalPages}
+      />
+    );
+  }
+
   return (
-    <Layout>
-      <h1>{data.title}</h1>
-      {data.images[0] && data.images[0].fileUrl && (
-        <img src={data.images[0].fileUrl} alt={data.title} style={{ maxWidth: '100%' }} />
-      )}
-      <div>
-        {htmlContent.map((htmlContentItem, index) => (
-          <div key={index} dangerouslySetInnerHTML={{ __html: htmlContentItem }} />
-        ))}
-      </div>
-    </Layout>
+    <ContentPageRenderer
+      htmlContent={htmlContent}
+      data={data}
+      canonicalPath={data?.slug ? `/hukuk/${data.slug}` : ''}
+      showPublishDate={false}
+    />
   );
 }
-const apiBaseUrl = process.env.API_BASE_URL;
-export async function getServerSideProps(context) {
-  // API'den veri çekme
-  const res = await fetch(`${apiBaseUrl}/content/slug/${context.params.slug}`);
-  const data = await res.json();
 
-  // `data.root.children`'ı serialize fonksiyonu ile işleme
-  const htmlContent = serialize(data.root.children);
-  
-  // HTML içeriğini props olarak döndürme
-  return { props: { htmlContent ,data } };
+export async function getServerSideProps({ params, query }) {
+  try {
+    const slug = String(params?.slug || '').trim();
+
+    if (!slug) {
+      return {
+        notFound: true,
+      };
+    }
+
+    if (shouldResolveSectionCategory(SECTION, slug)) {
+      const categoryPayload = await fetchSectionCategoryPayload({
+        apiBaseUrl,
+        section: SECTION,
+        slug,
+        query,
+      });
+
+      if (categoryPayload?.category?._id) {
+        return {
+          props: {
+            pageType: 'category',
+            slug,
+            category: categoryPayload.category || {},
+            initialContents: categoryPayload.contents || [],
+            initialTotalPages: categoryPayload.totalPages || 1,
+          },
+        };
+      }
+    }
+
+    const res = await fetch(`${apiBaseUrl}/contents/slug/${slug}`);
+    if (!res.ok) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const data = await res.json();
+    const htmlContent = data?.bodyHtml || '';
+
+    return {
+      props: {
+        htmlContent,
+        data,
+      },
+    };
+  } catch (error) {
+    console.error('Hukuk content fetch error:', error);
+    return {
+      notFound: true,
+    };
+  }
 }
 
-export default IcerikPage;
+export default HukukContentPage;

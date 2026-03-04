@@ -1,24 +1,13 @@
-import Layout from '../../component/basic/layout';  // Layout bileşeninin yolu
-import { Typography, Box } from '@mui/material';  
+import ContentPageRenderer from '../../component/basic/ContentPageRenderer';
 
 function DynamicContentPage({ htmlContent, data }) {
   return (
-    <Layout>
-      <h1>{data.title}</h1>
-      {data.featuredMedia && data.featuredMedia.url && (
-        <img src={data.featuredMedia.url} alt={data.title} style={{ maxWidth: '100%' }} />
-      )}
-       {/* Spot (Kalın Metin) */}
-       {data.spot && (
-        <Typography variant="h6" component="p" sx={{ fontWeight: 'bold', marginBottom: '20px' }}>
-          {data.spot}
-        </Typography>
-      )}
-
-      <div>
-        <div key={data.title} dangerouslySetInnerHTML={{ __html: htmlContent }} />
-      </div>
-    </Layout>
+    <ContentPageRenderer
+      htmlContent={htmlContent}
+      data={data}
+      canonicalPath={data?.slug ? `/sayfa/${data.slug}` : ''}
+      showPublishDate={false}
+    />
   );
 }
 

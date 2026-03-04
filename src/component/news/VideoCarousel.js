@@ -73,7 +73,7 @@ export default function VideoCarousel({ limit = 3 }) {
         
 
               {videoData.map((video) => (
-                  <Box key={video._id} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Box key={video._id} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                       <VideoCard
                           image={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
                           title={video.title}

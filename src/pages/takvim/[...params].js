@@ -72,52 +72,71 @@ const CalendarPage = ({ initialEvents, initialView, initialSelectedDate }) => {
     <div>
       <Header />
       <TopMenu />
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        {/* Sabit Navigasyon Bölümü */}
+      <Box className="site-shell site-shell--content">
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 2,
-            borderBottom: '1px solid #ddd',
-            bgcolor: 'white',
-            zIndex: 2,
+            flexDirection: 'column',
+            minHeight: { xs: 'auto', md: 'calc(100vh - 220px)' },
+            overflow: 'hidden',
+            border: '1px solid #d6dde7',
+            borderRadius: '20px',
+            bgcolor: '#fff',
+            boxShadow: '0 18px 42px rgba(15, 23, 42, 0.08)',
           }}
         >
-          <Button variant="outlined" onClick={handleToday}>
-            Bugün
-          </Button>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button onClick={() => handleNavigate(-1)}>{'<'}</Button>
-            <Typography variant="h5">{currentDate.format('MMMM YYYY')}</Typography>
-            <Button onClick={() => handleNavigate(1)}>{'>'}</Button>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: { xs: 'stretch', sm: 'center' },
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2,
+              p: { xs: 2, md: 3 },
+              borderBottom: '1px solid #ddd',
+              bgcolor: 'white',
+              zIndex: 2,
+            }}
+          >
+            <Button variant="outlined" onClick={handleToday}>
+              Bugün
+            </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: { xs: 'space-between', sm: 'center' }, gap: 2 }}>
+              <Button onClick={() => handleNavigate(-1)}>{'<'}</Button>
+              <Typography variant="h5">{currentDate.format('MMMM YYYY')}</Typography>
+              <Button onClick={() => handleNavigate(1)}>{'>'}</Button>
+            </Box>
           </Box>
-        </Box>
 
-        {/* İçerik Alanı */}
-        <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-          {/* Sol taraf - Tarih Seçici */}
-          <Box sx={{ width: '20%', padding: 2, borderRight: '1px solid #ddd', overflowY: 'auto' }}>
-            <DynamicCalendar
-              events={events}
-              value={currentDate.toDate()}
-              onChange={(date) => setCurrentDate(dayjs(date))}
-              onMonthChange={(activeStartDate) => setCurrentDate(dayjs(activeStartDate))}
-            />
-            <CalendarSubscription />
-          </Box>
+          <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden', flexDirection: { xs: 'column', md: 'row' } }}>
+            <Box
+              sx={{
+                width: { xs: '100%', md: '320px' },
+                flexShrink: 0,
+                p: { xs: 2, md: 3 },
+                borderRight: { md: '1px solid #ddd' },
+                borderBottom: { xs: '1px solid #ddd', md: 0 },
+                overflowY: 'auto',
+              }}
+            >
+              <DynamicCalendar
+                events={events}
+                value={currentDate.toDate()}
+                onChange={(date) => setCurrentDate(dayjs(date))}
+                onMonthChange={(activeStartDate) => setCurrentDate(dayjs(activeStartDate))}
+              />
+              <CalendarSubscription />
+            </Box>
 
-          {/* Sağ taraf - Takvim */}
-          <Box sx={{ width: '80%', overflow: 'auto' }}>
-            <CalendarView
-              events={events}
-              initialView={view}
-              selectedDate={currentDate}
-              setView={setView}
-              onDateChange={setCurrentDate}
-            />
-
+            <Box sx={{ flex: 1, overflow: 'auto', minWidth: 0 }}>
+              <CalendarView
+                events={events}
+                initialView={view}
+                selectedDate={currentDate}
+                setView={setView}
+                onDateChange={setCurrentDate}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>

@@ -1,7 +1,14 @@
  import ContentPageRenderer from '../../component/basic/ContentPageRenderer';
 
 function PreviewPage({ htmlContent, data }) {
-  return <ContentPageRenderer htmlContent={htmlContent} data={data} />;
+  return (
+    <ContentPageRenderer
+      htmlContent={htmlContent}
+      data={data}
+      canonicalPath={data?.slug ? `/${data.slug}` : ''}
+      metaRobots="noindex,nofollow"
+    />
+  );
 }
 
 export async function getServerSideProps(context) {
@@ -9,12 +16,6 @@ export async function getServerSideProps(context) {
   const token = context?.query?.token || '';
   const apiBaseUrl = process.env.API_BASE_URL;
 
-//   if (!token) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-console.log("url",`${apiBaseUrl}/contents/${id}`)
   try {
     const response = await fetch(`${apiBaseUrl}/contents/${id}`, {
       headers: {

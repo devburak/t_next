@@ -17,7 +17,9 @@ function ReadOnlyEditor({ htmlContent }) {
         const parser = new DOMParser();
         const dom = parser.parseFromString(htmlContent, 'text/html');
         const nodes = $generateNodesFromDOM(editor, dom);
-        $getRoot().select();
+        const root = $getRoot();
+        root.clear();
+        root.select();
         $insertNodes(nodes);
       } catch (error) {
         console.error('Error parsing HTML content for LexicalEditor:', error);

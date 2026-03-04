@@ -6,6 +6,8 @@ import ContentListItem from '../../component/ContentListItem';
 import Layout from '../../component/basic/layout';
 import PeriodComponent from '../../component/PeriodComponent';
 import Head from 'next/head';
+import { buildCanonicalUrl, buildMetaDescription } from '../../lib/seo';
+import { getCategoryDisplayName, getCategoryHeading } from '../../lib/categoryText';
 
 const CategoryPage = ({ categorySlug, initialContents, initialTotalPages, category }) => {
   const router = useRouter();
@@ -13,11 +15,12 @@ const CategoryPage = ({ categorySlug, initialContents, initialTotalPages, catego
   const [totalPages, setTotalPages] = useState(initialTotalPages); // Başlangıç değeri SSR'dan gelen değer
   const [page, setPage] = useState(parseInt(router.query.page) || 1);
   const [periodId, setPeriodId] = useState(router.query.periodId || null);
+  const categoryName = getCategoryDisplayName(category.name || categorySlug);
+  const categoryHeading = getCategoryHeading(category.name || categorySlug);
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-  const canonicalUrl = `${SITE_URL}/kategori/${categorySlug}`;
-  const description = `${category.name || categorySlug} kategorisindeki içerikleri keşfedin.`;
-  const keywords = `${category.name || categorySlug}, TMMOB, içerikler, mühendislik, mimarlık`;
+  const canonicalUrl = buildCanonicalUrl(`/kategori/${categorySlug}`);
+  const description = buildMetaDescription(`${categoryName} kategorisindeki içerikleri keşfedin.`);
+  const keywords = `${categoryName}, TMMOB, içerikler, mühendislik, mimarlık`;
 
   // Fetch içerikleri
   const fetchContents = async () => {
@@ -28,7 +31,6 @@ const CategoryPage = ({ categorySlug, initialContents, initialTotalPages, catego
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/contents/category/${categorySlug}?${queryParams}`);
       const data = await res.json();
-      console.log("data",data)
       setContents(data.contents);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -80,11 +82,11 @@ const CategoryPage = ({ categorySlug, initialContents, initialTotalPages, catego
     <Layout>
       {/* Head Meta Tags */}
       <Head>
-        <title>{category.name || categorySlug} Kategorisi | TMMOB</title>
+        <title>{categoryName} | TMMOB</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={`${category.name || categorySlug} Kategorisi`} />
+        <meta property="og:title" content={categoryName} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
@@ -96,7 +98,7 @@ const CategoryPage = ({ categorySlug, initialContents, initialTotalPages, catego
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={9}>
             <Typography variant="h4" component="h1" gutterBottom>
-              {category.name ? category.name.toUpperCase() : categorySlug.toUpperCase()} Kategorisi
+              {categoryHeading}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={3}>

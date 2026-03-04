@@ -1,5 +1,16 @@
 :root {
   --max-width: 1100px;
+  --tmmob-red: #e10702;
+  --tmmob-yellow: #fcff00;
+  --site-max-width: 1280px;
+  --site-gutter: 40px;
+  --site-gutter-mobile: 16px;
+  --site-shell-max-width: 1360px;
+  --site-surface: #f7f9fc;
+  --site-elevated: #ffffff;
+  --site-ink: #0f172a;
+  --site-border: #d6dde7;
+  --site-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
@@ -56,12 +67,26 @@ body {
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: linear-gradient(180deg, #eef2f6 0%, #f8fafc 180px, #edf2f7 100%);
+  min-height: 100vh;
+}
+
+#__next {
+  min-height: 100vh;
+}
+
+.site-shell {
+  width: min(100%, var(--site-shell-max-width));
+  margin-inline: auto;
+  padding-inline: clamp(var(--site-gutter-mobile), 4vw, var(--site-gutter));
+}
+
+.site-shell--content {
+  padding-block: 24px 32px;
+}
+
+.site-shell--section {
+  padding-block: 0 24px;
 }
 h1 {
   margin: 11px;
@@ -76,9 +101,88 @@ a {
   text-decoration: none;
 }
 
+.content-print-body a,
+.content-print-body a:visited {
+  color: var(--tmmob-red);
+  text-decoration: underline;
+  text-decoration-color: rgba(225, 7, 2, 0.35);
+  text-underline-offset: 0.12em;
+}
+
+.content-print-body a:hover,
+.content-print-body a:focus-visible {
+  text-decoration-color: currentColor;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@media (max-width: 900px) {
+  .site-shell--content {
+    padding-block: 16px 24px;
+  }
+
+  .site-shell--section {
+    padding-block: 0 16px;
+  }
+}
+
+@media print {
+  @page {
+    size: auto;
+    margin: 16mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  .content-print-root,
+  .content-print-root * {
+    visibility: visible !important;
+  }
+
+  .content-print-root {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  [data-print-exclude="true"] {
+    display: none !important;
+  }
+
+  .content-print-body {
+    overflow: visible !important;
+    padding-top: 8px !important;
+  }
+
+  .content-print-body img,
+  .content-print-featured img {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid;
+  }
+
+  .content-print-title,
+  .content-print-date,
+  .content-print-spot,
+  .content-print-featured,
+  .content-print-body {
+    page-break-inside: avoid;
   }
 }
 
@@ -90,20 +194,24 @@ a {
 }
 
 
-#carousel-container {
+#carousel-container,
+[data-carousel-container] {
   position: relative;
   max-width: 690px;
   max-height: 400px;
   margin: 0 auto;
 }
 
-#carousel-container > div {
+#carousel-container > div,
+[data-carousel-container] > div,
+[data-carousel-slides] {
   display: flex;
   width: 300%; /* Slide sayısına göre genişletin */
   transition: transform 0.5s ease;
 }
 
-#carousel-container img {
+#carousel-container img,
+[data-carousel-container] img {
   width: 100%;
   height: auto;
   object-fit: contain;
@@ -114,18 +222,23 @@ a {
 .carousel-slide-div {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-#carousel-wrapper {
+#carousel-wrapper,
+[data-carousel-root] {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 12px;
   position: relative;
   width: 100%;
   max-width: 690px;
-  margin: 0 auto;
-  /* overflow: hidden; */
+  margin: 0 auto 28px;
+  padding: 8px 0 16px;
 }
 #carousel-prev,
-#carousel-next {
+#carousel-next,
+[data-carousel-prev],
+[data-carousel-next] {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -139,11 +252,13 @@ a {
   z-index: 1000;
 }
 
-#carousel-prev {
+#carousel-prev,
+[data-carousel-prev] {
   left: 10px;
 }
 
-#carousel-next {
+#carousel-next,
+[data-carousel-next] {
   right: 10px;
 }
 
@@ -165,11 +280,15 @@ a {
   z-index: 1;
   display: block;
 }
-#carousel-dots-container {
+#carousel-dots-container,
+.carousel-dots-container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
+  margin-top: 4px;
+  position: relative;
+  z-index: 2;
 }
 
 .carousel-dot {

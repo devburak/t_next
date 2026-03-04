@@ -5,6 +5,7 @@ import Layout from '../../component/basic/layout';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import PeriodComponent from '../../component/PeriodComponent';
 import Head from 'next/head';
+import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
 
 
 const CATEGORY_SLUG = 'yonetim-kurulu';
@@ -56,9 +57,9 @@ const YonetimKuruluPage = ({ initialContent, initialPeriods, initialPeriodId }) 
   // "Geri" ile gelince, useEffect router.query.periodId'i dinliyor ve trigger ediyor!
 
   const title = content?.title || "Yönetim Kurulu";
-  const description = (content?.spot || content?.bodyHtml || "TMMOB Yönetim Kurulu üyeleri ve bilgileri.").substring(0, 150) + "...";
-  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/tmmob/yonetim-kurulu`;
-  const ogImage = "https://storage.ikon-x.com.tr/default.png";
+  const description = buildMetaDescription(content?.spot || content?.bodyHtml || "TMMOB Yönetim Kurulu üyeleri ve bilgileri.");
+  const canonicalUrl = buildCanonicalUrl('/tmmob/yonetim-kurulu');
+  const ogImage = DEFAULT_OG_IMAGE;
 
   return (
     <Layout>

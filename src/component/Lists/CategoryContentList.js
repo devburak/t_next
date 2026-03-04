@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Card, CardMedia, CardContent, Grid } from '@mui/material';
+import { Box, Typography, Card, CardContent, Grid } from '@mui/material';
 import Link from 'next/link';
+import AspectRatioMedia, { getMediaUrl } from '../basic/AspectRatioMedia';
 
 const CategoryContentList = ({ category, limit }) => {
   const [contents, setContents] = useState([]);
+  const leadContent = contents[0];
+  const leadMediaUrl = getMediaUrl(leadContent?.featuredMedia, { preferThumbnail: true }) || getMediaUrl(leadContent?.featuredMedia);
 
   useEffect(() => {
     // İstemci tarafında veri çekme
@@ -29,29 +32,30 @@ const CategoryContentList = ({ category, limit }) => {
       {contents.length > 0 && (
         <>
           {/* İlk İçerik Resimli */}
-          <Card sx={{ display: 'flex', marginBottom: 2 }}>
-            <Grid container>
+          <Card sx={{ display: 'flex', marginBottom: 2, overflow: 'hidden' }}>
+            <Grid container alignItems="stretch">
             
-              {contents[0].featuredMedia && (
+              {leadMediaUrl && (
                 <Grid item xs={12} sm={4}>
-                  <CardMedia
-                    component="img"
-                    sx={{ width: '100%', height: '100%', objectFit: 'cover',  maxHeight:80 }}
-                    image={
-                      contents[0].featuredMedia.thumbnails && contents[0].featuredMedia.thumbnails[0]
-                        ? contents[0].featuredMedia.thumbnails[0]
-                        : contents[0].featuredMedia.url
-                    }
-                    alt={contents[0].title}
+                  <AspectRatioMedia
+                    src={leadMediaUrl}
+                    alt={leadContent.title}
+                    sizes="(max-width: 600px) 100vw, 33vw"
+                    sx={{
+                      minHeight: {
+                        xs: 200,
+                        sm: 140,
+                      },
+                    }}
                   />
                 </Grid>
               )}
           
-              <Grid item xs={12} sm={8}>
+              <Grid item xs={12} sm={leadMediaUrl ? 8 : 12}>
                 <CardContent>
-                  <Link href={`/${contents[0].slug}`} passHref>
+                  <Link href={`/${leadContent.slug}`} passHref>
                     <Typography variant="h6"  sx={{ textDecoration: 'none', color: 'inherit', fontSize:12, fontWeight:600}}>
-                      {contents[0].title}
+                      {leadContent.title}
                     </Typography>
                   </Link>
                   {/* Diğer İçerikler Başlık Olarak */}

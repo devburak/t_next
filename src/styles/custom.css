@@ -1,118 +1,412 @@
 /* TopMenu bileşeni için stil tanımları */
 .TopMenu {
-    @media (max-width: 960px) { /* 960px'ten küçük ekranlar için */
-      flex-direction: column; /* Alt alta sıralama */
-    }
+  @media (max-width: 960px) {
+    flex-direction: column;
   }
-
-  
-  
-  /* ListItemButton bileşeni için stil tanımları */
-  .TopMenu .ListItemButton {
-    @media (max-width: 960px) { /* 960px'ten küçük ekranlar için */
-      width: 100%; /* Tam genişlik */
-    }
-  }
-  
-  /* Collapse bileşeni için stil tanımları */
-  .TopMenu .Collapse {
-    @media (max-width: 960px) { /* 960px'ten küçük ekranlar için */
-      border: none; /* Kenarlık gösterme */
-    }
-  }
-
-  /* Header Background için mevcut stiller */
-.headerBackground {
-  background-color: #e20303; /* Kırmızı tonunu belirleyin */
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-left: 40px;
-  padding-right: 40px; /* Sağ tarafa da padding ekleyerek ikonların yerleşimini kolaylaştırır */
-  border-bottom: 4px solid #ffff00; /* Eklenen sarı border */
 }
-  
-/* Sosyal Medya İkonları için yeni sınıf */
+
+.TopMenu .ListItemButton {
+  @media (max-width: 960px) {
+    width: 100%;
+  }
+}
+
+.TopMenu .Collapse {
+  @media (max-width: 960px) {
+    border: none;
+  }
+}
+
+.headerBackground {
+  width: 100%;
+  background: var(--tmmob-red);
+  border-bottom: 4px solid var(--tmmob-yellow);
+  box-shadow: 0 10px 24px rgba(114, 13, 13, 0.18);
+}
+
+.headerShell {
+  min-height: 124px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  padding-block: 10px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 90px;
+}
+
+.logoButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: auto;
+  height: 90px;
+  max-width: min(100%, 366px);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.logoButton > span {
+  display: flex !important;
+  align-items: center !important;
+  width: auto !important;
+  height: 90px !important;
+}
+
+.logoButton img {
+  width: auto;
+  height: 90px;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.logoButton:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
 .socialIcons {
   color: #fff;
-  margin-left: auto; /* Sosyal ikonları sağ tarafa iter */
   display: flex;
-  gap: 4px; /* İkonlar arasında boşluk bırakır */
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+  padding-block: 20px;
 }
-  /* styles.css */
+
+.socialIcons .MuiIconButton-root {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.12);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.socialIcons .MuiIconButton-root:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 900px) {
+  .headerShell {
+    min-height: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding-block: 14px 16px;
+  }
+
+  .logo {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .logoButton {
+    justify-content: center;
+    margin-inline: auto;
+  }
+
+  .socialIcons {
+    justify-content: center;
+    margin-left: 0;
+    width: 100%;
+    padding-block: 0;
+  }
+}
+
+.topMenuBackground {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid #d7dee7;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+.topMenuShell {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.topMenuShell--mobile {
+  min-height: 56px;
+}
+
+.topMenuItems {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.topMenuSearch {
+  width: min(100%, 320px);
+  min-width: 240px;
+  flex: 0 0 auto;
+}
+
+.topMenuSearch--mobile {
+  width: 100%;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .img-hover-grow {
-    transition: transform 0.3s ease-in-out; /* Animasyon süresi ve geçiş efekti */
-  }
-  
-  .img-hover-grow:hover {
-    transform: scale(1.4); /* Büyütme oranı */
+  transition: transform 0.3s ease-in-out;
+}
+
+.img-hover-grow:hover {
+  transform: scale(1.4);
+}
+
+.todayStyle {
+  border: 2px solid #1976d2;
+  border-radius: 35%;
+}
+
+.eventDay {
+  background-color: #1976d2 !important;
+  color: #fff !important;
+}
+
+.customCalendar .react-calendar {
+  border: none;
+  font-family: sans-serif;
+}
+
+.customCalendar .react-calendar__navigation {
+  background-color: #1976d2;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.customCalendar .react-calendar__navigation button {
+  color: white;
+  min-width: 44px;
+  background: none;
+  font-size: 16px;
+}
+
+.customCalendar .react-calendar__month-view__weekdays {
+  text-align: center;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.customCalendar .react-calendar__tile {
+  max-width: 100%;
+  color: #424242;
+  font-size: 14px;
+}
+
+.customCalendar .react-calendar__tile:enabled:hover,
+.customCalendar .react-calendar__tile:enabled:focus {
+  background-color: #e3f2fd;
+}
+
+.customCalendar .react-calendar__tile--active {
+  background-color: #1976d2;
+  color: white;
+}
+
+.customCalendar .react-calendar__tile--active:enabled:hover,
+.customCalendar .react-calendar__tile--active:enabled:focus {
+  background-color: #1565c0;
+}
+
+.chambersSection {
+  position: relative;
+  z-index: 4;
+  margin-top: 4px;
+  padding-block: 14px 18px;
+}
+
+.chambersRail {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-top: -42px;
+  padding-top: 78px;
+  padding-bottom: 12px;
+}
+
+.chambersRail::-webkit-scrollbar {
+  height: 8px;
+}
+
+.chambersRail::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.18);
+  border-radius: 999px;
+}
+
+.chambersTrack {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  min-width: max-content;
+  margin-inline: auto;
+  padding: 0 4px 10px;
+}
+
+.chambersItem {
+  flex: 0 0 auto;
+  transform: translateY(calc(var(--dock-lift, 0px) * -1)) scale(var(--dock-scale, 1));
+  transform-origin: center bottom;
+  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 180ms ease;
+  filter: saturate(calc(0.9 + var(--dock-glow, 0.18))) drop-shadow(0 14px 20px rgba(15, 23, 42, 0.12));
+  will-change: transform;
+}
+
+.chambersLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 0;
+}
+
+.chambersLink::after {
+  content: none;
+}
+
+.chambersLink:focus-visible {
+  outline: 3px solid rgba(218, 16, 20, 0.45);
+  outline-offset: 4px;
+}
+
+.chambersLogo {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.chambersLogo[src*='mimarlar_logo'],
+.chambersLogo[src*='meteoroloji'],
+.chambersLogo[src*='peyzaj_logo'],
+.chambersLogo[src*='gidamo-logo'] {
+  width: 41px;
+  height: 41px;
+}
+
+.chambersLabel {
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  transform: translateX(-50%) translateY(4px);
+  min-width: max-content;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.08);
+  color: #27364a;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: var(--dock-label-opacity, 0);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.chambersItem:hover .chambersLabel,
+.chambersItem:focus-within .chambersLabel {
+  transform: translateX(-50%) translateY(0);
+}
+
+.siteFooter {
+  width: 100%;
+  background: #2b2f36;
+  color: #fff;
+}
+
+.footerShell {
+  padding-block: 20px 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+@media (max-width: 960px) {
+  .headerShell {
+    min-height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 
-  .todayStyle {
-    border: 2px solid #1976d2; /* MUI primary rengi veya tercih ettiğiniz bir renk */
-    border-radius: 35%; /* Daire şeklinde bir border için */
-  }
-  
-
-  .eventDay {
-    background-color: #1976d2 !important; /* MUI mavisinin mat tonu */
-    color: #fff !important;
+  .logo {
+    width: 100%;
   }
 
-  .customCalendar .react-calendar {
-    border: none;
-    font-family: sans-serif;
+  .logoButton {
+    max-width: min(100%, 280px);
   }
-  
-  .customCalendar .react-calendar__navigation {
-    background-color: #1976d2; /* MUI primary rengi */
-    color: white;
-    margin-bottom: 10px;
+
+  .socialIcons {
+    margin-left: 0;
+    padding-top: 0;
+    padding-bottom: 18px;
+    width: 100%;
+    justify-content: center;
   }
-  
-  .customCalendar .react-calendar__navigation button {
-    color: white;
-    min-width: 44px;
-    background: none;
-    font-size: 16px;
+
+  .topMenuShell {
+    gap: 12px;
   }
-  
-  .customCalendar .react-calendar__month-view__weekdays {
-    text-align: center;
-    color: #1976d2; /* MUI primary rengi */
-    font-weight: bold;
+
+  .topMenuSearch {
+    min-width: 0;
   }
-  
-  .customCalendar .react-calendar__tile {
-    max-width: 100%;
-    /* background: none; */
-    color: #424242; /* MUI metin rengi */
-    font-size: 14px;
+
+  .chambersRail {
+    margin-top: -28px;
+    padding-top: 58px;
+    padding-bottom: 8px;
   }
-  
-  .customCalendar .react-calendar__tile:enabled:hover,
-  .customCalendar .react-calendar__tile:enabled:focus {
-    background-color: #e3f2fd; /* MUI primary light rengi */
+
+  .chambersTrack {
+    justify-content: flex-start;
+    gap: 2px;
+    padding-top: 0;
   }
-  
-  .customCalendar .react-calendar__tile--active {
-    background-color: #1976d2; /* MUI primary rengi */
-    color: white;
+
+  .chambersLink {
+    width: auto;
+    height: auto;
   }
-  
-  .customCalendar .react-calendar__tile--active:enabled:hover,
-  .customCalendar .react-calendar__tile--active:enabled:focus {
-    background-color: #1565c0; /* MUI primary dark rengi */
+
+  .chambersLogo {
+    width: 36px;
+    height: 36px;
   }
-  @media (max-width: 960px) {
-    .socialIcons {
-      display: grid; /* Flex yerine grid kullanıyoruz */
-      grid-template-columns: repeat(2, 40px); /* 2 kolon oluşturuyoruz, ikon boyutuna göre ayarlayın */
-      grid-template-rows: repeat(2, 40px); /* 2 satır oluşturuyoruz */
-      gap: 6px; /* İkonlar arasında boşluk bırakır */
-      margin-right: 0; /* Margin'i sıfırlar */
-      margin-top: 16px; /* Logodan biraz boşluk bırakır */
-      justify-content: center; /* Grid'i ortalar */
+
+  .chambersLabel {
+    bottom: -16px;
+    font-size: 9px;
+    padding-inline: 4px;
   }
 }

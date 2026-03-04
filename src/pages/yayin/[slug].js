@@ -1,4 +1,4 @@
-// src/pages/yayin/[id].js
+// src/pages/yayin/[slug].js
 
 import React from 'react';
 import { Container, Typography, Grid, Box, Link as MuiLink, Button, Stack } from '@mui/material';
@@ -6,15 +6,18 @@ import Layout from '../../component/basic/layout';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Head from 'next/head';
+import Image from 'next/image';
+import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
 
 export default function PublicationDetailPage({ publication }) {
   if (!publication) return <Layout><Container>Bulunamadı</Container></Layout>;
 
   // SEO/OG için tanımlar
   const seoTitle = publication.title || 'Yayın Detayı | TMMOB';
-  const seoDescription = (publication.bodyText || '').substring(0, 140) + '...';
-  const seoImage = publication.coverFile?.url || 'https://storage.ikon-x.com.tr/default.png';
-  const canonicalUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/yayin/${publication._id}`;
+  const seoDescription = buildMetaDescription(publication.bodyText || publication.title);
+  const seoImage = publication.coverFile?.url || DEFAULT_OG_IMAGE;
+  const publicationPath = `/yayin/${publication.slug || publication._id}`;
+  const canonicalUrl = buildCanonicalUrl(publicationPath);
 
   return (
     <Layout>
@@ -43,9 +46,12 @@ export default function PublicationDetailPage({ publication }) {
           <Grid item xs={12} md={4}>
             {publication.coverFile?.url && (
               <Box sx={{ mb: 2, textAlign: 'center' }}>
-                <img
+                <Image
                   src={publication.coverFile.url}
                   alt={publication.title}
+                  width={640}
+                  height={900}
+                  sizes="(max-width: 900px) 100vw, 320px"
                   style={{
                     maxWidth: '100%',
                     height: 'auto',
@@ -108,11 +114,20 @@ export default function PublicationDetailPage({ publication }) {
 
 // SSR Data Fetch
 export async function getServerSideProps({ params }) {
-  const { id } = params;
+  const { slug } = params;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/publication/${id}`);
+    const lookupValue = String(slug || '').trim();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/publication/${lookupValue}`);
     if (!res.ok) return { notFound: true };
     const publication = await res.json();
+    if (publication?.slug && publication.slug !== lookupValue) {
+      return {
+        redirect: {
+          destination: `/yayin/${publication.slug}`,
+          permanent: true,
+        },
+      };
+    }
     return {
       props: { publication },
     };

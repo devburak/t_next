@@ -1,11 +1,23 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Box, Chip, Stack } from '@mui/material';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { DEFAULT_OG_IMAGE } from '../../lib/seo';
+import AspectRatioMedia from '../basic/AspectRatioMedia';
+
+const TITLE_CLAMP_SX = {
+    fontSize: 12,
+    fontWeight: 'bold',
+    lineHeight: 1.5,
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: 3,
+    overflow: 'hidden',
+    minHeight: '4.5em',
+    maxHeight: '4.5em'
+};
 
 function formattedDate(dateStr) {
     if (!dateStr) return '';
@@ -18,12 +30,12 @@ function formattedDate(dateStr) {
 }
 
 export default function PublicationCard({ publication, hideCategories = false }) {
-    const router = useRouter();
+    const publicationHref = `/yayin/${publication.slug || publication._id}`;
     const coverImage =
         publication.coverFile?.url ||
-        (publication.files && publication.files.length && publication.files[0].type.startsWith('image')
+        (publication.files && publication.files.length && String(publication.files[0]?.type || '').startsWith('image')
             ? publication.files[0].link
-            : '/no-image.png');
+            : DEFAULT_OG_IMAGE);
 
     return (
         <Card
@@ -33,24 +45,24 @@ export default function PublicationCard({ publication, hideCategories = false })
                 cursor: 'pointer',
                 display: 'flex',
                 flexDirection: 'column',
-                textDecoration: 'none'
+                textDecoration: 'none',
+                width: '100%',
+                height: '100%'
             }}
             elevation={2}
         >
-            <Link href={`/yayin/${publication._id}`} passHref legacyBehavior>
+            <Link href={publicationHref} passHref legacyBehavior>
                 <a style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Box sx={{ position: 'relative' }}>
-                        <CardMedia
-                            component="img"
-                            image={coverImage}
+                        <AspectRatioMedia
+                            src={coverImage}
                             alt={publication.title}
+                            sizes="(max-width: 600px) 100vw, 345px"
+                            objectFit="contain"
                             sx={{
-                                height: 180,
-                                width: '100%',
-                                objectFit: 'contain',
                                 backgroundColor: '#fff',
                                 borderRadius: 1,
-                                display: 'block',
+                                maxHeight: 260
                             }}
                         />
                         {/* Yayın tarihi etiketi (resim üzerinde absolute) */}
@@ -73,16 +85,15 @@ export default function PublicationCard({ publication, hideCategories = false })
                     </Box>
                 </a>
             </Link>
-            <CardContent sx={{ flexGrow: 1 }}>
+            <CardContent sx={{ flexGrow: 1, minHeight: 96, display: 'flex' }}>
                 <Stack spacing={1}>
                     {/* Yayın başlığı */}
-                    <Link href={`/yayin/${publication._id}`} passHref legacyBehavior>
+                    <Link href={publicationHref} passHref legacyBehavior>
                         <a style={{ textDecoration: 'none', color: 'inherit' }}>
                             <Typography
-                                gutterBottom
                                 variant="h6"
                                 component="div"
-                                sx={{ fontSize: 12, fontWeight: 'bold', lineHeight: '1.5' }}
+                                sx={TITLE_CLAMP_SX}
                             >
                                 {publication.title}
                             </Typography>

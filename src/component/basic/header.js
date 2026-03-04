@@ -17,39 +17,44 @@ function Header() {
 
     return (
         <div className="headerBackground">
-            {/* Logo Bölümü */}
-            <div className="logo" onClick={handleGoHome} style={{ cursor: 'pointer' }}>
-                <Image
-                    src="https://storage.ikon-x.com.tr/2024/02/tmmob.png"
-                    alt="TMMOB Logo"
-                    width={296} // Resmin orijinal genişliği
-                    height={81} // Resmin orijinal yüksekliği
-                    objectFit="contain"
-                />
-            </div>
+            <div className="site-shell headerShell">
+                <div className="logo">
+                    <button type="button" className="logoButton" onClick={handleGoHome} aria-label="Anasayfaya git">
+                        <Image
+                            src="https://storage.ikon-x.com.tr/2024/02/tmmob.png"
+                            alt="TMMOB Logo"
+                            width={366}
+                            height={90}
+                            priority
+                            quality={100}
+                            sizes="(max-width: 900px) 366px, 366px"
+                            style={{ width: 'auto', height: '90px', maxWidth: '100%' }}
+                        />
+                    </button>
+                </div>
 
-            {/* Sosyal Medya İkonları Bölümü */}
-            <div className="socialIcons">
-                <a href="https://www.facebook.com/tmmob1954/" target="_blank" rel="noopener noreferrer">
-                    <IconButton aria-label="Facebook" color="inherit" size='small'>
-                        <FacebookIcon />
-                    </IconButton>
-                </a>
-                <a href="https://x.com/tmmob1954" target="_blank" rel="noopener noreferrer">
-                    <IconButton aria-label="X" color="inherit"  size='small'>
-                        <XIcon />
-                    </IconButton>
-                </a>
-                <a href="https://www.instagram.com/tmmob1954/" target="_blank" rel="noopener noreferrer">
-                    <IconButton aria-label="Instagram" color="inherit"  size='small'>
-                        <InstagramIcon />
-                    </IconButton>
-                </a>
-                <a href="https://www.youtube.com/channel/UCcueF3RXjWfm0koMg1OnAXQ" target="_blank" rel="noopener noreferrer">
-                    <IconButton aria-label="YouTube" color="inherit" size='small'>
-                        <YouTubeIcon />
-                    </IconButton>
-                </a>
+                <div className="socialIcons">
+                    <a href="https://www.facebook.com/tmmob1954/" target="_blank" rel="noopener noreferrer">
+                        <IconButton aria-label="Facebook" color="inherit" size='small'>
+                            <FacebookIcon />
+                        </IconButton>
+                    </a>
+                    <a href="https://x.com/tmmob1954" target="_blank" rel="noopener noreferrer">
+                        <IconButton aria-label="X" color="inherit"  size='small'>
+                            <XIcon />
+                        </IconButton>
+                    </a>
+                    <a href="https://www.instagram.com/tmmob1954/" target="_blank" rel="noopener noreferrer">
+                        <IconButton aria-label="Instagram" color="inherit"  size='small'>
+                            <InstagramIcon />
+                        </IconButton>
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCcueF3RXjWfm0koMg1OnAXQ" target="_blank" rel="noopener noreferrer">
+                        <IconButton aria-label="YouTube" color="inherit" size='small'>
+                            <YouTubeIcon />
+                        </IconButton>
+                    </a>
+                </div>
             </div>
         </div>
     );

@@ -7,6 +7,70 @@ import {
 } from 'lexical';
 import Carousel from 'react-material-ui-carousel';
 
+const normalizeSlide = (slide, index) => {
+  if (typeof slide === 'string') {
+    return {
+      src: slide,
+      altText: `Slide ${index + 1}`,
+      metaText: ''
+    };
+  }
+
+  return {
+    src: slide?.src || slide?.url || '',
+    altText: slide?.altText || `Slide ${index + 1}`,
+    metaText: slide?.metaText || ''
+  };
+};
+
+const isCarouselRootElement = (domNode) => {
+  if (!domNode || typeof domNode.getAttribute !== 'function') {
+    return false;
+  }
+
+  const isWrapper =
+    domNode.hasAttribute('data-carousel-root') ||
+    domNode.id === 'carousel-wrapper';
+
+  if (isWrapper) {
+    return true;
+  }
+
+  const isContainer =
+    domNode.hasAttribute('data-carousel-container') ||
+    domNode.id === 'carousel-container';
+
+  if (!isContainer) {
+    return false;
+  }
+
+  const parentWrapper = domNode.parentElement?.closest?.('[data-carousel-root], #carousel-wrapper');
+  return !parentWrapper;
+};
+
+function convertCarouselElement(domNode) {
+  const images = Array.from(
+    domNode.querySelectorAll('.carousel-slide-div img, [data-carousel-slides] img, .field-slideshow-slide img, img')
+  )
+    .map((img, index) =>
+      normalizeSlide(
+        {
+          src: img.getAttribute('src') || '',
+          altText: img.getAttribute('alt') || `Slide ${index + 1}`,
+          metaText: ''
+        },
+        index
+      )
+    )
+    .filter((slide) => Boolean(slide.src));
+
+  if (images.length === 0) {
+    return null;
+  }
+
+  return { node: $createCarouselNode(images) };
+}
+
 // CarouselNode bileşeni
 class CarouselNode extends DecoratorNode {
   static getType() {
@@ -35,14 +99,44 @@ class CarouselNode extends DecoratorNode {
     return new CarouselNode(images);
   }
 
+  static importDOM() {
+    return {
+      div: (domNode) => {
+        if (!isCarouselRootElement(domNode)) {
+          return null;
+        }
+
+        return {
+          conversion: convertCarouselElement,
+          priority: 2
+        };
+      }
+    };
+  }
+
   /**
    * 1) exportDOM metodunu ekliyoruz.
    *    $generateHtmlFromNodes() bu metodu çağıracak ve
    *    CarouselNode'un HTML çıktısını elde edecek.
    */
   exportDOM() {
-    // Ana container <div>
+    const wrapperDiv = document.createElement('div');
+    wrapperDiv.id = 'carousel-wrapper';
+    wrapperDiv.setAttribute('data-carousel-root', 'lexical-carousel');
+    wrapperDiv.style.display = 'flex';
+    wrapperDiv.style.flexDirection = 'column';
+    wrapperDiv.style.gap = '12px';
+    wrapperDiv.style.justifyContent = 'center';
+    wrapperDiv.style.alignItems = 'center';
+    wrapperDiv.style.position = 'relative';
+    wrapperDiv.style.width = '100%';
+    wrapperDiv.style.maxWidth = '690px';
+    wrapperDiv.style.margin = '0 auto 28px';
+    wrapperDiv.style.padding = '8px 0 16px';
+
     const containerDiv = document.createElement('div');
+    containerDiv.id = 'carousel-container';
+    containerDiv.setAttribute('data-carousel-container', 'lexical-carousel');
     containerDiv.style.display = 'inline-block';
     containerDiv.style.position = 'relative';
     containerDiv.style.overflow = 'hidden';
@@ -52,36 +146,84 @@ class CarouselNode extends DecoratorNode {
     containerDiv.style.margin = '0 auto';
     containerDiv.style.verticalAlign = 'middle';
 
-    // İçerikleri tutacak alt <div>
     const innerDiv = document.createElement('div');
+    innerDiv.setAttribute('data-carousel-slides', '');
     innerDiv.style.display = 'flex';
     innerDiv.style.flexWrap = 'nowrap';
+    innerDiv.style.height = '400px';
     innerDiv.style.width = `${this.__images.length * 100}%`;
-    // Not: Material UI Carousel’in butonlarını vs. burada statik olarak oluşturmak isterseniz
-    // kendiniz ek div/button ekleyebilirsiniz. Aşağıda sadece img’leri yerleştiriyoruz.
 
-    // Her görsel için bir <div> + <img> ekleyelim
-    this.__images.forEach((src) => {
+    this.__images.forEach((slide, index) => {
+      const normalizedSlide = normalizeSlide(slide, index);
       const slideDiv = document.createElement('div');
+      slideDiv.className = 'carousel-slide-div';
       slideDiv.style.flex = '0 0 100%';
       slideDiv.style.display = 'flex';
+      slideDiv.style.flexDirection = 'column';
       slideDiv.style.justifyContent = 'center';
       slideDiv.style.alignItems = 'center';
 
       const img = document.createElement('img');
-      img.src = src;
+      img.src = normalizedSlide.src;
+      img.alt = normalizedSlide.altText;
       img.style.width = '100%';
       img.style.height = 'auto';
       img.style.objectFit = 'contain';
       slideDiv.appendChild(img);
+
+      if (normalizedSlide.metaText) {
+        const meta = document.createElement('div');
+        meta.textContent = normalizedSlide.metaText;
+        meta.style.fontSize = '12px';
+        meta.style.color = '#6b7280';
+        meta.style.marginTop = '8px';
+        slideDiv.appendChild(meta);
+      }
 
       innerDiv.appendChild(slideDiv);
     });
 
     containerDiv.appendChild(innerDiv);
 
-    // Geriye { element: containerDiv } döndürmeliyiz:
-    return { element: containerDiv };
+    const prevButton = document.createElement('button');
+    prevButton.id = 'carousel-prev';
+    prevButton.setAttribute('data-carousel-prev', '');
+    prevButton.innerHTML = '‹';
+    prevButton.style.position = 'absolute';
+    prevButton.style.top = '50%';
+    prevButton.style.left = '10px';
+    prevButton.style.transform = 'translateY(-50%)';
+    prevButton.style.background = 'rgba(0, 0, 0, 0.5)';
+    prevButton.style.color = 'white';
+    prevButton.style.border = 'none';
+    prevButton.style.borderRadius = '50%';
+    prevButton.style.width = '40px';
+    prevButton.style.height = '40px';
+    prevButton.style.cursor = 'pointer';
+    prevButton.style.zIndex = '2';
+
+    const nextButton = document.createElement('button');
+    nextButton.id = 'carousel-next';
+    nextButton.setAttribute('data-carousel-next', '');
+    nextButton.innerHTML = '›';
+    nextButton.style.position = 'absolute';
+    nextButton.style.top = '50%';
+    nextButton.style.right = '10px';
+    nextButton.style.transform = 'translateY(-50%)';
+    nextButton.style.background = 'rgba(0, 0, 0, 0.5)';
+    nextButton.style.color = 'white';
+    nextButton.style.border = 'none';
+    nextButton.style.borderRadius = '50%';
+    nextButton.style.width = '40px';
+    nextButton.style.height = '40px';
+    nextButton.style.cursor = 'pointer';
+    nextButton.style.zIndex = '2';
+
+    containerDiv.appendChild(prevButton);
+    containerDiv.appendChild(nextButton);
+    wrapperDiv.appendChild(containerDiv);
+
+    return { element: wrapperDiv };
   }
 
   createDOM() {
@@ -126,21 +268,30 @@ function MaterialUiCarousel({ images }) {
         // Material UI Carousel'de height prop'unu ayarlayabilirsiniz
         height="400px"
       >
-        {images.map((src, index) => (
-          <img
-            key={index}
-            src={src}
-            alt={`Slide ${index + 1}`}
-            style={{
-              width: '100%',
-              height: 'auto',
-              objectFit: 'contain',
-              display: 'block',
-              maxHeight: '400px',
-              margin: '0 auto',
-            }}
-          />
-        ))}
+        {images.map((slide, index) => {
+          const normalizedSlide = normalizeSlide(slide, index);
+          return (
+            <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <img
+                src={normalizedSlide.src}
+                alt={normalizedSlide.altText}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  display: 'block',
+                  maxHeight: '400px',
+                  margin: '0 auto',
+                }}
+              />
+              {normalizedSlide.metaText ? (
+                <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>
+                  {normalizedSlide.metaText}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </Carousel>
     </div>
   );

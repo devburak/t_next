@@ -1,7 +1,3 @@
-import Layout from '../component/basic/layout';  // Layout bileşeninin yolu
-import ContentContainer from '../component/ContentContainer';
-import Script from 'next/script';
-import Head from 'next/head';
 import dayjs from 'dayjs';
 import ContentPageRenderer from '../component/basic/ContentPageRenderer';
 function DynamicContentPage({ htmlContent, data, jsonContent = null }) {
@@ -10,7 +6,11 @@ function DynamicContentPage({ htmlContent, data, jsonContent = null }) {
 
   return (
 
-      <ContentPageRenderer htmlContent={htmlContent} data={data} />
+      <ContentPageRenderer
+        htmlContent={htmlContent}
+        data={data}
+        canonicalPath={data?.slug ? `/${data.slug}` : ''}
+      />
 
   );
 }

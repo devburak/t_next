@@ -7,6 +7,8 @@ import ContentListItem from '../../../component/ContentListItem';
 import Layout from '../../../component/basic/layout';
 import PeriodComponent from '../../../component/PeriodComponent';
 import Head from 'next/head';
+import { buildCanonicalUrl, buildMetaDescription } from '../../../lib/seo';
+import { getCategoryDisplayName, getCategoryHeading } from '../../../lib/categoryText';
 
 const BelgelerCategoryPage = ({ slug, initialContents, initialTotalPages, category }) => {
   const router = useRouter();
@@ -14,11 +16,12 @@ const BelgelerCategoryPage = ({ slug, initialContents, initialTotalPages, catego
   const [totalPages, setTotalPages] = useState(initialTotalPages);
   const [page, setPage] = useState(parseInt(router.query.page) || 1);
   const [periodId, setPeriodId] = useState(router.query.periodId || null);
+  const categoryName = getCategoryDisplayName(category.name || slug);
+  const categoryHeading = getCategoryHeading(category.name || slug);
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-  const canonicalUrl = `${SITE_URL}/belgeler/${slug}`;
-  const description = `${category.name || slug} kategorisindeki içerikleri keşfedin.`;
-  const keywords = `${category.name || slug}, TMMOB, içerikler, mühendislik, mimarlık`;
+  const canonicalUrl = buildCanonicalUrl(`/belgeler/liste/${slug}`);
+  const description = buildMetaDescription(`${categoryName} kategorisindeki içerikleri keşfedin.`);
+  const keywords = `${categoryName}, TMMOB, içerikler, mühendislik, mimarlık`;
 
   // İçerikleri getir
   const fetchContents = async () => {
@@ -78,11 +81,11 @@ const BelgelerCategoryPage = ({ slug, initialContents, initialTotalPages, catego
   return (
     <Layout>
       <Head>
-        <title>{category.name || slug} Belgeleri | TMMOB</title>
+        <title>{categoryName} | TMMOB</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={`${category.name || slug} Belgeleri`} />
+        <meta property="og:title" content={categoryName} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
@@ -93,7 +96,7 @@ const BelgelerCategoryPage = ({ slug, initialContents, initialTotalPages, catego
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} sm={9}>
             <Typography variant="h4" component="h1" gutterBottom>
-              {category.name ? category.name.toUpperCase() : slug.toUpperCase()} Belgeleri
+              {categoryHeading}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={3}>

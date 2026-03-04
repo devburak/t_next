@@ -4,6 +4,14 @@ import Layout from '../../component/basic/layout';  // Layout bileşeninin yolu
 // import { getEventById } from '@/api';
 import Head from 'next/head';
 import {getImageUrlFromBodyHtml} from '../../component/utils';
+import {
+  buildCanonicalUrl,
+  buildMetaDescription,
+  DEFAULT_META_DESCRIPTION,
+  DEFAULT_OG_IMAGE,
+  getSiteUrl,
+  toIsoDate,
+} from '../../lib/seo';
 
 const EventDetailPage = ({ event }) => {
   const router = useRouter();
@@ -15,16 +23,43 @@ const EventDetailPage = ({ event }) => {
 
   const imageUrl = 
   getImageUrlFromBodyHtml(event?.bodyHtml) ||  
-  'https://storage.ikon-x.com.tr/default.png';
+  DEFAULT_OG_IMAGE;
 
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tmmob.org.tr';
-  const canonicalUrl = `${SITE_URL}/etkinlik/${event._id}`;
-  const description = event?.spot || 'TMMOB, Türk Mühendis ve Mimar Odaları Birliği';
+  const canonicalUrl = buildCanonicalUrl(`/etkinlik/${event._id}`);
+  const description = buildMetaDescription(event?.spot || event?.bodyHtml, DEFAULT_META_DESCRIPTION);
   const keywords = event?.keywords?.length > 0 
   ? event.keywords.join(', ') 
-  : event?.title 
+    : event?.title 
     ? event.title.split(' ').join(', ') 
-    : 'TMMOB, etkinliker, mühendislik, mimarlık';
+    : 'TMMOB, etkinlikler, mühendislik, mimarlık';
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": event?.title || 'TMMOB Etkinliği',
+    "description": description,
+    "startDate": toIsoDate(event?.startDate),
+    "endDate": toIsoDate(event?.endDate || event?.startDate),
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": event?.location
+      ? "https://schema.org/OfflineEventAttendanceMode"
+      : "https://schema.org/OnlineEventAttendanceMode",
+    "image": [imageUrl],
+    "organizer": {
+      "@type": "Organization",
+      "name": "TMMOB",
+      "url": getSiteUrl(),
+    },
+    ...(event?.location
+      ? {
+          "location": {
+            "@type": "Place",
+            "name": event.location,
+            "address": event.location,
+          },
+        }
+      : {}),
+  };
 
   return (
     <Layout RigthSide={true}>
@@ -37,38 +72,17 @@ const EventDetailPage = ({ event }) => {
         <link rel="canonical" href={canonicalUrl} />
 
         {/* Open Graph Etiketleri */}
-        <meta property="og:type" content="article" />
+        <meta property="og:type" content="website" />
         <meta property="og:title" content={event?.title || 'TMMOB içerik'} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="article:published_time" content={event?.createdAt} />
-        <meta property="article:author" content={event?.createdBy?.name || 'TMMOB'} />
 
         {/* Yapılandırılmış Veri */}
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": event?.title || 'TMMOB içerik',
-            "description": description,
-            "image": imageUrl,
-            "author": {
-              "@type": "Person",
-              "name": event?.createdBy?.name || 'TMMOB',
-            },
-            "publisher": {
-              "@type": "Organization",
-              "name": "TMMOB",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://storage.ikon-x.com.tr/default.png",
-              }
-            },
-            "datePublished": event?.createdAt,
-            "dateModified": event?.updatedAt || event?.createdAt,
-          })}
-        </script>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
       </Head>
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
        
@@ -126,7 +140,6 @@ export async function getServerSideProps(context) {
     // Backend'den etkinlik detayını getir
     const res = await fetch(`${apiBaseUrl}/events/${id}`);
     const event = await res.json();
-    console.log(event)
     return {
       props: {
         event,

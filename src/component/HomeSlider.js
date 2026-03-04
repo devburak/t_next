@@ -1,32 +1,21 @@
 // components/HomeSlider.js
 import React from 'react';
 import Carousel from 'react-material-ui-carousel';
-import { Card, CardMedia, CardContent, Typography, Box, Grid } from '@mui/material';
+import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import Link from 'next/link';
-import { useMediaQuery } from '@mui/material';
+import AspectRatioMedia, { getMediaUrl } from './basic/AspectRatioMedia';
+import { DEFAULT_OG_IMAGE } from '../lib/seo';
 
 const HomeSlider = ({ slides = [] }) => {
 
-  const isMobile = useMediaQuery('(max-width:600px)'); // Mobil için
-  const isTablet = useMediaQuery('(min-width:601px) and (max-width:1024px)'); // Tablet için
-  const isDesktop = useMediaQuery('(min-width:1025px)'); // Bilgisayar için
-
-  const getCarouselHeight = () => {
-    if (isMobile) return '380px'; // Mobil ekran yüksekliği
-    if (isTablet) return '300px'; // Tablet ekran yüksekliği
-    if (isDesktop) return '400px'; // Bilgisayar ekran yüksekliği
-    return '380px'; // Varsayılan
-  };
-
   return (
     <Carousel
-       height={getCarouselHeight()}
       // navButtonsAlwaysVisible={true} // Kaydırma düğmelerinin her zaman görünür olmasını sağlar
       indicators={true} // Alt noktalı göstergeler
       animation="slide" // Slayt animasyonu
       duration={500} // Animasyon süresi
     >
-      {slides.map((slide) => (
+      {slides.map((slide, index) => (
         <Link href={slide.slug} passHref key={slide.title} legacyBehavior>
           <a style={{ textDecoration: 'none', color: 'inherit' }}>
             <Card sx={{
@@ -38,42 +27,36 @@ const HomeSlider = ({ slides = [] }) => {
                 sm: '720px', // Tabletlerde 720px
                 md: '100%', // Bilgisayarlarda 980px
               },
-              maxHeight: {
-                xs: '360px', // Mobilde daha küçük yükseklik
-                sm: '440px', // Tabletlerde daha büyük yükseklik
-                md: '100%', // Bilgisayarlarda orijinal yükseklik
-              },
+              overflow: 'hidden',
             }}>
-              <Grid container>
+              <Grid container alignItems="stretch">
                 {/* Resim bölümü */}
                 <Grid item xs={12} sm={6}>
-                  <CardMedia
-                    component="img"
-                    image={slide.featuredMedia.url}
-                    alt={slide.title}
-                    // sx={{ maxHeight: '380px', objectFit: 'cover' }}
-                    sx={{
-                      width: '100%', // Genişliği tamamen kaplaması
-                      height: '100%', // Yüksekliği tamamen kaplaması
-                      height: {
-                        xs: '320px', // Mobilde daha küçük yükseklik
-                        sm: '440px', // Tabletlerde daha büyük yükseklik
-                        md: '100%', // Bilgisayarlarda orijinal yükseklik
-                      }, // Mobilde daha küçük bir yükseklik
-                      objectFit: 'contain', // Resmin kırpılmasını önler
-                      objectPosition: 'center', // Görünümü ortalar
-                      maxHeight: {
-                        xs: '360px', // Mobilde daha küçük yükseklik
-                        sm: '320px', // Tabletlerde daha büyük yükseklik
-                        md: '100%', // Bilgisayarlarda orijinal yükseklik
-                      },
-                    }}
-                  />
+                  <Box sx={{ width: '100%' }}>
+                    <AspectRatioMedia
+                      src={getMediaUrl(slide?.featuredMedia) || DEFAULT_OG_IMAGE}
+                      alt={slide.title}
+                      priority={index === 0}
+                      sizes="(max-width: 600px) 100vw, 50vw"
+                      sx={{
+                        minHeight: {
+                          xs: 240,
+                          sm: 280,
+                          md: 320,
+                        },
+                      }}
+                      objectFit="contain"
+                    />
+                  </Box>
                 </Grid>
                 {/* Metin bölümü */}
                 <Grid item xs={12} sm={6}>
                   <CardContent
                     sx={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
                       padding: {
                         xs: '4px', // Mobil cihazlarda daha az padding
                         sm: '8px', // Tabletlerde orta padding

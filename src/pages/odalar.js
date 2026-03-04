@@ -11,8 +11,65 @@ import Image from "next/image";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import { useMemo } from "react";
+import SvgIcon from "@mui/material/SvgIcon";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import XIcon from "@mui/icons-material/X";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import PublicIcon from "@mui/icons-material/Public";
 import Layout from '../component/basic/layout';
+
+const SOCIAL_PLATFORM_META = {
+  facebook: { label: "Facebook", color: "#1877F2" },
+  instagram: { label: "Instagram", color: "#E4405F" },
+  x: { label: "X", color: "#111827" },
+  bluesky: { label: "Bluesky", color: "#0285FF" },
+  youtube: { label: "YouTube", color: "#FF0033" },
+  linkedin: { label: "LinkedIn", color: "#0A66C2" },
+  link: { label: "Bağlantı", color: "#64748B" },
+};
+
+function BlueskyIcon(props) {
+  return (
+    <SvgIcon viewBox="0 0 24 24" {...props}>
+      <path d="M6.335 4.5c2.364 1.11 4.124 3.084 5.665 5.102C13.541 7.584 15.301 5.61 17.665 4.5c1.704-.8 2.944.111 2.52 1.955-.59 2.57-2.13 4.491-4.624 5.763 2.05-.469 3.742-.186 5.076.85 1.194.929 1.112 2.165-.208 2.96-1.1.663-2.385.978-3.855.943-1.92-.047-3.445-.848-4.574-2.403-1.129 1.555-2.654 2.356-4.574 2.403-1.47.035-2.755-.28-3.855-.943-1.32-.795-1.402-2.031-.208-2.96 1.334-1.036 3.026-1.319 5.076-.85-2.494-1.272-4.034-3.193-4.624-5.763-.424-1.844.816-2.755 2.52-1.955Z" />
+    </SvgIcon>
+  );
+}
+
+function detectSocialPlatform(name = "", link = "") {
+  const value = `${name} ${link}`.toLowerCase();
+
+  if (value.includes("instagram")) return "instagram";
+  if (value.includes("facebook") || value.includes("fb.com")) return "facebook";
+  if (value.includes("x.com") || value.includes("twitter")) return "x";
+  if (value.includes("bsky") || value.includes("bluesky")) return "bluesky";
+  if (value.includes("youtube") || value.includes("youtu.be")) return "youtube";
+  if (value.includes("linkedin")) return "linkedin";
+
+  return "link";
+}
+
+function SocialPlatformIcon({ platform }) {
+  switch (platform) {
+    case "facebook":
+      return <FacebookIcon sx={{ fontSize: 18 }} />;
+    case "instagram":
+      return <InstagramIcon sx={{ fontSize: 18 }} />;
+    case "x":
+      return <XIcon sx={{ fontSize: 18 }} />;
+    case "bluesky":
+      return <BlueskyIcon sx={{ fontSize: 18 }} />;
+    case "youtube":
+      return <YouTubeIcon sx={{ fontSize: 18 }} />;
+    case "linkedin":
+      return <LinkedInIcon sx={{ fontSize: 18 }} />;
+    default:
+      return <PublicIcon sx={{ fontSize: 18 }} />;
+  }
+}
+
 // SSR fonksiyonu: veriyi sunucu tarafında çeker
 export async function getServerSideProps() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/chambers`);
@@ -26,15 +83,6 @@ export async function getServerSideProps() {
 }
 
 export default function OdalarPage({ chambers }) {
-  // Social medya ikonu göstermek için isteğe bağlı küçük bir yardımcı
-  const socialIcon = (name) => {
-    if (!name) return null;
-    if (name.toLowerCase().includes("facebook")) return "🌐";
-    if (name.toLowerCase().includes("instagram")) return "📸";
-    if (name.toLowerCase().includes("x") || name.toLowerCase().includes("twitter")) return "𝕏";
-    return "🔗";
-  };
-
   return (
     <Layout>
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
@@ -105,31 +153,68 @@ export default function OdalarPage({ chambers }) {
                   {chamber.website}
                 </Link>
               </Typography>
-              <Typography>
-                <b>Sosyal Medya:</b>
-                {chamber.socialMedia && chamber.socialMedia.length > 0 && chamber.socialMedia.some(sm => sm.link) ? (
-                  <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                    {chamber.socialMedia.map((sm) =>
-                      sm.link ? (
-                        <a
-                          key={sm._id}
+              {chamber.socialMedia && chamber.socialMedia.length > 0 && chamber.socialMedia.some(sm => sm.link) && (
+                <Box>
+                  <Typography component="div" sx={{ fontWeight: 700 }}>
+                    Sosyal Medya:
+                  </Typography>
+                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mt: 1 }}>
+                    {chamber.socialMedia.map((sm) => {
+                      if (!sm.link) return null;
+                      const platform = detectSocialPlatform(sm.name, sm.link);
+                      const meta = SOCIAL_PLATFORM_META[platform] || SOCIAL_PLATFORM_META.link;
+
+                      return (
+                        <Box
+                          key={sm._id || sm.link}
+                          component="a"
                           href={sm.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ display: "flex", alignItems: "center" }}
+                          sx={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 1,
+                            px: 1.25,
+                            py: 0.75,
+                            borderRadius: 999,
+                            border: "1px solid rgba(15, 23, 42, 0.12)",
+                            backgroundColor: "#fff",
+                            color: "text.primary",
+                            textDecoration: "none",
+                            transition: "transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease",
+                            "&:hover": {
+                              transform: "translateY(-1px)",
+                              borderColor: meta.color,
+                              boxShadow: `0 10px 24px ${meta.color}1f`,
+                            },
+                          }}
+                          aria-label={`${sm.name || meta.label} profilini yeni sekmede ac`}
                         >
-                          {socialIcon(sm.name)}{" "}
-                          <span style={{ marginLeft: 4, fontSize: 14 }}>
-                            {sm.name || sm.link}
-                          </span>
-                        </a>
-                      ) : null
-                    )}
+                          <Box
+                            sx={{
+                              width: 28,
+                              height: 28,
+                              borderRadius: "50%",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: meta.color,
+                              backgroundColor: `${meta.color}14`,
+                              flex: "0 0 auto",
+                            }}
+                          >
+                            <SocialPlatformIcon platform={platform} />
+                          </Box>
+                          <Typography component="span" sx={{ fontSize: 14, fontWeight: 600, lineHeight: 1.2 }}>
+                            {sm.name || meta.label}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
                   </Stack>
-                ) : (
-                  <span> Bilgi yok</span>
-                )}
-              </Typography>
+                </Box>
+              )}
             </Stack>
           </AccordionDetails>
         </Accordion>

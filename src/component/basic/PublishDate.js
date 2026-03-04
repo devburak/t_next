@@ -1,6 +1,15 @@
 import { Typography } from '@mui/material';
 function PublishDate({ date }) {
-    const formattedDate = new Date(date).toLocaleDateString('tr-TR', {
+    if (!date) {
+      return null;
+    }
+
+    const parsedDate = new Date(date);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return null;
+    }
+
+    const formattedDate = parsedDate.toLocaleDateString('tr-TR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',

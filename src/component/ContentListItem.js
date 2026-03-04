@@ -1,8 +1,10 @@
 // components/ContentListItem.js
-import { Card, CardMedia, CardContent, Typography, Box, Grid } from '@mui/material';
+import { Card, CardContent, Typography, Grid } from '@mui/material';
 import Link from 'next/link';
+import AspectRatioMedia, { getMediaUrl } from './basic/AspectRatioMedia';
 
 const ContentListItem = ({ title, publishDate, featuredMedia, spot, link }) => {
+  const mediaUrl = getMediaUrl(featuredMedia, { preferThumbnail: true }) || getMediaUrl(featuredMedia);
 
    // Tarihi 'tr-TR' formatında formatla
    const formattedDate = new Date(publishDate).toLocaleDateString('tr-TR', {
@@ -12,23 +14,31 @@ const ContentListItem = ({ title, publishDate, featuredMedia, spot, link }) => {
   });
 
   return (
-    <Card sx={{ display: 'flex', marginBottom: 2, width:"100%"}} >
+    <Card sx={{ display: 'flex', marginBottom: 2, width: '100%', overflow: 'hidden' }} >
       <Grid container spacing={2} alignItems="stretch" >
         {/* Sol tarafta resim */}
-        {featuredMedia?.url && (
+        {mediaUrl && (
           <Grid item xs={12} sm={4}>
-            <CardMedia
-              component="img"
-              sx={{ width: '100%', height: '100%', maxHeight:260, maxWidth:260, objectFit: 'contain', paddingLeft:1, }}
-              image={featuredMedia.url}
+            <AspectRatioMedia
+              src={mediaUrl}
               alt={title}
+              sizes="(max-width: 600px) 100vw, 33vw"
+              sx={{
+                width: '100%',
+                height: '100%',
+                minHeight: {
+                  xs: 220,
+                  sm: 180,
+                },
+              }}
+              objectFit="contain"
             />
           </Grid>
         )}
         
         {/* Sağ tarafta içerik */}
-        <Grid item xs={12} sm={8}>
-          <CardContent  sx={{ minHeight: 200,  width  : '100%' }}>
+        <Grid item xs={12} sm={mediaUrl ? 8 : 12}>
+          <CardContent  sx={{ minHeight: 200, width: '100%' }}>
              {/* Tarih */}
             <Typography variant="body2" color="text.secondary" align="right">
               {formattedDate}

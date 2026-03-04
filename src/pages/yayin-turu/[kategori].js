@@ -2,10 +2,8 @@ import * as React from "react";
 import { useRouter } from "next/router";
 import PublicationCard from "../../component/publications/PublicationCard";
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
 import Layout from '../../component/basic/layout';
 
 export async function getServerSideProps({ params, query }) {
@@ -32,9 +30,18 @@ export default function KategoriYayinlari({ kategori, page, limit, data }) {
   if (!data || !data.data || data.data.length === 0) {
     return (
         <Layout>
-            <Container sx={{ mt: 4 }}>
+            <Box
+              sx={{
+                mt: 1,
+                p: { xs: 2, md: 3 },
+                borderRadius: 3,
+                border: '1px solid rgba(15, 23, 42, 0.08)',
+                backgroundColor: '#fff',
+                boxShadow: '0 18px 42px rgba(15, 23, 42, 0.08)',
+              }}
+            >
                 <Typography variant="h5">Yayın bulunamadı.</Typography>
-            </Container>
+            </Box>
         </Layout>
     );
   }
@@ -45,26 +52,49 @@ export default function KategoriYayinlari({ kategori, page, limit, data }) {
 
   return (
     <Layout>
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-       Yayınlar
-      </Typography>
-      <Stack direction="row" flexWrap="wrap" gap={2} justifyContent="flex-start">
-        {data.data.map((pub) => (
-          <Box key={pub._id} sx={{ width: 300 }}>
-            <PublicationCard publication={pub} />
-          </Box>
-        ))}
-      </Stack>
-      <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
-        <Pagination
-          count={data.totalPages || 1}
-          page={page}
-          onChange={handlePageChange}
-          color="secondary"
-        />
+      <Box
+        sx={{
+          mt: 1,
+          p: { xs: 2, md: 3 },
+          borderRadius: 3,
+          border: '1px solid rgba(15, 23, 42, 0.08)',
+          backgroundColor: '#fff',
+          boxShadow: '0 18px 42px rgba(15, 23, 42, 0.08)',
+        }}
+      >
+        <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+          Yayınlar
+        </Typography>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: '1fr',
+              sm: 'repeat(2, minmax(0, 1fr))',
+              lg: 'repeat(3, minmax(0, 1fr))',
+            },
+            gap: 3,
+            '& .MuiCard-root': {
+              maxWidth: 'none',
+              width: '100%',
+            },
+          }}
+        >
+          {data.data.map((pub) => (
+            <Box key={pub._id} sx={{ minWidth: 0 }}>
+              <PublicationCard publication={pub} />
+            </Box>
+          ))}
+        </Box>
+        <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+          <Pagination
+            count={data.totalPages || 1}
+            page={page}
+            onChange={handlePageChange}
+            color="secondary"
+          />
+        </Box>
       </Box>
-    </Container>
     </Layout>
   );
 }

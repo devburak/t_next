@@ -1,5 +1,5 @@
 // components/SearchInput.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import { useRouter } from 'next/router';
 import SearchIcon from '@mui/icons-material/Search';
@@ -22,10 +22,14 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const SearchInput = () => {
+const SearchInput = ({ initialSearchTerm = '' }) => {
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    setSearchTerm(initialSearchTerm || '');
+  }, [initialSearchTerm]);
 
   const handleSearch = () => {
     const trimmedSearchTerm = searchTerm.trim();

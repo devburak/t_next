@@ -1,27 +1,41 @@
-
-import ContentPageRenderer from '../../component/basic/ContentPageRenderer';
-
-function IcerikPage({ htmlContent,data }) {
-
-  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
-
-  return (
-    <ContentPageRenderer htmlContent={htmlContent} data={data}  />
-  );
-}
 const apiBaseUrl = process.env.API_BASE_URL;
-export async function getServerSideProps(context) {
-  // API'den veri çekme
-  const res = await fetch(`${apiBaseUrl}/contents/slug/icerik/${context.params.slug}`);
-  const data = await res.json();
 
-  // `data.root.children`'ı serialize fonksiyonu ile işleme
-  // const htmlContent = serialize(data.bodyHtml);
-  console.log("data",data)
-  const htmlContent = data.bodyHtml;
-  
-  // HTML içeriğini props olarak döndürme
-  return { props: { htmlContent ,data } };
+export async function getServerSideProps({ params, query }) {
+  try {
+    const slug = String(params?.slug || '').trim();
+
+    if (!slug) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const res = await fetch(`${apiBaseUrl}/contents/slug/${slug}`);
+
+    if (!res.ok) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const data = await res.json();
+    const searchParams = new URLSearchParams(query || {});
+    const queryString = searchParams.toString();
+
+    return {
+      redirect: {
+        destination: `/${data?.slug || slug}${queryString ? `?${queryString}` : ''}`,
+        permanent: true,
+      },
+    };
+  } catch (error) {
+    console.error('Icerik page redirect error:', error);
+    return {
+      notFound: true,
+    };
+  }
 }
 
-export default IcerikPage;
+export default function IcerikRedirectPage() {
+  return null;
+}

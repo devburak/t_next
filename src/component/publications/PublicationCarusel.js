@@ -63,15 +63,17 @@ export default function PublicationCarousel({
     <Box sx={{ width: '100%', padding: 1 }}>
       <Carousel navButtonsAlwaysVisible={true}>
         {isMobile
-          ? data.map((publication, index) => (
-              <Box key={publication._id} sx={{ display: 'flex', justifyContent: 'center' }}>
+          ? data.map((publication) => (
+              <Box key={publication._id} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                 <PublicationCard publication={publication} hideCategories />
               </Box>
             ))
           : groupedPublications.map((group, index) => (
-              <Box key={index} sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-                {group.map((publication, idx) => (
-                  <PublicationCard key={publication._id} publication={publication} hideCategories />
+              <Box key={index} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'stretch', gap: 4 }}>
+                {group.map((publication) => (
+                  <Box key={publication._id} sx={{ display: 'flex', width: '100%', maxWidth: 345 }}>
+                    <PublicationCard publication={publication} hideCategories />
+                  </Box>
                 ))}
               </Box>
             ))}

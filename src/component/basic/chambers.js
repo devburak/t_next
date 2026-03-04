@@ -1,67 +1,193 @@
-import React from 'react';
+import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 
-const meslekOdasiLogolari = [
-    { href: "http://bmo.org.tr", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/bmo-logo-1-rgb-transparent-armali.jpg?itok=dlzQtkW7", alt: "BMO Logo" },
-    { href: "http://cmo.org.tr", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/CMO.jpg?itok=PzotMx-0", alt: "CMO Logo" },
-    { href: "http://www.emo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/emo_logo_13.jpg?itok=dbsgKHDy", alt: "EMO Logo" },
-    { href: "http://www.fmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/fizik_logo.jpg?itok=o0v7yFOK", alt: "FMO Logo" },
-    { href: "http://www.gemimo.org/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/gemimo_logo_son_tasarim.jpg?itok=2QYhaoEo", alt: "GEMIMO Logo" },
-    { href: "http://www.gmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/gemi_logo_0.jpg?itok=qa-oOSZ7", alt: "GMO Logo" },
-    { href: "http://www.gidamo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/gidamo-logo_0.png?itok=ZhhlZpQ3", alt: "GIDAMO Logo" },
-    { href: "http://www.hkmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/hkmo_logo.jpg?itok=3KRABEw8", alt: "HKMO Logo" },
-    { href: "http://www.icmimarlarodasi.org.tr", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/icmimar_logo_converted_copy.jpg?itok=F7KPLlSU", alt: "ICMIMAR Logo" },
-    { href: "http://www.imo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/imo_logo.jpg?itok=7v5FM_5D", alt: "IMO Logo" },
-    { href: "http://www.jeofizik.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/jeofizik.jpg?itok=doLHs_da", alt: "JEOFIZIK Logo" },
-    { href: "http://www.jmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/jmo_logo_oval.png?itok=l3Jgq6J1", alt: "JMO Logo" },
-    { href: "http://www.kmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/kimya_logo.jpg?itok=gEXVN8x6", alt: "KMO Logo" },
-    { href: "http://www.maden.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/maden.muh_.oda-logo.jpg?itok=oWs5sO-G", alt: "MADEN Logo" },
-    { href: "http://www.mmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/makina_logo.jpg?itok=u0hAVcdn", alt: "MMO Logo" },
-    { href: "http://www.metalurji.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/metalurji_logo.jpg?itok=7TSvF2xj", alt: "METALURJI Logo" },
-    { href: "http://www.meteoroloji.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/meteoroloji.jpg?itok=i_fUgH0T", alt: "METEOROLOJI Logo" },
-    { href: "http://www.mimarlarodasi.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/mimarlar_logo.jpg?itok=LWGGAh_k", alt: "MIMARLAR Logo" },
-    { href: "http://ormuh.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/orman_logo.jpg?itok=_ZGh7FXA", alt: "ORMUH Logo" },
-    { href: "http://pmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/petrol_logo.jpg?itok=dvxuX_7-", alt: "PMO Logo" },
-    { href: "http://www.peyzajmimoda.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/peyzaj_logo_yeni.jpg?itok=BY3UGODT", alt: "PEYZAJMIMODA Logo" },
-    { href: "http://www.spo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/spo_logo_5.jpg?itok=Gp7tGRIp", alt: "SPO Logo" },
-    { href: "http://www.tmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/tekstil_logo.jpg?itok=sd2qWh2X", alt: "TMO Logo" },
-    { href: "http://www.zmo.org.tr/", src: "https://www.tmmob.org.tr/sites/default/files/styles/footer_logo/public/zmologo.jpg?itok=-g0t8sHm", alt: "ZMO Logo" }
-  ];
-  
-  function Chambers() {
-    return (
-      <section className="block block-views clearfix">
-        <div className="view view-footer-oda-logolari">
-          <div className="view-content" style={{
-            marginBottom: 10,
-            display: "flex",
-            flexWrap: "nowrap",
-            justifyContent: "space-around",
-            alignItems: "center",
-            marginTop: 25,
-            paddingLeft: 20,
-            paddingRight: 20
-          }}>
-            {meslekOdasiLogolari.map((oda, index) => (
-              <div key={index} className={`views-row ${index % 2 === 0 ? 'views-row-odd' : 'views-row-even'}`}>
-                <div className="views-field views-field-field-amblem">
-                  <div className="field-content">
-                    <a href={oda.href}>
-                      <img
-                        className="img-responsive img-hover-grow" // Buraya img-hover-grow sınıfını ekleyin
-                        src={oda.src}
-                        width="37"
-                        height="37"
-                        alt={oda.alt}
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
+import {
+  fetchChambersDockData,
+  getChambersDockSnapshot,
+} from '../../lib/chambersDockCache';
+
+function createDefaultDockState(length = 0) {
+  return Array.from({ length }, () => ({ scale: 1, lift: 0, glow: 0.18 }));
+}
+
+function Chambers() {
+  const itemRefs = useRef([]);
+  const animationFrameRef = useRef(0);
+  const [dockItems, setDockItems] = useState([]);
+  const [dockState, setDockState] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const snapshot = getChambersDockSnapshot();
+    if (snapshot.data.length > 0) {
+      setDockItems(snapshot.data);
+      setDockState(createDefaultDockState(snapshot.data.length));
+    }
+
+    const loadChambers = async () => {
+      const nextItems = await fetchChambersDockData({ force: snapshot.isStale });
+
+      if (cancelled) {
+        return;
+      }
+
+      setDockItems(nextItems);
+      setDockState((currentState) =>
+        currentState.length === nextItems.length
+          ? currentState
+          : createDefaultDockState(nextItems.length)
+      );
+    };
+
+    loadChambers();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    itemRefs.current = itemRefs.current.slice(0, dockItems.length);
+  }, [dockItems.length]);
+
+  const applyDockEffectFromX = (clientX) => {
+    const nextState = dockItems.map((_, index) => {
+      const node = itemRefs.current[index];
+
+      if (!node) {
+        return { scale: 1, lift: 0, glow: 0.18 };
+      }
+
+      const rect = node.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const distance = Math.abs(clientX - centerX);
+      const reach = 150;
+      const intensity = Math.max(0, 1 - distance / reach);
+      const eased = intensity * intensity;
+
+      return {
+        scale: 1 + eased * 0.92,
+        lift: eased * 22,
+        glow: 0.18 + eased * 0.62,
+      };
+    });
+
+    setDockState(nextState);
+  };
+
+  const handleDockMove = (event) => {
+    const clientX = event.clientX;
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
+    animationFrameRef.current = requestAnimationFrame(() => {
+      applyDockEffectFromX(clientX);
+      animationFrameRef.current = 0;
+    });
+  };
+
+  const resetDock = () => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = 0;
+    }
+
+    setDockState(createDefaultDockState(dockItems.length));
+  };
+
+  const handleItemFocus = (index) => {
+    const node = itemRefs.current[index];
+
+    if (!node) {
+      return;
+    }
+
+    const rect = node.getBoundingClientRect();
+    applyDockEffectFromX(rect.left + rect.width / 2);
+  };
+
+  if (dockItems.length === 0) {
+    return null;
   }
+
+  return (
+    <section className="chambersSection">
+      <div
+        className="site-shell chambersRail"
+        onPointerMove={handleDockMove}
+        onPointerLeave={resetDock}
+      >
+        <div className="chambersTrack" role="list" aria-label="TMMOB odaları">
+          {dockItems.map((oda, index) => {
+            const itemState = dockState[index] || { scale: 1, lift: 0, glow: 0.18 };
+            const labelOpacity = Math.max(0, Math.min(1, (itemState.scale - 1.5) / 0.22));
+            const chamberLabel = oda.name || oda.short;
+
+            const logoNode = (
+              <Image
+                className="chambersLogo"
+                src={oda.logoSrc}
+                width={64}
+                height={64}
+                alt={`${chamberLabel} logosu`}
+                sizes="64px"
+              />
+            );
+
+            return (
+              <div
+                key={oda.id}
+                ref={(node) => {
+                  itemRefs.current[index] = node;
+                }}
+                className="chambersItem"
+                role="listitem"
+                style={{
+                  '--dock-scale': itemState.scale,
+                  '--dock-lift': `${itemState.lift}px`,
+                  '--dock-glow': itemState.glow,
+                  '--dock-label-opacity': labelOpacity,
+                  zIndex: Math.round(itemState.scale * 100),
+                }}
+              >
+                {oda.href ? (
+                  <a
+                    href={oda.href}
+                    className="chambersLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${chamberLabel} web sitesini ac`}
+                    onFocus={() => handleItemFocus(index)}
+                    onBlur={resetDock}
+                  >
+                    {logoNode}
+                  </a>
+                ) : (
+                  <span className="chambersLink" aria-hidden="true">
+                    {logoNode}
+                  </span>
+                )}
+                <span className="chambersLabel" aria-hidden="true">
+                  {oda.short}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default Chambers;

@@ -1,37 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { $generateNodesFromDOM } from '@lexical/html';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { createHeadlessEditor } from 'lexical';
+import { $getRoot, $insertNodes } from 'lexical';
 
 function ReadOnlyEditor({ htmlContent }) {
   const [editor] = useLexicalComposerContext();
 
-  React.useEffect(() => {
+  useEffect(() => {
     editor.update(() => {
       try {
-        // Lexical'in Headless Editor'unu oluştur
-        const headlessEditor = createHeadlessEditor();
-
-        // HTML içeriğini içeri aktar
-        headlessEditor.update(() => {
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlContent, 'text/html');
-          const root = headlessEditor.getRootElement();
-
-          if (doc.body) {
-            root.append(...Array.from(doc.body.childNodes));
-          }
-        });
-
-        // İçeriği ana editöre aktar
-        const editorState = headlessEditor.getEditorState();
-        editor.setEditorState(editorState);
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(htmlContent, 'text/html');
+        const nodes = $generateNodesFromDOM(editor, dom);
+        const root = $getRoot();
+        root.clear();
+        root.select();
+        $insertNodes(nodes);
       } catch (error) {
-        console.error('Error importing HTML using Lexical:', error);
+        console.error('Error parsing HTML content for LexicalEditor:', error);
       }
     });
   }, [editor, htmlContent]);
 
-  return <div className="editor-container" />;
+  return (
+    <RichTextPlugin
+      contentEditable={<ContentEditable readOnly className="editor-content" />}
+      placeholder={null}
+      ErrorBoundary={LexicalErrorBoundary}
+    />
+  );
 }
 
 export default ReadOnlyEditor;

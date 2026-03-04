@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import NewsCard from './NewsCard';
 import useMediaQuery from '@mui/material/useMediaQuery'; // Medya sorgusu için MUI kancası
+import { getMediaUrl } from '../basic/AspectRatioMedia';
 
 export default function NewsCarousel({ categorySlug , one=false }) {
   const [newsData, setNewsData] = useState([]);
@@ -25,7 +26,7 @@ export default function NewsCarousel({ categorySlug , one=false }) {
 
         // İçerikleri belirli bir formata dönüştürme
         const formattedData = data.contents.map((content) => ({
-          image: content.featuredMedia.url,
+          image: getMediaUrl(content.featuredMedia),
           title: content.title,
           url: `/${content.slug}`, // Link yönlendirme için
           publishDate: content.publishDate
@@ -62,14 +63,16 @@ export default function NewsCarousel({ categorySlug , one=false }) {
         {/* Geniş ekranda her kaydırma için iki haber, dar ekranda her kaydırma için bir haber */}
         {isMobile
           ? newsData.map((news, index) => (
-              <Box key={index} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box key={index} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                 <NewsCard {...news} />
               </Box>
             ))
           : groupedNews.map((group, index) => (
-              <Box key={index} sx={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+              <Box key={index} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'stretch', gap: 4 }}>
                 {group.map((news, idx) => (
-                  <NewsCard key={idx} {...news} />
+                  <Box key={idx} sx={{ display: 'flex', width: '100%', maxWidth: 345 }}>
+                    <NewsCard {...news} />
+                  </Box>
                 ))}
               </Box>
             ))}

@@ -2,11 +2,23 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/material';
 import Link from 'next/link'; // Next.js Link bileşenini import et
 import {formattedDate} from '../utils'
+import AspectRatioMedia from '../basic/AspectRatioMedia';
+
+const TITLE_CLAMP_SX = {
+  fontSize: 12,
+  fontWeight: 'bold',
+  lineHeight: 1.5,
+  display: '-webkit-box',
+  WebkitBoxOrient: 'vertical',
+  WebkitLineClamp: 3,
+  overflow: 'hidden',
+  minHeight: '4.5em',
+  maxHeight: '4.5em'
+};
 
 export default function NewsCard({ image, title, url,publishDate }) {
     return (
@@ -14,17 +26,22 @@ export default function NewsCard({ image, title, url,publishDate }) {
           <Card
             sx={{
               maxWidth: 345,
+              width: '100%',
+              height: '100%',
               margin: '0 auto',
               cursor: 'pointer', // Kartın tıklanabilir olduğunu gösterir
               textDecoration: 'none', // Link'in altını kaldırmak için
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
             <Box sx={{ position: 'relative' }}> {/* Relative pozisyonlandırma için bir Box eklendi */}
-              <CardMedia
-              
-                sx={{ height: 140, maxHeight: 140, objectFit: 'cover' }} // Sabit yükseklik ve max yükseklik ayarı
-                image={image}
-                title={title}
+              <AspectRatioMedia
+                  src={image}
+                  alt={title}
+                  sizes="(max-width: 600px) 100vw, 345px"
+                  sx={{ maxHeight: 260, bgcolor: 'grey.50' }}
+                  objectFit="contain"
               />
               {/* Tarih etiketi */}
               <Box
@@ -44,12 +61,11 @@ export default function NewsCard({ image, title, url,publishDate }) {
                 </Typography>
               </Box>
             </Box>
-            <CardContent sx={{ height: 100, maxHeight: 100, p: 1 }}> {/* Sabit yükseklik */}
+            <CardContent sx={{ minHeight: 96, maxHeight: 96, p: 1.5, display: 'flex', alignItems: 'flex-start' }}>
               <Typography
-                gutterBottom
                 variant="h6"
                 component="div"
-                sx={{ fontSize: 12, fontWeight: 'bold', lineHeight: '1.5' }} // Başlık için font ve stil ayarı
+                sx={TITLE_CLAMP_SX}
               >
                 {title}
               </Typography>
