@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3002",
+    "dev": "NEXT_DIST_DIR=.next-dev next dev -p 3002",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "rsync -avz --delete --exclude='.next/cache' --exclude='node_modules' ./ .next package.json next.config.js public frtmmob@demosrv.ikon-x.com.tr:/home/frtmmob/next/"
+    "deploy": "rsync -avz --delete --exclude='.next' --exclude='node_modules' ./ frtmmob@demosrv.ikon-x.com.tr:/home/frtmmob/next/"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",

@@ -2,7 +2,43 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 /** @type {import('next').NextConfig} */
-const isDevelopment = process.env.NODE_ENV === 'development';
+const distDir = process.env.NEXT_DIST_DIR || '.next';
+const PROD_API_BASE_URL = 'https://api.tmmob.org.tr/api';
+const PROD_SITE_URL = 'https://newt6491032g.tmmob.org.tr';
+const isProduction = process.env.NODE_ENV === 'production';
+
+function isLocalAddress(value = '') {
+  const normalized = String(value || '').trim().toLowerCase();
+  return (
+    normalized.includes('127.0.0.1') ||
+    normalized.includes('localhost')
+  );
+}
+
+function normalizeProductionEnv() {
+  if (!isProduction) {
+    return;
+  }
+
+  const apiEnvKeys = ['API_BASE_URL', 'NEXT_PUBLIC_API_BASE_URL'];
+  for (const key of apiEnvKeys) {
+    const current = String(process.env[key] || '').trim();
+    if (!current || isLocalAddress(current)) {
+      process.env[key] = PROD_API_BASE_URL;
+      console.warn(
+        `[next-config] ${key} was ${current || 'empty'} in production, forced to ${PROD_API_BASE_URL}`
+      );
+    }
+  }
+
+  const currentSiteUrl = String(process.env.NEXT_PUBLIC_SITE_URL || '').trim();
+  if (!currentSiteUrl || isLocalAddress(currentSiteUrl)) {
+    process.env.NEXT_PUBLIC_SITE_URL = PROD_SITE_URL;
+    console.warn(
+      `[next-config] NEXT_PUBLIC_SITE_URL was ${currentSiteUrl || 'empty'} in production, forced to ${PROD_SITE_URL}`
+    );
+  }
+}
 
 function removeLegacyDynamicRouteFiles({
   relativeDirectory,
@@ -108,10 +144,12 @@ removeLegacyDynamicRouteFiles({
   legacyParams: ['kategori'],
 });
 
+normalizeProductionEnv();
+
 const nextConfig = {
   // Keep dev output separate from production builds so mixed server
   // artifacts do not produce missing vendor chunk errors.
-  distDir: isDevelopment ? '.next-dev' : '.next',
+  distDir,
   reactStrictMode: true,
   images: {
     minimumCacheTTL: 604800,
