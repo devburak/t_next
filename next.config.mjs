@@ -4,50 +4,109 @@ import path from 'node:path';
 /** @type {import('next').NextConfig} */
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-function cleanupConflictingCategoryRoutes() {
+function removeLegacyDynamicRouteFiles({
+  relativeDirectory,
+  preferredParam,
+  legacyParams,
+}) {
   const dynamicExtensions = ['js', 'jsx', 'ts', 'tsx'];
-  const categoryDirectories = [
-    path.join(process.cwd(), 'pages', 'kategori'),
-    path.join(process.cwd(), 'src', 'pages', 'kategori'),
+  const routeDirectories = [
+    path.join(process.cwd(), 'pages', relativeDirectory),
+    path.join(process.cwd(), 'src', 'pages', relativeDirectory),
   ];
 
-  const legacyCategoryFiles = [];
-  const slugCategoryFiles = [];
+  const preferredEntries = [];
+  const legacyFiles = [];
+  const legacyDirectories = [];
 
-  for (const directoryPath of categoryDirectories) {
+  for (const directoryPath of routeDirectories) {
     for (const extension of dynamicExtensions) {
-      const legacyPath = path.join(directoryPath, `[category].${extension}`);
-      const slugPath = path.join(directoryPath, `[categorySlug].${extension}`);
-
-      if (fs.existsSync(legacyPath)) {
-        legacyCategoryFiles.push(legacyPath);
+      const preferredPath = path.join(
+        directoryPath,
+        `[${preferredParam}].${extension}`
+      );
+      if (fs.existsSync(preferredPath)) {
+        preferredEntries.push(preferredPath);
       }
 
-      if (fs.existsSync(slugPath)) {
-        slugCategoryFiles.push(slugPath);
+      for (const legacyParam of legacyParams) {
+        const legacyPath = path.join(directoryPath, `[${legacyParam}].${extension}`);
+        if (fs.existsSync(legacyPath)) {
+          legacyFiles.push(legacyPath);
+        }
+      }
+    }
+
+    const preferredDirectoryPath = path.join(directoryPath, `[${preferredParam}]`);
+    if (
+      fs.existsSync(preferredDirectoryPath) &&
+      fs.statSync(preferredDirectoryPath).isDirectory()
+    ) {
+      preferredEntries.push(preferredDirectoryPath);
+    }
+
+    for (const legacyParam of legacyParams) {
+      const legacyDirectoryPath = path.join(directoryPath, `[${legacyParam}]`);
+      if (
+        fs.existsSync(legacyDirectoryPath) &&
+        fs.statSync(legacyDirectoryPath).isDirectory()
+      ) {
+        legacyDirectories.push(legacyDirectoryPath);
       }
     }
   }
 
-  if (legacyCategoryFiles.length === 0 || slugCategoryFiles.length === 0) {
+  if (
+    (legacyFiles.length === 0 && legacyDirectories.length === 0) ||
+    preferredEntries.length === 0
+  ) {
     return;
   }
 
-  for (const legacyFile of legacyCategoryFiles) {
+  for (const legacyFile of legacyFiles) {
     try {
       fs.unlinkSync(legacyFile);
       console.warn(
-        `[next-config] Removed legacy dynamic route file to avoid conflict: ${legacyFile}`
+        `[next-config] Removed legacy dynamic route file to avoid conflict (${relativeDirectory}): ${legacyFile}`
       );
     } catch (error) {
       console.warn(
-        `[next-config] Failed to remove legacy route file: ${legacyFile}. ${error.message}`
+        `[next-config] Failed to remove legacy route file (${relativeDirectory}): ${legacyFile}. ${error.message}`
+      );
+    }
+  }
+
+  for (const legacyDirectory of legacyDirectories) {
+    try {
+      fs.rmSync(legacyDirectory, { recursive: true, force: true });
+      console.warn(
+        `[next-config] Removed legacy dynamic route directory to avoid conflict (${relativeDirectory}): ${legacyDirectory}`
+      );
+    } catch (error) {
+      console.warn(
+        `[next-config] Failed to remove legacy route directory (${relativeDirectory}): ${legacyDirectory}. ${error.message}`
       );
     }
   }
 }
 
-cleanupConflictingCategoryRoutes();
+removeLegacyDynamicRouteFiles({
+  relativeDirectory: 'kategori',
+  preferredParam: 'categorySlug',
+  legacyParams: ['category'],
+});
+
+removeLegacyDynamicRouteFiles({
+  relativeDirectory: 'yayin-turu',
+  preferredParam: 'kategori',
+  legacyParams: ['slug'],
+});
+
+removeLegacyDynamicRouteFiles({
+  relativeDirectory: '',
+  preferredParam: 'slug',
+  legacyParams: ['kategori'],
+});
 
 const nextConfig = {
   // Keep dev output separate from production builds so mixed server
