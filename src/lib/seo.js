@@ -1,7 +1,22 @@
+import { getSettings } from './settingsCache';
+
 const DEFAULT_SITE_URL = 'https://tmmob.org.tr';
 export const DEFAULT_OG_IMAGE = 'https://storage.ikon-x.com.tr/default.png';
 export const DEFAULT_META_DESCRIPTION =
   'Türk Mühendis ve Mimar Odaları Birliği resmi sitesi; haberler, basın açıklamaları, yayınlar, etkinlikler ve kurumsal duyurular.';
+
+/**
+ * Settings cache'den veya fallback olarak sabit default image URL'ini döndürür
+ */
+export async function getDefaultImage() {
+  try {
+    const settings = await getSettings();
+    return settings?.defaultImage?.url || DEFAULT_OG_IMAGE;
+  } catch (error) {
+    console.error('Error getting default image from settings:', error);
+    return DEFAULT_OG_IMAGE;
+  }
+}
 
 export function normalizeBaseUrl(value) {
   const normalized = String(value || DEFAULT_SITE_URL).trim().replace(/\/+$/, '');

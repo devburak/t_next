@@ -151,6 +151,16 @@ const nextConfig = {
   // artifacts do not produce missing vendor chunk errors.
   distDir,
   reactStrictMode: true,
+  async redirects() {
+    return [
+      // /icerik/:slug -> /:slug (301 permanent redirect for SEO)
+      {
+        source: '/icerik/:slug*',
+        destination: '/:slug*',
+        permanent: true,
+      },
+    ];
+  },
   images: {
     minimumCacheTTL: 604800,
     remotePatterns:[

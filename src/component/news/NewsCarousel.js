@@ -8,14 +8,15 @@ import NewsCard from './NewsCard';
 import useMediaQuery from '@mui/material/useMediaQuery'; // Medya sorgusu için MUI kancası
 import { getMediaUrl } from '../basic/AspectRatioMedia';
 
-export default function NewsCarousel({ categorySlug , one=false }) {
+export default function NewsCarousel({ categorySlug, one = false, itemsPerSlide = 3 }) {
   const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Ekran boyutuna göre limit ayarlaması
   const matches = useMediaQuery('(max-width:600px)');
-  const isMobile = one ? true: matches;
-  const newsLimit = isMobile ? 3 : 6; // Mobilde 3, geniş ekranlarda 6 haber çek
+  const isMobile = one ? true : matches;
+  // Mobilde itemsPerSlide kadar, geniş ekranlarda itemsPerSlide * 2 haber çek
+  const newsLimit = isMobile ? itemsPerSlide : itemsPerSlide * 2;
 
   // Veriyi API'den çekme işlemi
   useEffect(() => {
@@ -51,16 +52,16 @@ export default function NewsCarousel({ categorySlug , one=false }) {
     return <Typography>Bu kategoride haber bulunmamaktadır.</Typography>; // Eğer veri yoksa
   }
 
-  // Haberleri ikili gruplar halinde organize et
+  // Haberleri itemsPerSlide'a göre grupla
   const groupedNews = [];
-  for (let i = 0; i < newsData.length; i += 3) {
-    groupedNews.push(newsData.slice(i, i + 3));
+  for (let i = 0; i < newsData.length; i += itemsPerSlide) {
+    groupedNews.push(newsData.slice(i, i + itemsPerSlide));
   }
 
   return (
     <Box sx={{ width: '100%', padding: 1 }}>
       <Carousel navButtonsAlwaysVisible={true}>
-        {/* Geniş ekranda her kaydırma için iki haber, dar ekranda her kaydırma için bir haber */}
+        {/* Geniş ekranda her kaydırma için itemsPerSlide haber, dar ekranda her kaydırma için bir haber */}
         {isMobile
           ? newsData.map((news, index) => (
               <Box key={index} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>

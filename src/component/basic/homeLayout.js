@@ -18,6 +18,8 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import ForumIcon from '@mui/icons-material/Forum';
 import AltMenu from '../Altmenu';
 import PublicationCarousel from '../publications/PublicationCarusel';
 import SidebarRail from './SidebarRail';
@@ -82,9 +84,17 @@ function HomePage() {
               <TitleComponent icon={<EditNotificationsSharpIcon />} title={'İKK Haberleri'} link={'/kategori/ikk-haberleri'} />
               <NewsCarousel categorySlug={"ikk-haberleri"} />
             </Grid>
-            <Grid item xs={12}>
-              <TitleComponent icon={<CampaignIcon />} title={'Görüş ve Konuşmalar'} link={'/kategori/gorusler-ve-konusmalar'} />
-              <NewsCarousel categorySlug={"gorusler-ve-konusmalar"} />
+          </Grid>
+          
+          {/* Görüşler ve Konuşmalar - Yan Yana */}
+          <Grid container spacing={2} sx={{ mt: 1 }}>
+            <Grid item xs={12} sm={6}>
+              <TitleComponent icon={<RecordVoiceOverIcon />} title={'Görüşler'} link={'/kategori/gorusler'} />
+              <NewsCarousel categorySlug={"gorusler"} itemsPerSlide={2} />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TitleComponent icon={<ForumIcon />} title={'Açılış Konuşmaları'} link={'/kategori/etkinlik-acilis-konusmalari'} />
+              <NewsCarousel categorySlug={"etkinlik-acilis-konusmalari"} itemsPerSlide={2} />
             </Grid>
           </Grid>
 
