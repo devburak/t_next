@@ -85,18 +85,6 @@ function HomePage() {
               <NewsCarousel categorySlug={"ikk-haberleri"} />
             </Grid>
           </Grid>
-          
-          {/* Görüşler ve Konuşmalar - Yan Yana */}
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6}>
-              <TitleComponent icon={<RecordVoiceOverIcon />} title={'Görüşler'} link={'/kategori/gorusler'} />
-              <NewsCarousel categorySlug={"gorusler"} itemsPerSlide={2} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TitleComponent icon={<ForumIcon />} title={'Açılış Konuşmaları'} link={'/kategori/etkinlik-acilis-konusmalari'} />
-              <NewsCarousel categorySlug={"etkinlik-acilis-konusmalari"} itemsPerSlide={2} />
-            </Grid>
-          </Grid>
 
         </Grid>
 
@@ -105,6 +93,19 @@ function HomePage() {
           <SidebarRail pageType="home" />
         </Grid>
       </Grid>
+
+      {/* Görüşler ve Konuşmalar - Tam Genişlik */}
+      <Grid container spacing={3} sx={{ mt: 1 }}>
+        <Grid item xs={12} sm={6}>
+          <TitleComponent icon={<RecordVoiceOverIcon />} title={'Görüşler'} link={'/kategori/gorusler'} />
+          <NewsCarousel categorySlug={"gorusler"} itemsPerSlide={2} />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TitleComponent icon={<ForumIcon />} title={'Açılış Konuşmaları'} link={'/kategori/etkinlik-acilis-konusmalari'} />
+          <NewsCarousel categorySlug={"etkinlik-acilis-konusmalari"} itemsPerSlide={2} />
+        </Grid>
+      </Grid>
+
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid item xs={12} sm={4}>
           <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/yayin-turu/birlik-haberleri'} />
