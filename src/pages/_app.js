@@ -28,7 +28,7 @@ import "../styles/custom.css";
 export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
-      <CampaignProvider>
+      <CampaignProvider initialCampaigns={pageProps.campaigns}>
       {/* CssBaseline, tarayıcı stil sıfırlaması ve temel stilleri ekler */}
       <CssBaseline />
       <Component {...pageProps} />

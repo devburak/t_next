@@ -3,6 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import HomePage from "@/component/basic/homeLayout";
 import { buildCanonicalUrl, DEFAULT_META_DESCRIPTION } from "@/lib/seo";
+import { getServerCampaigns } from "@/lib/campaignCache";
 // import fs from "../styles/fs.css"
 
 export default function Home() {
@@ -24,4 +25,22 @@ export default function Home() {
       <HomePage />
     </>
   );
+}
+
+export async function getServerSideProps() {
+  try {
+    const campaigns = await getServerCampaigns();
+    return {
+      props: {
+        campaigns: campaigns || []
+      }
+    };
+  } catch (error) {
+    console.error('[index] Failed to fetch campaigns:', error);
+    return {
+      props: {
+        campaigns: []
+      }
+    };
+  }
 }
