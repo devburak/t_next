@@ -15,15 +15,19 @@ export default function SectionCategoryListPage({
   category,
   initialContents,
   initialTotalPages,
+  allowPeriodFilter = true,
+  categoryPathOverride = '',
 }) {
   const router = useRouter();
   const [contents, setContents] = useState(initialContents);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
   const [page, setPage] = useState(parseInt(router.query.page, 10) || 1);
-  const [periodId, setPeriodId] = useState(router.query.periodId || null);
+  const [periodId, setPeriodId] = useState(
+    allowPeriodFilter ? router.query.periodId || null : null
+  );
 
   const routePath = buildSectionPagePath(section, slug);
-  const categoryPath = buildSectionPath(section, slug);
+  const categoryPath = String(categoryPathOverride || '').trim() || buildSectionPath(section, slug);
   const categoryName = getCategoryDisplayName(category?.name || slug || section);
   const categoryHeading = getCategoryHeading(category?.name || slug || section);
   const canonicalUrl = buildCanonicalUrl(routePath);
@@ -35,7 +39,7 @@ export default function SectionCategoryListPage({
   const fetchContents = async () => {
     const queryParams = new URLSearchParams({
       page: String(page),
-      ...(periodId ? { periodId } : {}),
+      ...(allowPeriodFilter && periodId ? { periodId } : {}),
     });
 
     try {
@@ -53,14 +57,23 @@ export default function SectionCategoryListPage({
   useEffect(() => {
     fetchContents();
     // eslint-disable-next-line
-  }, [page, periodId, categoryPath]);
+  }, [page, periodId, categoryPath, allowPeriodFilter]);
 
   const handlePageChange = (event, value) => {
     setPage(value);
+    const nextQuery = {
+      ...router.query,
+      page: value,
+    };
+
+    if (!allowPeriodFilter) {
+      delete nextQuery.periodId;
+    }
+
     router.push(
       {
         pathname: router.pathname,
-        query: { ...router.query, page: value },
+        query: nextQuery,
       },
       undefined,
       { shallow: true }
@@ -68,6 +81,10 @@ export default function SectionCategoryListPage({
   };
 
   const handlePeriodChange = (newPeriodId) => {
+    if (!allowPeriodFilter) {
+      return;
+    }
+
     setPage(1);
     setPeriodId(newPeriodId);
     router.push(
@@ -81,10 +98,14 @@ export default function SectionCategoryListPage({
   };
 
   useEffect(() => {
+    if (!allowPeriodFilter) {
+      return;
+    }
+
     handlePageChange(null, 1);
     handlePeriodChange(router.query.periodId);
     // eslint-disable-next-line
-  }, [router.query.periodId]);
+  }, [router.query.periodId, allowPeriodFilter]);
 
   return (
     <Layout>
@@ -107,9 +128,11 @@ export default function SectionCategoryListPage({
               {categoryHeading}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <PeriodComponent onPeriodChange={handlePeriodChange} />
-          </Grid>
+          {allowPeriodFilter ? (
+            <Grid item xs={12} sm={3}>
+              <PeriodComponent onPeriodChange={handlePeriodChange} />
+            </Grid>
+          ) : null}
         </Grid>
 
         {contents.map((content) => (

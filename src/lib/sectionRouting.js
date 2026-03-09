@@ -46,15 +46,17 @@ export async function fetchSectionCategoryPayload({
   section,
   slug = '',
   query = {},
+  includePeriod = true,
+  categoryPathOverride = '',
 }) {
-  const categoryPath = buildSectionPath(section, slug);
+  const categoryPath = String(categoryPathOverride || '').trim() || buildSectionPath(section, slug);
   if (!apiBaseUrl || !categoryPath) {
     return null;
   }
 
   const queryParams = new URLSearchParams({
     page: String(parseInt(query?.page, 10) || 1),
-    ...(query?.periodId ? { periodId: String(query.periodId) } : {}),
+    ...(includePeriod && query?.periodId ? { periodId: String(query.periodId) } : {}),
   });
 
   const response = await fetch(
