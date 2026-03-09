@@ -28,7 +28,9 @@ const getApiBaseUrl = () => process.env.API_BASE_URL || process.env.NEXT_PUBLIC_
 async function fetchCampaignsFromApi() {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/campaigns/active`);
+    const response = await fetch(`${apiBaseUrl}/campaigns/active`, {
+      cache: 'no-store' // Next.js fetch cache'ini devre dışı bırak
+    });
     if (!response.ok) {
       throw new Error(`Campaign API error: ${response.status}`);
     }

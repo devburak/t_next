@@ -27,7 +27,9 @@ const getApiBaseUrl = () => process.env.API_BASE_URL || process.env.NEXT_PUBLIC_
 async function fetchSettingsFromApi() {
   try {
     const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/system/public-settings`);
+    const response = await fetch(`${apiBaseUrl}/system/public-settings`, {
+      cache: 'no-store' // Next.js fetch cache'ini devre dışı bırak
+    });
     if (!response.ok) {
       throw new Error(`Settings API error: ${response.status}`);
     }
