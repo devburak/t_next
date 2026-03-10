@@ -8,12 +8,43 @@ import ContentShareBar from '../../component/basic/ContentShareBar';
 import Head from 'next/head';
 import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
 
-const CATEGORY_SLUG = 'yuksek-onur-kurulu';
+const CATEGORY_PATH_CANDIDATES = [
+  'belgeler/genel-kurul-sonuc-bildirgesi',
+  'genel-kurul-sonuc-bildirgesi',
+];
 
-const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId }) => {
+async function fetchGenelKurulSonucBildirgesiContent(apiBaseUrl, periodId) {
+  for (const categoryPath of CATEGORY_PATH_CANDIDATES) {
+    try {
+      const queryParams = new URLSearchParams();
+      if (periodId) {
+        queryParams.set('periodId', String(periodId));
+      }
+
+      const response = await fetch(
+        `${apiBaseUrl}/contents/fullcategory/${categoryPath}${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
+      );
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const data = await response.json();
+      const content = data?.contents?.[0] || null;
+      if (content) {
+        return content;
+      }
+    } catch (error) {
+      // Try next category path candidate.
+    }
+  }
+
+  return null;
+}
+
+const GenelKurulSonucBildirgesiPage = ({ initialContent, initialPeriods, initialPeriodId }) => {
   const router = useRouter();
   const [content, setContent] = useState(initialContent);
-  const [periods, setPeriods] = useState(initialPeriods);
   const [periodId, setPeriodId] = useState(initialPeriodId);
 
   useEffect(() => {
@@ -25,13 +56,21 @@ const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId 
 
   useEffect(() => {
     const fetchContent = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/contents/fullcategory/${CATEGORY_SLUG}?periodId=${periodId}`
-      );
-      const data = await res.json();
-      setContent(data.contents?.[0] || null);
+      try {
+        const data = await fetchGenelKurulSonucBildirgesiContent(
+          process.env.NEXT_PUBLIC_API_BASE_URL,
+          periodId
+        );
+        setContent(data);
+      } catch (error) {
+        console.error('Genel kurul sonuc bildirgesi icerigi alinamadi:', error);
+        setContent(null);
+      }
     };
-    if (periodId) fetchContent();
+
+    if (periodId) {
+      fetchContent();
+    }
     // eslint-disable-next-line
   }, [periodId]);
 
@@ -47,11 +86,11 @@ const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId 
     );
   };
 
-  const title = content?.title || 'Yüksek Onur Kurulu';
+  const title = content?.title || 'Genel Kurul Sonuc Bildirgesi';
   const description = buildMetaDescription(
-    content?.spot || content?.bodyHtml || 'TMMOB Yüksek Onur Kurulu üyeleri ve bilgileri.'
+    content?.spot || content?.bodyHtml || 'TMMOB Genel Kurul Sonuc Bildirgesi icerikleri.'
   );
-  const canonicalUrl = buildCanonicalUrl('/tmmob/yuksek-onur-kurulu');
+  const canonicalUrl = buildCanonicalUrl('/belgeler/genel-kurul-sonuc-bildirgesi');
   const ogImage = DEFAULT_OG_IMAGE;
   const imageUrl = content?.featuredMedia?.url || ogImage;
   const shareTitle = `${title} | TMMOB`;
@@ -74,7 +113,7 @@ const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId 
       <Head>
         <title>{shareTitle}</title>
         <meta name="description" content={description} />
-        <meta name="keywords" content="TMMOB, yüksek onur kurulu, dönem, onur" />
+        <meta name="keywords" content="TMMOB, genel kurul sonuc bildirgesi, donem, belgeler" />
         <link rel="canonical" href={canonicalUrl} />
         <meta property="og:site_name" content="TMMOB" />
         <meta property="og:locale" content="tr_TR" />
@@ -99,7 +138,7 @@ const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId 
           </Grid>
           <Grid item xs={12} sm={3}>
             <PeriodComponent
-              periods={periods}
+              periods={initialPeriods}
               value={periodId}
               onPeriodChange={handlePeriodChange}
             />
@@ -110,7 +149,7 @@ const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId 
           {content?.bodyHtml ? (
             <div dangerouslySetInnerHTML={{ __html: content.bodyHtml }} />
           ) : (
-            <Typography color="text.secondary">İçerik bulunamadı.</Typography>
+            <Typography color="text.secondary">Icerik bulunamadi.</Typography>
           )}
         </Box>
       </Container>
@@ -119,12 +158,14 @@ const YuksekOnurKuruluPage = ({ initialContent, initialPeriods, initialPeriodId 
 };
 
 export async function getServerSideProps({ query }) {
+  const apiBaseUrl = process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
+
   let periods = [];
   try {
-    const periodRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/periods`);
-    const p = await periodRes.json();
-    periods = p.periods || [];
-  } catch (err) {
+    const periodResponse = await fetch(`${apiBaseUrl}/periods`);
+    const payload = await periodResponse.json();
+    periods = payload.periods || [];
+  } catch (error) {
     periods = [];
   }
 
@@ -133,13 +174,9 @@ export async function getServerSideProps({ query }) {
   let content = null;
   try {
     if (periodId) {
-      const contentRes = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/contents/fullcategory/yuksek-onur-kurulu?periodId=${periodId}`
-      );
-      const data = await contentRes.json();
-      content = data.contents?.[0] || null;
+      content = await fetchGenelKurulSonucBildirgesiContent(apiBaseUrl, periodId);
     }
-  } catch (err) {
+  } catch (error) {
     content = null;
   }
 
@@ -152,4 +189,4 @@ export async function getServerSideProps({ query }) {
   };
 }
 
-export default YuksekOnurKuruluPage;
+export default GenelKurulSonucBildirgesiPage;

@@ -47,14 +47,14 @@ const menuItems = [
       { name: 'Yasal Çerçeve', path: '/hukuk/yasal-cerceve' },
       { name: 'Ana Yönetmelik', path: '/hukuk/ana-yonetmelik' },
       { name: 'Yönetmelikler', path: '/hukuk/yonetmelikler' },
-      { name: 'Hukuk', path: 'https://www.tmmob.org.tr/hukuk/acilan-davalar?field_donem_tid=132' },
+      { name: 'Hukuk', path: '/hukuk/acilan-davalar' },
     ],
   },
   {
     name: 'BELGELER',
     prfx: '/belgeler',
     subItems: [
-      { name: 'Genel Kurul Sonuç Bildirgesi', path: '/belgeler/liste/genel-kurul-sonuc-bildirgesi' },
+      { name: 'Genel Kurul Sonuç Bildirgesi', path: '/belgeler/genel-kurul-sonuc-bildirgesi' },
       { name: 'Sonuç Bildirgeleri', path: '/sonuc-bildirgeleri' },
       { name: 'Çalışma Programı', path: '/belgeler/calisma-programi' },
       { name: 'Yönetim Kurulu Kararları', path: '/belgeler/yonetim-kurulu-kararlari' },

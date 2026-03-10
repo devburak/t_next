@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Layout from '../../component/basic/layout';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import PeriodComponent from '../../component/PeriodComponent';
+import ContentShareBar from '../../component/basic/ContentShareBar';
 import Head from 'next/head';
 import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
 
@@ -52,6 +53,8 @@ const DenetlemeKuruluPage = ({ initialContent, initialPeriods, initialPeriodId }
   );
   const canonicalUrl = buildCanonicalUrl('/tmmob/denetleme-kurulu');
   const ogImage = DEFAULT_OG_IMAGE;
+  const imageUrl = content?.featuredMedia?.url || ogImage;
+  const shareTitle = `${title} | TMMOB`;
 
   return (
     <Layout>
@@ -69,15 +72,23 @@ const DenetlemeKuruluPage = ({ initialContent, initialPeriods, initialPeriodId }
         `}
       />
       <Head>
-        <title>{title} | TMMOB</title>
+        <title>{shareTitle}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content="TMMOB, denetleme kurulu, dönem, denetim" />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={`${title} | TMMOB`} />
+        <meta property="og:site_name" content="TMMOB" />
+        <meta property="og:locale" content="tr_TR" />
+        <meta property="og:title" content={shareTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:image" content={ogImage} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:alt" content={title || 'TMMOB içerik'} />
+        <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image:alt" content={title || 'TMMOB içerik'} />
       </Head>
       <Container maxWidth="md" sx={{ mt: 6 }}>
         <Grid container spacing={2} alignItems="center">
@@ -94,6 +105,7 @@ const DenetlemeKuruluPage = ({ initialContent, initialPeriods, initialPeriodId }
             />
           </Grid>
         </Grid>
+        <ContentShareBar title={title} url={canonicalUrl} />
         <Box sx={{ mt: 4 }}>
           {content?.bodyHtml ? (
             <div dangerouslySetInnerHTML={{ __html: content.bodyHtml }} />

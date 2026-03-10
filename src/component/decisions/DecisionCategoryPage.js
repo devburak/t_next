@@ -71,6 +71,7 @@ export default function DecisionCategoryPage({
   periods = [],
   selectedPeriodId = '',
   selectedDecisionType = '',
+  lockDecisionType = false,
   workGroups = [],
   selectedWorkGroupSlug = '',
 }) {
@@ -84,7 +85,7 @@ export default function DecisionCategoryPage({
     canonicalQuery.set('periodId', selectedPeriodId);
   }
 
-  if (selectedDecisionType) {
+  if (selectedDecisionType && !lockDecisionType) {
     canonicalQuery.set('decisionType', selectedDecisionType);
   }
 
@@ -109,7 +110,7 @@ export default function DecisionCategoryPage({
       pathname: `/belgeler/${slug}`,
       query: {
         ...(selectedPeriodId ? { periodId: selectedPeriodId } : {}),
-        ...(selectedDecisionType ? { decisionType: selectedDecisionType } : {}),
+        ...(selectedDecisionType && !lockDecisionType ? { decisionType: selectedDecisionType } : {}),
         ...(selectedWorkGroupSlug ? { workGroupSlug: selectedWorkGroupSlug } : {}),
         ...(value > 1 ? { page: value } : {}),
       },
@@ -122,13 +123,17 @@ export default function DecisionCategoryPage({
       pathname: `/belgeler/${slug}`,
       query: {
         ...(value ? { periodId: value } : {}),
-        ...(selectedDecisionType ? { decisionType: selectedDecisionType } : {}),
+        ...(selectedDecisionType && !lockDecisionType ? { decisionType: selectedDecisionType } : {}),
         ...(selectedWorkGroupSlug ? { workGroupSlug: selectedWorkGroupSlug } : {}),
       },
     });
   };
 
   const handleDecisionTypeChange = (event) => {
+    if (lockDecisionType) {
+      return;
+    }
+
     const value = String(event.target.value || '').trim();
     router.push({
       pathname: `/belgeler/${slug}`,
@@ -146,13 +151,22 @@ export default function DecisionCategoryPage({
       pathname: `/belgeler/${slug}`,
       query: {
         ...(selectedPeriodId ? { periodId: selectedPeriodId } : {}),
-        ...(selectedDecisionType ? { decisionType: selectedDecisionType } : {}),
+        ...(selectedDecisionType && !lockDecisionType ? { decisionType: selectedDecisionType } : {}),
         ...(value ? { workGroupSlug: value } : {}),
       },
     });
   };
 
   const showWorkGroupFilter = selectedDecisionType === 'work-group' || selectedWorkGroupSlug;
+  const showTypeAndWorkGroupColumns = !lockDecisionType;
+  const showPublishDateColumn = !lockDecisionType;
+  const headingGridMd = lockDecisionType ? 9 : showWorkGroupFilter ? 3 : 5;
+  const periodGridSx = lockDecisionType
+    ? {
+        display: 'flex',
+        justifyContent: { xs: 'flex-start', md: 'flex-end' },
+      }
+    : undefined;
 
   return (
     <Layout>
@@ -170,7 +184,7 @@ export default function DecisionCategoryPage({
 
       <Container maxWidth="lg">
         <Grid container spacing={2} alignItems="end" sx={{ mb: 3 }}>
-          <Grid item xs={12} md={showWorkGroupFilter ? 3 : 5}>
+          <Grid item xs={12} md={headingGridMd}>
             <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
               {categoryHeading}
             </Typography>
@@ -184,7 +198,7 @@ export default function DecisionCategoryPage({
               </Typography>
             ) : null}
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3} sx={periodGridSx}>
             <TextField
               select
               label="Dönem"
@@ -192,6 +206,7 @@ export default function DecisionCategoryPage({
               onChange={handlePeriodChange}
               fullWidth
               size="small"
+              sx={lockDecisionType ? { maxWidth: { xs: '100%', md: 260 } } : undefined}
             >
               <MenuItem value="">Tüm Dönemler</MenuItem>
               {periods.map((period) => (
@@ -201,22 +216,24 @@ export default function DecisionCategoryPage({
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={12} md={showWorkGroupFilter ? 3 : 4}>
-            <TextField
-              select
-              label="Karar Türü"
-              value={selectedDecisionType}
-              onChange={handleDecisionTypeChange}
-              fullWidth
-              size="small"
-            >
-              <MenuItem value="">Tümü</MenuItem>
-              <MenuItem value="management-board">Yönetim Kurulu</MenuItem>
-              <MenuItem value="audit-board">Denetleme Kurulu</MenuItem>
-              <MenuItem value="honor-board">Onur Kurulu</MenuItem>
-              <MenuItem value="work-group">Çalışma Grubu</MenuItem>
-            </TextField>
-          </Grid>
+          {!lockDecisionType ? (
+            <Grid item xs={12} md={showWorkGroupFilter ? 3 : 4}>
+              <TextField
+                select
+                label="Karar Türü"
+                value={selectedDecisionType}
+                onChange={handleDecisionTypeChange}
+                fullWidth
+                size="small"
+              >
+                <MenuItem value="">Tümü</MenuItem>
+                <MenuItem value="management-board">Yönetim Kurulu</MenuItem>
+                <MenuItem value="audit-board">Denetleme Kurulu</MenuItem>
+                <MenuItem value="honor-board">Onur Kurulu</MenuItem>
+                <MenuItem value="work-group">Çalışma Grubu</MenuItem>
+              </TextField>
+            </Grid>
+          ) : null}
           {showWorkGroupFilter ? (
             <Grid item xs={12} md={2}>
               <TextField
@@ -255,13 +272,13 @@ export default function DecisionCategoryPage({
                   <TableHead>
                     <TableRow>
                       <TableCell>Başlık</TableCell>
-                      <TableCell>Tür</TableCell>
-                      <TableCell>Çalışma Grubu</TableCell>
+                      {showTypeAndWorkGroupColumns ? <TableCell>Tür</TableCell> : null}
+                      {showTypeAndWorkGroupColumns ? <TableCell>Çalışma Grubu</TableCell> : null}
                       <TableCell>Toplantı No</TableCell>
                       <TableCell>Toplantı Tarihi</TableCell>
                       <TableCell>Toplantı Saati</TableCell>
                       <TableCell>Toplantı Yeri</TableCell>
-                      <TableCell>Yayın Tarihi</TableCell>
+                      {showPublishDateColumn ? <TableCell>Yayın Tarihi</TableCell> : null}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -288,13 +305,19 @@ export default function DecisionCategoryPage({
                             </Typography>
                           ) : null}
                         </TableCell>
-                        <TableCell>{getDecisionTypeLabel(decision.decisionType)}</TableCell>
-                        <TableCell>{decision?.workGroup?.name || '-'}</TableCell>
+                        {showTypeAndWorkGroupColumns ? (
+                          <TableCell>{getDecisionTypeLabel(decision.decisionType)}</TableCell>
+                        ) : null}
+                        {showTypeAndWorkGroupColumns ? (
+                          <TableCell>{decision?.workGroup?.name || '-'}</TableCell>
+                        ) : null}
                         <TableCell>{decision.meetingNo || '-'}</TableCell>
                         <TableCell>{formatDate(decision.meetingDate)}</TableCell>
                         <TableCell>{decision.meetingTime || '-'}</TableCell>
                         <TableCell>{decision.meetingLocation || '-'}</TableCell>
-                        <TableCell>{formatDate(decision.publishDate)}</TableCell>
+                        {showPublishDateColumn ? (
+                          <TableCell>{formatDate(decision.publishDate)}</TableCell>
+                        ) : null}
                       </TableRow>
                     ))}
                   </TableBody>

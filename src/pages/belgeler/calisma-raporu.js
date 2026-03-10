@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Layout from '../../component/basic/layout';
 import { Container, Typography, Grid, Box } from '@mui/material';
 import PeriodComponent from '../../component/PeriodComponent';
+import ContentShareBar from '../../component/basic/ContentShareBar';
 import Head from 'next/head';
 import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
 
@@ -141,19 +142,29 @@ const CalismaRaporuPage = ({ initialContent, initialPeriods, initialPeriodId }) 
     content?.spot || content?.bodyHtml || DEFAULT_DESCRIPTION
   );
   const canonicalUrl = buildCanonicalUrl('/belgeler/calisma-raporu');
+  const imageUrl = content?.featuredMedia?.url || DEFAULT_OG_IMAGE;
+  const shareTitle = `${title} | TMMOB`;
 
   return (
     <Layout>
       <Head>
-        <title>{title} | TMMOB</title>
+        <title>{shareTitle}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content="TMMOB, calisma raporu, donem, belgeler" />
         <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content={`${title} | TMMOB`} />
+        <meta property="og:site_name" content="TMMOB" />
+        <meta property="og:locale" content="tr_TR" />
+        <meta property="og:title" content={shareTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:alt" content={title || 'TMMOB içerik'} />
+        <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+        <meta name="twitter:title" content={shareTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image:alt" content={title || 'TMMOB içerik'} />
       </Head>
 
       <Container maxWidth="md" sx={{ mt: 6 }}>
@@ -171,6 +182,7 @@ const CalismaRaporuPage = ({ initialContent, initialPeriods, initialPeriodId }) 
             />
           </Grid>
         </Grid>
+        <ContentShareBar title={title} url={canonicalUrl} />
 
         <Box sx={{ mt: 4 }}>
           {content?.bodyHtml ? (

@@ -17,10 +17,11 @@ function SearchResults({ page, exp = true, vertical = false }) {
 
     const fetchSearchResults = async () => {
       try {
-        const response = await fetch(`${apiBaseUrl}/contents/search?searchTerm=${encodeURIComponent(s)}&page=${currentPage}`);
+        const response = await fetch(
+          `${apiBaseUrl}/contents/search?searchTerm=${encodeURIComponent(s)}&page=${currentPage}&scope=all`
+        );
         if (!response.ok) throw new Error('Sunucu hatası!');
         const data = await response.json();
-        console.log("data", data);
         setSearchResults(data.contents || []);
         setTotalPages(data.totalPages);
       } catch (error) {
@@ -45,12 +46,12 @@ function SearchResults({ page, exp = true, vertical = false }) {
       </Grid>
       {searchResults.map((item) => (
         <ContentListItem
-          key={item.slug}
+          key={`${item.resultType || 'content'}-${item.slug || item._id || item.title}`}
           title={item.title}
           publishDate={item.publishDate}
           featuredMedia={item.featuredMedia}
           spot={item.spot}
-          link={`/${item.slug}`}
+          link={item.link || `/${item.slug}`}
         />
       ))}
       <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} />

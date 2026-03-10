@@ -7,6 +7,9 @@ import WorkGroupCategoryPage from '../../component/workGroups/WorkGroupCategoryP
 
 const REPORT_PAGE_SIZE = 100;
 const apiBaseUrl = process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
+const FIXED_DECISION_TYPE_BY_SLUG = {
+  'yonetim-kurulu-kararlari': 'management-board',
+};
 
 function readQueryValue(query = {}, key) {
   const value = query?.[key];
@@ -42,6 +45,7 @@ function BelgeContentPage({
   selectedPeriodId,
   selectedWorkGroupSlug,
   selectedDecisionType,
+  lockDecisionType = false,
 }) {
   if (view === 'workGroupCategory') {
     return (
@@ -82,6 +86,7 @@ function BelgeContentPage({
         periods={periods}
         selectedPeriodId={selectedPeriodId}
         selectedDecisionType={selectedDecisionType}
+        lockDecisionType={lockDecisionType}
         workGroups={workGroups}
         selectedWorkGroupSlug={selectedWorkGroupSlug}
       />
@@ -111,7 +116,9 @@ export async function getServerSideProps({ params, query }) {
   const page = Math.max(1, parseInt(query?.page, 10) || 1);
   const selectedPeriodId = readQueryValue(query, 'periodId');
   const selectedWorkGroupSlug = readQueryValue(query, 'workGroupSlug');
-  const selectedDecisionType = readQueryValue(query, 'decisionType');
+  const selectedDecisionTypeFromQuery = readQueryValue(query, 'decisionType');
+  const fixedDecisionType = FIXED_DECISION_TYPE_BY_SLUG[slug] || '';
+  const selectedDecisionType = fixedDecisionType || selectedDecisionTypeFromQuery;
 
   // Takvim ve video-galeri slug'ları /belgeler için mantıklı değil ama gene de filtre ekleyelim
   if (slug === 'takvim' || slug === 'video-galeri') {
@@ -232,6 +239,7 @@ export async function getServerSideProps({ params, query }) {
           workGroups: Array.isArray(workGroupsPayload) ? workGroupsPayload : [],
           selectedPeriodId,
           selectedDecisionType,
+          lockDecisionType: Boolean(fixedDecisionType),
           selectedWorkGroupSlug,
         },
       };
