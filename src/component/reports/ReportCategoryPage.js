@@ -72,6 +72,7 @@ export default function ReportCategoryPage({
   selectedPeriodId = '',
   workGroups = [],
   selectedWorkGroupSlug = '',
+  lockWorkGroupFilter = false,
 }) {
   const router = useRouter();
   const categoryName = getCategoryDisplayName(category?.name || slug);
@@ -83,7 +84,7 @@ export default function ReportCategoryPage({
     canonicalQuery.set('periodId', selectedPeriodId);
   }
 
-  if (selectedWorkGroupSlug) {
+  if (selectedWorkGroupSlug && !lockWorkGroupFilter) {
     canonicalQuery.set('workGroupSlug', selectedWorkGroupSlug);
   }
 
@@ -104,7 +105,7 @@ export default function ReportCategoryPage({
       pathname: `/belgeler/${slug}`,
       query: {
         ...(selectedPeriodId ? { periodId: selectedPeriodId } : {}),
-        ...(selectedWorkGroupSlug ? { workGroupSlug: selectedWorkGroupSlug } : {}),
+        ...(selectedWorkGroupSlug && !lockWorkGroupFilter ? { workGroupSlug: selectedWorkGroupSlug } : {}),
         ...(value > 1 ? { page: value } : {}),
       },
     });
@@ -116,12 +117,16 @@ export default function ReportCategoryPage({
       pathname: `/belgeler/${slug}`,
       query: {
         ...(value ? { periodId: value } : {}),
-        ...(selectedWorkGroupSlug ? { workGroupSlug: selectedWorkGroupSlug } : {}),
+        ...(selectedWorkGroupSlug && !lockWorkGroupFilter ? { workGroupSlug: selectedWorkGroupSlug } : {}),
       },
     });
   };
 
   const handleWorkGroupChange = (event) => {
+    if (lockWorkGroupFilter) {
+      return;
+    }
+
     const value = String(event.target.value || '').trim();
     router.push({
       pathname: `/belgeler/${slug}`,
@@ -131,6 +136,15 @@ export default function ReportCategoryPage({
       },
     });
   };
+
+  const showWorkGroupAndPublishDateColumns = !lockWorkGroupFilter;
+  const headingGridMd = lockWorkGroupFilter ? 9 : 6;
+  const periodGridSx = lockWorkGroupFilter
+    ? {
+        display: 'flex',
+        justifyContent: { xs: 'flex-start', md: 'flex-end' },
+      }
+    : undefined;
 
   return (
     <Layout>
@@ -148,7 +162,7 @@ export default function ReportCategoryPage({
 
       <Container maxWidth="lg">
         <Grid container spacing={2} alignItems="end" sx={{ mb: 3 }}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={headingGridMd}>
             <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
               {categoryHeading}
             </Typography>
@@ -162,7 +176,7 @@ export default function ReportCategoryPage({
               </Typography>
             ) : null}
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3} sx={periodGridSx}>
             <TextField
               select
               label="Dönem"
@@ -170,6 +184,7 @@ export default function ReportCategoryPage({
               onChange={handlePeriodChange}
               fullWidth
               size="small"
+              sx={lockWorkGroupFilter ? { maxWidth: { xs: '100%', md: 260 } } : undefined}
             >
               <MenuItem value="">Tüm Dönemler</MenuItem>
               {periods.map((period) => (
@@ -179,23 +194,25 @@ export default function ReportCategoryPage({
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={12} md={3}>
-            <TextField
-              select
-              label="Çalışma Grubu"
-              value={selectedWorkGroupSlug}
-              onChange={handleWorkGroupChange}
-              fullWidth
-              size="small"
-            >
-              <MenuItem value="">Tümü</MenuItem>
-              {workGroups.map((workGroup) => (
-                <MenuItem key={workGroup._id || workGroup.slug} value={workGroup.slug}>
-                  {workGroup.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+          {!lockWorkGroupFilter ? (
+            <Grid item xs={12} md={3}>
+              <TextField
+                select
+                label="Çalışma Grubu"
+                value={selectedWorkGroupSlug}
+                onChange={handleWorkGroupChange}
+                fullWidth
+                size="small"
+              >
+                <MenuItem value="">Tümü</MenuItem>
+                {workGroups.map((workGroup) => (
+                  <MenuItem key={workGroup._id || workGroup.slug} value={workGroup.slug}>
+                    {workGroup.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          ) : null}
         </Grid>
 
         {groupedReports.length === 0 ? (
@@ -215,11 +232,11 @@ export default function ReportCategoryPage({
                   <TableHead>
                     <TableRow>
                       <TableCell>Başlık</TableCell>
-                      <TableCell>Çalışma Grubu</TableCell>
+                      {showWorkGroupAndPublishDateColumns ? <TableCell>Çalışma Grubu</TableCell> : null}
                       <TableCell>Toplantı No</TableCell>
                       <TableCell>Toplantı Tarihi</TableCell>
                       <TableCell>Toplantı Yeri</TableCell>
-                      <TableCell>Yayın Tarihi</TableCell>
+                      {showWorkGroupAndPublishDateColumns ? <TableCell>Yayın Tarihi</TableCell> : null}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -246,11 +263,15 @@ export default function ReportCategoryPage({
                             </Typography>
                           ) : null}
                         </TableCell>
-                        <TableCell>{report?.workGroup?.name || '-'}</TableCell>
+                        {showWorkGroupAndPublishDateColumns ? (
+                          <TableCell>{report?.workGroup?.name || '-'}</TableCell>
+                        ) : null}
                         <TableCell>{report.meetingNo || '-'}</TableCell>
                         <TableCell>{formatDate(report.meetingDate)}</TableCell>
                         <TableCell>{report.meetingLocation || '-'}</TableCell>
-                        <TableCell>{formatDate(report.publishDate)}</TableCell>
+                        {showWorkGroupAndPublishDateColumns ? (
+                          <TableCell>{formatDate(report.publishDate)}</TableCell>
+                        ) : null}
                       </TableRow>
                     ))}
                   </TableBody>

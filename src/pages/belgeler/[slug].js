@@ -10,6 +10,7 @@ const apiBaseUrl = process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_
 const FIXED_DECISION_TYPE_BY_SLUG = {
   'yonetim-kurulu-kararlari': 'management-board',
 };
+const LOCK_REPORT_WORK_GROUP_BY_SLUG = new Set(['denetleme-kurulu-raporlari']);
 
 function readQueryValue(query = {}, key) {
   const value = query?.[key];
@@ -46,6 +47,7 @@ function BelgeContentPage({
   selectedWorkGroupSlug,
   selectedDecisionType,
   lockDecisionType = false,
+  lockReportWorkGroup = false,
 }) {
   if (view === 'workGroupCategory') {
     return (
@@ -71,6 +73,7 @@ function BelgeContentPage({
         selectedPeriodId={selectedPeriodId}
         workGroups={workGroups}
         selectedWorkGroupSlug={selectedWorkGroupSlug}
+        lockWorkGroupFilter={lockReportWorkGroup}
       />
     );
   }
@@ -118,6 +121,8 @@ export async function getServerSideProps({ params, query }) {
   const selectedWorkGroupSlug = readQueryValue(query, 'workGroupSlug');
   const selectedDecisionTypeFromQuery = readQueryValue(query, 'decisionType');
   const fixedDecisionType = FIXED_DECISION_TYPE_BY_SLUG[slug] || '';
+  const lockReportWorkGroup = LOCK_REPORT_WORK_GROUP_BY_SLUG.has(slug);
+  const effectiveSelectedWorkGroupSlug = lockReportWorkGroup ? '' : selectedWorkGroupSlug;
   const selectedDecisionType = fixedDecisionType || selectedDecisionTypeFromQuery;
 
   // Takvim ve video-galeri slug'ları /belgeler için mantıklı değil ama gene de filtre ekleyelim
@@ -168,22 +173,26 @@ export async function getServerSideProps({ params, query }) {
         page: String(page),
         limit: String(REPORT_PAGE_SIZE),
         ...(selectedPeriodId ? { period: selectedPeriodId } : {}),
-        ...(selectedWorkGroupSlug ? { workGroupSlug: selectedWorkGroupSlug } : {}),
+        ...(effectiveSelectedWorkGroupSlug ? { workGroupSlug: effectiveSelectedWorkGroupSlug } : {}),
       });
       const workGroupQueryParams = new URLSearchParams({
         isListed: 'true',
         ...(selectedPeriodId ? { period: selectedPeriodId } : {}),
       });
+      const workGroupsRequest = lockReportWorkGroup
+        ? Promise.resolve(null)
+        : fetch(`${apiBaseUrl}/work-groups?${workGroupQueryParams.toString()}`);
 
       const [reportsRes, periodsRes, workGroupsRes] = await Promise.all([
         fetch(`${apiBaseUrl}/reports?${queryParams.toString()}`),
         fetch(`${apiBaseUrl}/periods`),
-        fetch(`${apiBaseUrl}/work-groups?${workGroupQueryParams.toString()}`),
+        workGroupsRequest,
       ]);
 
       const reportsPayload = reportsRes.ok ? await reportsRes.json() : { data: [], totalPages: 1 };
       const periodsPayload = periodsRes.ok ? await periodsRes.json() : { periods: [] };
-      const workGroupsPayload = workGroupsRes.ok ? await workGroupsRes.json() : [];
+      const workGroupsPayload =
+        !lockReportWorkGroup && workGroupsRes?.ok ? await workGroupsRes.json() : [];
 
       return {
         props: {
@@ -195,7 +204,8 @@ export async function getServerSideProps({ params, query }) {
           periods: normalizePeriodsPayload(periodsPayload),
           workGroups: Array.isArray(workGroupsPayload) ? workGroupsPayload : [],
           selectedPeriodId,
-          selectedWorkGroupSlug,
+          selectedWorkGroupSlug: effectiveSelectedWorkGroupSlug,
+          lockReportWorkGroup,
         },
       };
     }
