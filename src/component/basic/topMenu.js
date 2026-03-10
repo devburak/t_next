@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -26,7 +26,10 @@ import { StyledListItem, StyledListItemText } from './StyledListItem';
 
 const SearchInput = dynamic(() => import('./searchInput'), { ssr: false });
 
-const menuItems = [
+const MAIN_MENU_API_ENDPOINT = '/api/menu/main';
+const EXTERNAL_PATH_REGEX = /^(https?:\/\/|mailto:|tel:|\/\/)/i;
+
+const DEFAULT_MENU_ITEMS = [
   { name: 'ANASAYFA', path: '/', prfx: '/' },
   {
     name: 'TMMOB',
@@ -87,7 +90,9 @@ const menuItems = [
   { name: 'İKKLAR', prfx: '/ikk', path: '/ikk' },
 ];
 
-function TopMenu() {
+function TopMenu({ initialMenuItems = null, disableClientFetch = false }) {
+  const hasInitialMenuItems = Array.isArray(initialMenuItems) && initialMenuItems.length > 0;
+  const [menuItems, setMenuItems] = useState(hasInitialMenuItems ? initialMenuItems : DEFAULT_MENU_ITEMS);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mobileOpenMenus, setMobileOpenMenus] = useState({});
   const [desktopOpenMenu, setDesktopOpenMenu] = useState(null);
@@ -96,11 +101,70 @@ function TopMenu() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  useEffect(() => {
+    if (disableClientFetch && hasInitialMenuItems) {
+      return undefined;
+    }
+
+    let isMounted = true;
+    const controller = new AbortController();
+
+    const loadMainMenu = async () => {
+      try {
+        const response = await fetch(MAIN_MENU_API_ENDPOINT, {
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = await response.json();
+        if (!isMounted || !Array.isArray(payload?.items) || payload.items.length === 0) {
+          return;
+        }
+
+        setMenuItems(payload.items);
+      } catch (error) {
+        if (error?.name === 'AbortError') {
+          return;
+        }
+        console.error('[TopMenu] Failed to load main menu:', error);
+      }
+    };
+
+    loadMainMenu();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [disableClientFetch, hasInitialMenuItems]);
+
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleMenuClick = (path) => {
+  const isExternalPath = (path) => EXTERNAL_PATH_REGEX.test(path) || String(path || '').startsWith('#');
+
+  const handleMenuClick = (path, target = '_self') => {
+    if (!path) {
+      return;
+    }
+
+    if (target === '_blank') {
+      window.open(path, '_blank', 'noopener,noreferrer');
+      setDrawerOpen(false);
+      handleCloseDesktopMenu();
+      return;
+    }
+
+    if (isExternalPath(path)) {
+      window.location.assign(path);
+      setDrawerOpen(false);
+      handleCloseDesktopMenu();
+      return;
+    }
+
     router.push(path);
     setDrawerOpen(false);
     handleCloseDesktopMenu();
@@ -123,7 +187,13 @@ function TopMenu() {
     setDesktopOpenMenu(null);
   };
 
-  const isActive = (path) => router.pathname === path;
+  const isActive = (path) => {
+    if (!path || isExternalPath(path)) {
+      return false;
+    }
+
+    return router.pathname === path;
+  };
 
   return (
     <Box className="topMenuBackground">
@@ -180,8 +250,8 @@ function TopMenu() {
 
               <List>
                 {menuItems.map((item) => (
-                  <React.Fragment key={item.name}>
-                    {item.subItems ? (
+                  <React.Fragment key={item.id || item.name}>
+                    {Array.isArray(item.subItems) && item.subItems.length > 0 ? (
                       <>
                         <ListItem
                           button
@@ -199,8 +269,8 @@ function TopMenu() {
                             {item.subItems.map((subItem) => (
                               <ListItem
                                 button
-                                key={subItem.name}
-                                onClick={() => handleMenuClick(subItem.path)}
+                                key={subItem.id || subItem.name}
+                                onClick={() => handleMenuClick(subItem.path, subItem.target)}
                                 selected={isActive(subItem.path)}
                                 sx={{
                                   pl: 4,
@@ -216,7 +286,7 @@ function TopMenu() {
                     ) : (
                       <StyledListItem
                         button
-                        onClick={() => handleMenuClick(item.path)}
+                        onClick={() => handleMenuClick(item.path, item.target)}
                         selected={isActive(item.path)}
                         sx={{
                           bgcolor: isActive(item.path) ? 'var(--tmmob-red)' : 'inherit',
@@ -243,9 +313,9 @@ function TopMenu() {
         >
           <Box className="topMenuItems">
             {menuItems.map((item) =>
-              item.subItems ? (
+              Array.isArray(item.subItems) && item.subItems.length > 0 ? (
                 <Box
-                  key={item.name}
+                  key={item.id || item.name}
                   sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}
                 >
                   <Button
@@ -302,8 +372,8 @@ function TopMenu() {
                   >
                     {item.subItems.map((subItem) => (
                       <MenuItem
-                        key={subItem.name}
-                        onClick={() => handleMenuClick(subItem.path)}
+                        key={subItem.id || subItem.name}
+                        onClick={() => handleMenuClick(subItem.path, subItem.target)}
                         selected={isActive(subItem.path)}
                         sx={{
                           bgcolor: isActive(subItem.path) ? 'var(--tmmob-red)' : 'inherit',
@@ -321,8 +391,8 @@ function TopMenu() {
                 </Box>
               ) : (
                 <Button
-                  key={item.name}
-                  onClick={() => handleMenuClick(item.path)}
+                  key={item.id || item.name}
+                  onClick={() => handleMenuClick(item.path, item.target)}
                   variant="text"
                   sx={{
                     color: isActive(item.path) ? '#ffffff' : 'inherit',

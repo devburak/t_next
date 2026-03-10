@@ -8,7 +8,11 @@ import QuickAccessMenu from '../QuickAccessMenu';
 const DynamicCalendar = dynamic(() => import('../calendar'), { ssr: false });
 const Campaign = dynamic(() => import('../campaign'), { ssr: false });
 
-function SidebarRail({ pageType = 'detail' }) {
+function SidebarRail({
+  pageType = 'detail',
+  initialRightMenuItems = null,
+  disableRightMenuFetch = false,
+}) {
   return (
     <>
       <Box sx={{ backgroundColor: 'inherit', p: '4px' }}>
@@ -19,7 +23,10 @@ function SidebarRail({ pageType = 'detail' }) {
         </Box>
       </Box>
       <Box sx={{ backgroundColor: 'inherit', p: '16px 4px' }}>
-        <QuickAccessMenu />
+        <QuickAccessMenu
+          initialMenuItems={initialRightMenuItems}
+          disableClientFetch={disableRightMenuFetch}
+        />
       </Box>
     </>
   );

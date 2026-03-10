@@ -11,6 +11,7 @@ import Image from "next/image";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
+import Chip from "@mui/material/Chip";
 import SvgIcon from "@mui/material/SvgIcon";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -19,6 +20,7 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import PublicIcon from "@mui/icons-material/Public";
 import Layout from '../component/basic/layout';
+import { getChamberSlug } from "../lib/boardDirectory";
 
 const SOCIAL_PLATFORM_META = {
   facebook: { label: "Facebook", color: "#1877F2" },
@@ -90,7 +92,11 @@ export default function OdalarPage({ chambers }) {
         Odalar
       </Typography>
       <Divider sx={{ mb: 2 }} />
-      {chambers.map((chamber) => (
+      {chambers.map((chamber) => {
+        const chamberSlug = getChamberSlug(chamber);
+        const chamberBoardsHref = chamberSlug ? `/oda-kurullari/${chamberSlug}` : "/oda-kurullari";
+
+        return (
         <Accordion key={chamber._id} sx={{ mb: 1 }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -132,8 +138,30 @@ export default function OdalarPage({ chambers }) {
           </AccordionSummary>
           <AccordionDetails>
             <Stack spacing={1}>
-              <Typography>
-                <b>Kısaltma:</b> {chamber.short}
+              <Typography component="div" sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                <span>
+                  <b>Kısaltma:</b> {chamber.short}
+                </span>
+                <Chip
+                  component={Link}
+                  href={chamberBoardsHref}
+                  clickable
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  label="Kurulları"
+                  aria-label={`${chamber.short || chamber.name} kurulları`}
+                  sx={{
+                    cursor: "pointer",
+                    textDecoration: "none",
+                    "& .MuiChip-label": { fontWeight: 600 },
+                    "&:hover": {
+                      bgcolor: "primary.main",
+                      color: "primary.contrastText",
+                      borderColor: "primary.main",
+                    },
+                  }}
+                />
               </Typography>
               <Typography>
                 <b>Adres:</b> {chamber.contact?.address}
@@ -218,7 +246,8 @@ export default function OdalarPage({ chambers }) {
             </Stack>
           </AccordionDetails>
         </Accordion>
-      ))}
+        );
+      })}
     </Container>
     </Layout>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Grid, useTheme, useMediaQuery, Box } from '@mui/material';
 import Header from './header'; // Header bileşeninizin yolu
 import Chambers from './chambers';
@@ -14,7 +14,6 @@ import NewsCarousel from '../news/NewsCarousel';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import FeedIcon from '@mui/icons-material/Feed';
 import EditNotificationsSharpIcon from '@mui/icons-material/EditNotificationsSharp';
-import CampaignIcon from '@mui/icons-material/Campaign';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -27,34 +26,32 @@ import SidebarRail from './SidebarRail';
 // Dynamically import Campaign with SSR disabled
 const Campaign = dynamic(() => import('../campaign'), { ssr: false });
 
-function HomePage() {
+function HomePage({
+  initialSlides = [],
+  initialMainMenuItems = null,
+  initialRightMenuItems = null,
+  initialNewsData = {},
+  initialPublicationData = {},
+  initialVideoData = null,
+}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const [slides, setSlides] = useState([]); // Slider verisi için state
-
-  useEffect(() => {
-    // İstemci tarafında veri çekme
-    const fetchSlides = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/contents/category/slide?limit=5`); // İstemci tarafı için env değişkeni
-        if (!res.ok) {
-          console.error('Sunucudan veri alınırken hata oluştu:', res.statusText);
-          return;
-        }
-        const data = await res.json();
-        setSlides(data.contents || []); // Gelen verileri state'e ata
-      } catch (error) {
-        console.error('Veri çekme hatası:', error.message);
-      }
-    };
-    fetchSlides(); // Veri çekme işlemini başlat
-
-  }, []); // Component mount olduğunda çalışır
+  const slides = Array.isArray(initialSlides) ? initialSlides : [];
+  const mainMenuItems = Array.isArray(initialMainMenuItems) ? initialMainMenuItems : null;
+  const rightMenuItems = Array.isArray(initialRightMenuItems) ? initialRightMenuItems : null;
+  const newsDataByCategory = initialNewsData && typeof initialNewsData === 'object' ? initialNewsData : {};
+  const publicationData = initialPublicationData && typeof initialPublicationData === 'object'
+    ? initialPublicationData
+    : {};
+  const videos = Array.isArray(initialVideoData) ? initialVideoData : null;
 
   return (
     <>
       <Header />
-      <TopMenu />
+      <TopMenu
+        initialMenuItems={mainMenuItems}
+        disableClientFetch={Boolean(mainMenuItems?.length)}
+      />
       <Box className="site-shell site-shell--content">
       <Grid container spacing={3}>
         <Grid item xs={12} >
@@ -70,19 +67,35 @@ function HomePage() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
-              <NewsCarousel categorySlug={"haberler"} />
+              <NewsCarousel
+                categorySlug={"haberler"}
+                initialNewsData={newsDataByCategory.haberler}
+                deferCarousel
+              />
             </Grid>
             <Grid item xs={12}>
               <TitleComponent icon={<FeedIcon />} title={'Basın Açıklamaları'} link={'/kategori/basin-aciklamalari'} />
-              <NewsCarousel categorySlug={"basin-aciklamalari"} />
+              <NewsCarousel
+                categorySlug={"basin-aciklamalari"}
+                initialNewsData={newsDataByCategory["basin-aciklamalari"]}
+                deferCarousel
+              />
             </Grid>
             <Grid item xs={12}>
               <TitleComponent icon={<ExtensionIcon />} title={'Oda Haberleri'} link={'/kategori/oda-haberleri'} />
-              <NewsCarousel categorySlug={"oda-haberleri"} />
+              <NewsCarousel
+                categorySlug={"oda-haberleri"}
+                initialNewsData={newsDataByCategory["oda-haberleri"]}
+                deferCarousel
+              />
             </Grid>
             <Grid item xs={12}>
               <TitleComponent icon={<EditNotificationsSharpIcon />} title={'İKK Haberleri'} link={'/kategori/ikk-haberleri'} />
-              <NewsCarousel categorySlug={"ikk-haberleri"} />
+              <NewsCarousel
+                categorySlug={"ikk-haberleri"}
+                initialNewsData={newsDataByCategory["ikk-haberleri"]}
+                deferCarousel
+              />
             </Grid>
           </Grid>
 
@@ -90,7 +103,11 @@ function HomePage() {
 
 
         <Grid item xs={12} sm={3} order={isMobile ? 3 : 3} sx={{paddingTop:"1px"}}>
-          <SidebarRail pageType="home" />
+          <SidebarRail
+            pageType="home"
+            initialRightMenuItems={rightMenuItems}
+            disableRightMenuFetch={Boolean(rightMenuItems?.length)}
+          />
         </Grid>
       </Grid>
 
@@ -98,26 +115,46 @@ function HomePage() {
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid item xs={12} sm={6}>
           <TitleComponent icon={<RecordVoiceOverIcon />} title={'Görüşler'} link={'/kategori/gorusler'} />
-          <NewsCarousel categorySlug={"gorusler"} itemsPerSlide={2} />
+          <NewsCarousel
+            categorySlug={"gorusler"}
+            itemsPerSlide={2}
+            initialNewsData={newsDataByCategory.gorusler}
+            deferCarousel
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TitleComponent icon={<ForumIcon />} title={'Açılış Konuşmaları'} link={'/kategori/etkinlik-acilis-konusmalari'} />
-          <NewsCarousel categorySlug={"etkinlik-acilis-konusmalari"} itemsPerSlide={2} />
+          <NewsCarousel
+            categorySlug={"etkinlik-acilis-konusmalari"}
+            itemsPerSlide={2}
+            initialNewsData={newsDataByCategory["etkinlik-acilis-konusmalari"]}
+            deferCarousel
+          />
         </Grid>
       </Grid>
 
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid item xs={12} sm={4}>
           <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/yayin-turu/birlik-haberleri'} />
-          <PublicationCarousel one={true} categorySlug={"birlik-haberleri"} />
+          <PublicationCarousel
+            one={true}
+            categorySlug={"birlik-haberleri"}
+            initialData={publicationData["birlik-haberleri"] || null}
+            deferCarousel
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TitleComponent icon={<MenuBookIcon />} title={'TMMOB Kitapları'} link={'/yayin-turu/kitap'} />
-          <PublicationCarousel one={true} categorySlug={"kitap"} />
+          <PublicationCarousel
+            one={true}
+            categorySlug={"kitap"}
+            initialData={publicationData.kitap || null}
+            deferCarousel
+          />
         </Grid>
         <Grid item xs={12} sm={4}>
         <TitleComponent icon={<OndemandVideoIcon />} title={'Videolar'} link={'/video-galeri'} />
-        <VideoCarousel />
+        <VideoCarousel initialVideos={videos} deferCarousel />
         </Grid>
       </Grid>
       </Box>

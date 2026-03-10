@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 import { invalidateServerCache } from '../../../lib/campaignCache';
+import { invalidateServerMainMenuCache } from '../../../lib/mainMenuCache';
+import { invalidateServerRightMenuCache } from '../../../lib/rightMenuCache';
 
 // Webhook secret - CMS_BACKEND'de tanımlanan secret ile aynı olmalı
 const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || '';
@@ -50,6 +52,12 @@ export default async function handler(req, res) {
   if (event && event.startsWith('campaign.')) {
     invalidateServerCache();
     console.log(`[Webhook] Campaign cache invalidated for event: ${event}`);
+  }
+
+  if (event && event.startsWith('menu.')) {
+    invalidateServerMainMenuCache();
+    invalidateServerRightMenuCache();
+    console.log(`[Webhook] Menu caches invalidated for event: ${event}`);
   }
 
   return res.status(200).json({ 

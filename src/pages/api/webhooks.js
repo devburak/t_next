@@ -1,5 +1,7 @@
 import crypto from 'crypto';
 import { invalidateServerCache } from '../../lib/campaignCache';
+import { invalidateServerMainMenuCache } from '../../lib/mainMenuCache';
+import { invalidateServerRightMenuCache } from '../../lib/rightMenuCache';
 import { invalidateServerSettingsCache } from '../../lib/settingsCache';
 
 // Webhook secret - CMS_BACKEND'de tanımlanan secret ile aynı olmalı
@@ -62,6 +64,12 @@ export default async function handler(req, res) {
     if (event === 'system.variable.update') {
       invalidateServerSettingsCache();
       console.log(`[Webhook] Settings cache invalidated for event: ${event}`);
+    }
+
+    if (event && event.startsWith('menu.')) {
+      invalidateServerMainMenuCache();
+      invalidateServerRightMenuCache();
+      console.log(`[Webhook] Menu caches invalidated for event: ${event}`);
     }
 
     // Content events için de eklenebilir

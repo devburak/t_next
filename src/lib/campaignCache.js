@@ -25,11 +25,14 @@ const getApiBaseUrl = () => process.env.API_BASE_URL || process.env.NEXT_PUBLIC_
 /**
  * Kampanyaları API'den çeker
  */
-async function fetchCampaignsFromApi() {
+async function fetchCampaignsFromApi(options = {}) {
+  const { signal } = options;
+
   try {
     const apiBaseUrl = getApiBaseUrl();
     const response = await fetch(`${apiBaseUrl}/campaigns/active`, {
-      cache: 'no-store' // Next.js fetch cache'ini devre dışı bırak
+      cache: 'no-store', // Next.js fetch cache'ini devre dışı bırak
+      signal,
     });
     if (!response.ok) {
       throw new Error(`Campaign API error: ${response.status}`);
@@ -37,6 +40,9 @@ async function fetchCampaignsFromApi() {
     const data = await response.json();
     return Array.isArray(data) ? data : [];
   } catch (error) {
+    if (error?.name === 'AbortError') {
+      return null;
+    }
     console.error('Failed to fetch campaigns from API:', error);
     return null;
   }
@@ -159,7 +165,8 @@ export function invalidateClientCache() {
 /**
  * Client-side: Kampanyaları getir (cache'li)
  */
-export async function getClientCampaigns() {
+export async function getClientCampaigns(options = {}) {
+  const { signal } = options;
   const now = Date.now();
 
   // Memory cache geçerli ise kullan
@@ -176,7 +183,7 @@ export async function getClientCampaigns() {
   }
 
   // API'den çek
-  const data = await fetchCampaignsFromApi();
+  const data = await fetchCampaignsFromApi({ signal });
   if (data !== null) {
     persistClientCache(data);
     return data;
@@ -188,13 +195,13 @@ export async function getClientCampaigns() {
 /**
  * Kampanyaları getir - ortama göre doğru cache kullanır
  */
-export async function getCampaigns() {
+export async function getCampaigns(options = {}) {
   if (typeof window === 'undefined') {
     // Server-side
     return getServerCampaigns();
   }
   // Client-side
-  return getClientCampaigns();
+  return getClientCampaigns(options);
 }
 
 /**

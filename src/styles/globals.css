@@ -114,6 +114,21 @@ a {
   text-decoration-color: currentColor;
 }
 
+.content-print-body iframe[data-lexical-youtube],
+.content-print-body iframe[data-lexical-vimeo],
+.content-print-body iframe[src*="youtube.com/embed/"],
+.content-print-body iframe[src*="youtube-nocookie.com/embed/"],
+.content-print-body iframe[src*="player.vimeo.com/video/"] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 280px;
+  border: 0;
+  margin: 16px 0;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
@@ -127,6 +142,14 @@ a {
 
   .site-shell--section {
     padding-block: 0 16px;
+  }
+
+  .content-print-body iframe[data-lexical-youtube],
+  .content-print-body iframe[data-lexical-vimeo],
+  .content-print-body iframe[src*="youtube.com/embed/"],
+  .content-print-body iframe[src*="youtube-nocookie.com/embed/"],
+  .content-print-body iframe[src*="player.vimeo.com/video/"] {
+    min-height: 200px;
   }
 }
 

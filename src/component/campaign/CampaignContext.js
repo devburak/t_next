@@ -10,25 +10,41 @@ export const CampaignProvider = ({ children, initialCampaigns = null }) => {
   const [loading, setLoading] = useState(!initialCampaigns);
   const [error, setError] = useState(null);
 
-  const fetchCampaigns = useCallback(async () => {
+  const fetchCampaigns = useCallback(async (signal) => {
     try {
       setLoading(true);
-      const data = await getCampaigns();
+      const data = await getCampaigns({ signal });
+
+      if (signal?.aborted) {
+        return;
+      }
+
       setCampaigns(Array.isArray(data) ? data : []);
       setError(null);
     } catch (err) {
+      if (err?.name === 'AbortError' || signal?.aborted) {
+        return;
+      }
       console.error('Error fetching campaigns:', err);
       setError(err.message);
     } finally {
-      setLoading(false);
+      if (!signal?.aborted) {
+        setLoading(false);
+      }
     }
   }, []);
 
   // Server-side'dan gelen initial data yoksa client'ta fetch et
   useEffect(() => {
+    const controller = new AbortController();
+
     if (!initialCampaigns) {
-      fetchCampaigns();
+      fetchCampaigns(controller.signal);
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [initialCampaigns, fetchCampaigns]);
 
   // Cache'i invalidate edip yeniden fetch et (webhook sonrası kullanılabilir)

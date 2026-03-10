@@ -1,40 +1,85 @@
 // components/VideoCarousel.js
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Carousel from 'react-material-ui-carousel';
+import dynamic from 'next/dynamic';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActionArea from '@mui/material/CardActionArea';
 import Dialog from '@mui/material/Dialog';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import VideoCard from './VideoCard';
 
-export default function VideoCarousel({ limit = 3 }) {
-  const [videoData, setVideoData] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Carousel = dynamic(() => import('react-material-ui-carousel'), { ssr: false });
+
+export default function VideoCarousel({ limit = 3, initialVideos = null, deferCarousel = false }) {
+  const hasInitialVideos = Array.isArray(initialVideos);
+  const [videoData, setVideoData] = useState(hasInitialVideos ? initialVideos : []);
+  const [loading, setLoading] = useState(!hasInitialVideos);
   const [open, setOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-
-  const matches = useMediaQuery('(max-width:600px)');
-  const isMobile = matches;
+  const [carouselReady, setCarouselReady] = useState(!deferCarousel);
 
   useEffect(() => {
+    if (hasInitialVideos) {
+      return undefined;
+    }
+
+    const controller = new AbortController();
+
     async function fetchData() {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/videos?limit=${limit}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/videos?limit=${limit}`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          throw new Error(`Video API error: ${response.status}`);
+        }
         const data = await response.json();
+
+        if (controller.signal.aborted) {
+          return;
+        }
 
         setVideoData(data.videos || []);
         setLoading(false);
       } catch (error) {
+        if (error?.name === 'AbortError') {
+          return;
+        }
         console.error("Video verisi çekilirken hata oluştu:", error);
         setLoading(false);
       }
     }
     fetchData();
-  }, [limit]); 
+
+    return () => {
+      controller.abort();
+    };
+  }, [limit, hasInitialVideos]); 
+
+  useEffect(() => {
+    if (!deferCarousel) {
+      return undefined;
+    }
+
+    let timeoutId = null;
+    let idleId = null;
+
+    const markReady = () => setCarouselReady(true);
+
+    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+      idleId = window.requestIdleCallback(markReady, { timeout: 2000 });
+    } else {
+      timeoutId = setTimeout(markReady, 800);
+    }
+
+    return () => {
+      if (idleId && typeof window !== 'undefined' && typeof window.cancelIdleCallback === 'function') {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [deferCarousel]);
 
   if (loading) return <Typography>Yükleniyor...</Typography>;
   if (!videoData || videoData.length === 0)
@@ -67,21 +112,30 @@ export default function VideoCarousel({ limit = 3 }) {
     return <Typography>Video oynatılamıyor</Typography>;
   };
 
+  const renderVideoItem = (video, key) => (
+    <Box key={key} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <VideoCard
+        image={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+        title={video.title}
+        publishDate={video.createdAt}
+        onClick={() => handleOpen(video)}
+      />
+    </Box>
+  );
+
+  if (!carouselReady) {
+    const firstVideo = videoData[0];
+    return (
+      <Box sx={{ width: '100%', padding: 1 }}>
+        {firstVideo ? renderVideoItem(firstVideo, 'video-static') : null}
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ width: '100%', padding: 1 }}>
       <Carousel navButtonsAlwaysVisible={false} autoPlay={false}>
-        
-
-              {videoData.map((video) => (
-                  <Box key={video._id} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                      <VideoCard
-                          image={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
-                          title={video.title}
-                          publishDate={video.createdAt}
-                          onClick={() => handleOpen(video)}
-                      />
-                  </Box>
-              ))}
+        {videoData.map((video) => renderVideoItem(video, video._id || video.videoId))}
       </Carousel>
 
       <Dialog
