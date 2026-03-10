@@ -9,13 +9,18 @@ import VideoCard from './VideoCard';
 
 const Carousel = dynamic(() => import('react-material-ui-carousel'), { ssr: false });
 
-export default function VideoCarousel({ limit = 3, initialVideos = null, deferCarousel = false }) {
+export default function VideoCarousel({
+  limit = 3,
+  initialVideos = null,
+  deferCarousel = false,
+  disableCarousel = false,
+}) {
   const hasInitialVideos = Array.isArray(initialVideos);
   const [videoData, setVideoData] = useState(hasInitialVideos ? initialVideos : []);
   const [loading, setLoading] = useState(!hasInitialVideos);
   const [open, setOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [carouselReady, setCarouselReady] = useState(!deferCarousel);
+  const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
 
   useEffect(() => {
     if (hasInitialVideos) {
@@ -56,7 +61,7 @@ export default function VideoCarousel({ limit = 3, initialVideos = null, deferCa
   }, [limit, hasInitialVideos]); 
 
   useEffect(() => {
-    if (!deferCarousel) {
+    if (!deferCarousel || disableCarousel) {
       return undefined;
     }
 
@@ -79,7 +84,7 @@ export default function VideoCarousel({ limit = 3, initialVideos = null, deferCa
         clearTimeout(timeoutId);
       }
     };
-  }, [deferCarousel]);
+  }, [deferCarousel, disableCarousel]);
 
   if (loading) return <Typography>Yükleniyor...</Typography>;
   if (!videoData || videoData.length === 0)
@@ -123,20 +128,18 @@ export default function VideoCarousel({ limit = 3, initialVideos = null, deferCa
     </Box>
   );
 
-  if (!carouselReady) {
-    const firstVideo = videoData[0];
-    return (
-      <Box sx={{ width: '100%', padding: 1 }}>
-        {firstVideo ? renderVideoItem(firstVideo, 'video-static') : null}
-      </Box>
-    );
-  }
+  const shouldRenderStatic = disableCarousel || !carouselReady;
+  const firstVideo = videoData[0];
 
   return (
     <Box sx={{ width: '100%', padding: 1 }}>
-      <Carousel navButtonsAlwaysVisible={false} autoPlay={false}>
-        {videoData.map((video) => renderVideoItem(video, video._id || video.videoId))}
-      </Carousel>
+      {shouldRenderStatic ? (
+        firstVideo ? renderVideoItem(firstVideo, 'video-static') : null
+      ) : (
+        <Carousel navButtonsAlwaysVisible={false} autoPlay={false}>
+          {videoData.map((video) => renderVideoItem(video, video._id || video.videoId))}
+        </Carousel>
+      )}
 
       <Dialog
         open={open}

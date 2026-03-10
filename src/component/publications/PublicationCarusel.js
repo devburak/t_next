@@ -18,10 +18,11 @@ export default function PublicationCarousel({
   categorySlug = '',
   one = false,
   deferCarousel = false,
+  disableCarousel = false,
 }) {
   const [data, setData] = useState(initialData ? initialData.data : []);
   const [loading, setLoading] = useState(!initialData);
-  const [carouselReady, setCarouselReady] = useState(!deferCarousel);
+  const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
 
   // Ekran boyutuna göre limit ve görünüm ayarlama
   const matches = useMediaQuery('(max-width:600px)');
@@ -73,7 +74,7 @@ export default function PublicationCarousel({
   }, [page, itemLimit, search, period, category, categorySlug, initialData]);
 
   useEffect(() => {
-    if (!deferCarousel) {
+    if (!deferCarousel || disableCarousel) {
       return undefined;
     }
 
@@ -96,7 +97,7 @@ export default function PublicationCarousel({
         clearTimeout(timeoutId);
       }
     };
-  }, [deferCarousel]);
+  }, [deferCarousel, disableCarousel]);
 
   if (loading) return <Typography>Yükleniyor...</Typography>;
   if (!data || data.length === 0) return <Typography>Hiç yayın bulunamadı.</Typography>;
@@ -117,7 +118,9 @@ export default function PublicationCarousel({
     </Box>
   );
 
-  if (!carouselReady) {
+  const shouldRenderStatic = disableCarousel || !carouselReady;
+
+  if (shouldRenderStatic) {
     const firstGroup = isMobile ? data.slice(0, 1) : (groupedPublications[0] || []);
     return (
       <Box sx={{ width: '100%', padding: 1 }}>

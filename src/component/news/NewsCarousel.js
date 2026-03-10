@@ -16,11 +16,12 @@ export default function NewsCarousel({
   itemsPerSlide = 3,
   initialNewsData = null,
   deferCarousel = false,
+  disableCarousel = false,
 }) {
   const hasInitialNewsData = Array.isArray(initialNewsData);
   const [newsData, setNewsData] = useState(hasInitialNewsData ? initialNewsData : []);
   const [loading, setLoading] = useState(!hasInitialNewsData);
-  const [carouselReady, setCarouselReady] = useState(!deferCarousel);
+  const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
 
   // Ekran boyutuna göre limit ayarlaması
   const matches = useMediaQuery('(max-width:600px)');
@@ -78,7 +79,7 @@ export default function NewsCarousel({
   }, [categorySlug, newsLimit, hasInitialNewsData]);
 
   useEffect(() => {
-    if (!deferCarousel) {
+    if (!deferCarousel || disableCarousel) {
       return undefined;
     }
 
@@ -101,7 +102,7 @@ export default function NewsCarousel({
         clearTimeout(timeoutId);
       }
     };
-  }, [deferCarousel]);
+  }, [deferCarousel, disableCarousel]);
 
   if (loading) {
     return <Typography>Yükleniyor...</Typography>; // Yüklenme durumu
@@ -127,7 +128,9 @@ export default function NewsCarousel({
     </Box>
   );
 
-  if (!carouselReady) {
+  const shouldRenderStatic = disableCarousel || !carouselReady;
+
+  if (shouldRenderStatic) {
     const firstGroup = isMobile
       ? newsData.slice(0, 1)
       : groupedNews[0] || [];

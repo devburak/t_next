@@ -119,7 +119,7 @@ function HomePage({
             categorySlug={"gorusler"}
             itemsPerSlide={2}
             initialNewsData={newsDataByCategory.gorusler}
-            deferCarousel
+            disableCarousel
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -128,7 +128,7 @@ function HomePage({
             categorySlug={"etkinlik-acilis-konusmalari"}
             itemsPerSlide={2}
             initialNewsData={newsDataByCategory["etkinlik-acilis-konusmalari"]}
-            deferCarousel
+            disableCarousel
           />
         </Grid>
       </Grid>
@@ -140,7 +140,7 @@ function HomePage({
             one={true}
             categorySlug={"birlik-haberleri"}
             initialData={publicationData["birlik-haberleri"] || null}
-            deferCarousel
+            disableCarousel
           />
         </Grid>
         <Grid item xs={12} sm={4}>
@@ -149,12 +149,12 @@ function HomePage({
             one={true}
             categorySlug={"kitap"}
             initialData={publicationData.kitap || null}
-            deferCarousel
+            disableCarousel
           />
         </Grid>
         <Grid item xs={12} sm={4}>
         <TitleComponent icon={<OndemandVideoIcon />} title={'Videolar'} link={'/video-galeri'} />
-        <VideoCarousel initialVideos={videos} deferCarousel />
+        <VideoCarousel initialVideos={videos} disableCarousel />
         </Grid>
       </Grid>
       </Box>
