@@ -22,8 +22,7 @@ const HomeSlider = ({ slides = [] }) => {
         duration={500} // Animasyon süresi
       >
         {slides.map((slide, index) => (
-          <Link href={slide.slug} passHref key={slide.title} legacyBehavior>
-            <a style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href={slide.slug} key={slide.title} style={{ textDecoration: 'none', color: 'inherit' }}>
               <Card sx={{
                 display: 'flex',
                 alignItems: 'center',
@@ -96,8 +95,7 @@ const HomeSlider = ({ slides = [] }) => {
                   </Grid>
                 </Grid>
               </Card>
-            </a>
-          </Link>
+            </Link>
         ))}
       </Carousel>
     </>

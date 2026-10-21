@@ -45,13 +45,11 @@ const ContentListItem = ({ title, publishDate, featuredMedia, spot, link }) => {
             </Typography>
             
             {/* Başlık */}
-            <Link href={link} legacyBehavior>
-              <a style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href={link} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Typography variant="h6" component="span" gutterBottom>
                   {title}
                 </Typography>
-              </a>
-            </Link>
+              </Link>
             
             {/* Spot */}
             {spot && (

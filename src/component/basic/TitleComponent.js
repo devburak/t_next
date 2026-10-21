@@ -23,11 +23,9 @@ export default function TitleComponent({ icon, title, link }) {
         </Box>
       )}
       {/* Link bileşenini <a> etiketiyle birlikte kullanın */}
-      <Link href={link} legacyBehavior>
-        <a style={{ fontWeight: 'bold', color: 'white', fontSize: 14, textDecoration: 'none' }}>
+      <Link href={link} style={{ fontWeight: 'bold', color: 'white', fontSize: 14, textDecoration: 'none' }}>
           {title}
-        </a>
-      </Link>
+        </Link>
     </Box>
   );
 }

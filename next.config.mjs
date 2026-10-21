@@ -147,6 +147,15 @@ removeLegacyDynamicRouteFiles({
 normalizeProductionEnv();
 
 const nextConfig = {
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: '/:path*', headers: [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+    ] }];
+  },
   // Keep dev output separate from production builds so mixed server
   // artifacts do not produce missing vendor chunk errors.
   distDir,
@@ -162,6 +171,7 @@ const nextConfig = {
     ];
   },
   images: {
+    qualities: [75, 100],
     minimumCacheTTL: 604800,
     remotePatterns:[
       {

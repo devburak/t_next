@@ -51,8 +51,7 @@ export default function PublicationCard({ publication, hideCategories = false })
             }}
             elevation={2}
         >
-            <Link href={publicationHref} passHref legacyBehavior>
-                <a style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href={publicationHref} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Box sx={{ position: 'relative' }}>
                         <AspectRatioMedia
                             src={coverImage}
@@ -83,13 +82,11 @@ export default function PublicationCard({ publication, hideCategories = false })
                             </Typography>
                         </Box>
                     </Box>
-                </a>
-            </Link>
+                </Link>
             <CardContent sx={{ flexGrow: 1, minHeight: 96, display: 'flex' }}>
                 <Stack spacing={1}>
                     {/* Yayın başlığı */}
-                    <Link href={publicationHref} passHref legacyBehavior>
-                        <a style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Link href={publicationHref} style={{ textDecoration: 'none', color: 'inherit' }}>
                             <Typography
                                 variant="h6"
                                 component="div"
@@ -97,8 +94,7 @@ export default function PublicationCard({ publication, hideCategories = false })
                             >
                                 {publication.title}
                             </Typography>
-                        </a>
-                    </Link>
+                        </Link>
                     {/* Kategoriler */}
                     
                     { !hideCategories && publication.categories && publication.categories.length > 0 && (
@@ -107,10 +103,7 @@ export default function PublicationCard({ publication, hideCategories = false })
                                 <Link
                                     key={cat._id}
                                     href={`/yayin-turu/${cat.slug}`}
-                                    passHref
-                                    legacyBehavior
                                 >
-                                    <a>
                                         <Chip
                                             label={cat.name}
                                             size="small"
@@ -118,8 +111,7 @@ export default function PublicationCard({ publication, hideCategories = false })
                                             clickable
                                             sx={{ fontSize: 12, mr: 1, mb: 0.5 }}
                                         />
-                                    </a>
-                                </Link>
+                                    </Link>
                             ))}
                         </Stack>
                     )}
