@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src",
+    "cache:warm": "node scripts/warm-image-cache.mjs",
     "deploy": "rsync -avz --delete --exclude='.next' --exclude='node_modules' ./ frtmmob@demosrv.ikon-x.com.tr:/home/frtmmob/next/",
     "predev": "node scripts/check-runtime.cjs",
     "prebuild": "node scripts/check-runtime.cjs",

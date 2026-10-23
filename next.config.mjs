@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /** @type {import('next').NextConfig} */
 const distDir = process.env.NEXT_DIST_DIR || '.next';
@@ -147,6 +148,10 @@ removeLegacyDynamicRouteFiles({
 normalizeProductionEnv();
 
 const nextConfig = {
+  // Each site is an independent repository; the workspace lockfile is unrelated.
+  turbopack: { root: path.dirname(fileURLToPath(import.meta.url)) },
+  // Workspace agent documentation is maintained at the root, outside site repos.
+  agentRules: false,
   poweredByHeader: false,
   async headers() {
     return [{ source: '/:path*', headers: [
@@ -171,6 +176,9 @@ const nextConfig = {
     ];
   },
   images: {
+    // Bound the optimized image disk cache per running site instance (2 GB).
+    maximumDiskCacheSize: 2_000_000_000,
+    formats: ['image/webp'],
     qualities: [75, 100],
     minimumCacheTTL: 604800,
     remotePatterns:[

@@ -51,8 +51,8 @@ export default function PublicationCard({ publication, hideCategories = false })
             }}
             elevation={2}
         >
-            <Link href={publicationHref} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <Box sx={{ position: 'relative' }}>
+            <Link href={publicationHref} style={{ display: 'block', width: '100%', flexShrink: 0, textDecoration: 'none', color: 'inherit' }}>
+                    <Box sx={{ position: 'relative', flexShrink: 0 }}>
                         <AspectRatioMedia
                             src={coverImage}
                             alt={publication.title}
@@ -83,7 +83,7 @@ export default function PublicationCard({ publication, hideCategories = false })
                         </Box>
                     </Box>
                 </Link>
-            <CardContent sx={{ flexGrow: 1, minHeight: 96, display: 'flex' }}>
+            <CardContent sx={{ flexGrow: 1, minHeight: 96, display: 'flex', ...(hideCategories && { maxHeight: 96, flexShrink: 0, p: 1.5 }) }}>
                 <Stack spacing={1}>
                     {/* Yayın başlığı */}
                     <Link href={publicationHref} style={{ textDecoration: 'none', color: 'inherit' }}>

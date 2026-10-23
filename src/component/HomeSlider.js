@@ -1,6 +1,5 @@
 // components/HomeSlider.js
 import React from 'react';
-import Head from 'next/head';
 import Carousel from 'react-material-ui-carousel';
 import { Card, CardContent, Typography, Box, Grid } from '@mui/material';
 import Link from 'next/link';
@@ -8,13 +7,8 @@ import AspectRatioMedia, { getMediaUrl } from './basic/AspectRatioMedia';
 import { DEFAULT_OG_IMAGE } from '../lib/seo';
 
 const HomeSlider = ({ slides = [] }) => {
-  const firstSlideImage = getMediaUrl(slides?.[0]?.featuredMedia) || DEFAULT_OG_IMAGE;
-
   return (
     <>
-      <Head>
-        <link rel="preload" as="image" href={firstSlideImage} />
-      </Head>
       <Carousel
         // navButtonsAlwaysVisible={true} // Kaydırma düğmelerinin her zaman görünür olmasını sağlar
         indicators={true} // Alt noktalı göstergeler

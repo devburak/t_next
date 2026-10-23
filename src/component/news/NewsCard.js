@@ -20,9 +20,9 @@ const TITLE_CLAMP_SX = {
   maxHeight: '4.5em'
 };
 
-export default function NewsCard({ image, title, url,publishDate }) {
+export default function NewsCard({ image, title, url, publishDate, eager = false }) {
     return (
-        <Link href={url} passHref>
+        <Link href={url} passHref style={{ display: 'block', width: '100%', minWidth: 0 }}>
           <Card
             sx={{
               maxWidth: 345,
@@ -35,11 +35,12 @@ export default function NewsCard({ image, title, url,publishDate }) {
               flexDirection: 'column',
             }}
           >
-            <Box sx={{ position: 'relative' }}> {/* Relative pozisyonlandırma için bir Box eklendi */}
+            <Box sx={{ position: 'relative', flexShrink: 0 }}>
               <AspectRatioMedia
                   src={image}
                   alt={title}
                   sizes="(max-width: 600px) 100vw, 345px"
+                  imageProps={{ loading: eager ? 'eager' : 'lazy' }}
                   sx={{ maxHeight: 260, bgcolor: 'grey.50' }}
                   objectFit="contain"
               />
@@ -61,7 +62,7 @@ export default function NewsCard({ image, title, url,publishDate }) {
                 </Typography>
               </Box>
             </Box>
-            <CardContent sx={{ minHeight: 96, maxHeight: 96, p: 1.5, display: 'flex', alignItems: 'flex-start' }}>
+            <CardContent sx={{ minHeight: 96, maxHeight: 96, flexShrink: 0, p: 1.5, display: 'flex', alignItems: 'flex-start' }}>
               <Typography
                 variant="h6"
                 component="div"

@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PublicationCard from './PublicationCard';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import CardCarouselFrame, { CAROUSEL_ITEM_HEIGHT, cardGroupSx } from '../basic/CardCarouselFrame';
 
 const Carousel = dynamic(() => import('react-material-ui-carousel'), { ssr: false });
 
@@ -25,7 +26,7 @@ export default function PublicationCarousel({
   const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
 
   // Ekran boyutuna göre limit ve görünüm ayarlama
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:599.95px)');
   const isMobile = one ? true : matches;
   const itemLimit = isMobile ? 3 : 6;
 
@@ -99,7 +100,11 @@ export default function PublicationCarousel({
     };
   }, [deferCarousel, disableCarousel]);
 
-  if (loading) return <Typography>Yükleniyor...</Typography>;
+  if (loading) return (
+    <CardCarouselFrame columns={one ? 1 : 3} controls={!disableCarousel}>
+      <Box role="status" aria-label="Yayınlar yükleniyor" sx={{ height: '100%', bgcolor: 'grey.100' }} />
+    </CardCarouselFrame>
+  );
   if (!data || data.length === 0) return <Typography>Hiç yayın bulunamadı.</Typography>;
 
   // Yayınları 3'erli gruplar halinde organize et
@@ -109,9 +114,9 @@ export default function PublicationCarousel({
   }
 
   const renderPublicationGroup = (group, keyPrefix) => (
-    <Box key={keyPrefix} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'stretch', gap: 4 }}>
+    <Box key={keyPrefix} sx={cardGroupSx(one ? 1 : 3)}>
       {group.map((publication, idx) => (
-        <Box key={`${keyPrefix}-${publication._id || idx}`} sx={{ display: 'flex', width: '100%', maxWidth: 345 }}>
+        <Box key={`${keyPrefix}-${publication._id || idx}`} sx={{ display: 'flex', width: '100%', maxWidth: 345, minWidth: 0 }}>
           <PublicationCard publication={publication} hideCategories />
         </Box>
       ))}
@@ -123,19 +128,21 @@ export default function PublicationCarousel({
   if (shouldRenderStatic) {
     const firstGroup = isMobile ? data.slice(0, 1) : (groupedPublications[0] || []);
     return (
-      <Box sx={{ width: '100%', padding: 1 }}>
-        {firstGroup.length > 0 ? renderPublicationGroup(firstGroup, 'publication-static') : null}
-      </Box>
+      <CardCarouselFrame columns={one ? 1 : 3} controls={!disableCarousel}>
+        <Box sx={{ height: disableCarousel ? '100%' : CAROUSEL_ITEM_HEIGHT, overflow: 'hidden' }}>
+          {firstGroup.length > 0 ? renderPublicationGroup(firstGroup, 'publication-static') : null}
+        </Box>
+      </CardCarouselFrame>
     );
   }
 
   return (
-    <Box sx={{ width: '100%', padding: 1 }}>
-      <Carousel navButtonsAlwaysVisible={true}>
+    <CardCarouselFrame columns={one ? 1 : 3}>
+      <Carousel height={CAROUSEL_ITEM_HEIGHT} sx={{ height: '100%' }} navButtonsAlwaysVisible={true}>
         {isMobile
           ? data.map((publication, index) => renderPublicationGroup([publication], `publication-mobile-${index}`))
           : groupedPublications.map((group, index) => renderPublicationGroup(group, `publication-${index}`))}
       </Carousel>
-    </Box>
+    </CardCarouselFrame>
   );
 }

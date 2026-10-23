@@ -69,6 +69,7 @@ function HomePage({
               <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
               <NewsCarousel
                 categorySlug={"haberler"}
+                eagerImages
                 initialNewsData={newsDataByCategory.haberler}
                 deferCarousel
               />

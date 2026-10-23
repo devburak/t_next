@@ -43,10 +43,12 @@ function AspectRatioMedia({
 
   return (
     <Box
+      data-media-frame
       sx={{
         position: 'relative',
         width: '100%',
         aspectRatio: ratio,
+        flexShrink: 0,
         overflow: 'hidden',
         bgcolor: 'grey.100',
         ...sx

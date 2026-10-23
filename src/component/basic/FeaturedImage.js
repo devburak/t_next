@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Box } from '@mui/material';
+import AspectRatioMedia from './AspectRatioMedia';
 
 function FeaturedImage({ url, alt }) {
   if (!url) return null;
@@ -7,23 +7,19 @@ function FeaturedImage({ url, alt }) {
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: 2,
-        marginBottom: 2,
+        width: '100%',
+        maxWidth: 600,
+        mx: 'auto',
+        my: 2,
       }}
     >
-      <Image
+      <AspectRatioMedia
         src={url}
         alt={alt || 'Featured Image'}
-        width={600} // Maksimum genişlik
-        height={450} // Maksimum yükseklik
-        style={{
-          objectFit: 'contain',
-          maxWidth: '600px',
-          maxHeight: '450px',
-        }}
-        layout="responsive" // Doğru oranda render alması için kullanılır
+        objectFit="contain"
+        sx={{ bgcolor: 'transparent' }}
+        sizes="(max-width: 600px) calc(100vw - 74px), (max-width: 1000px) calc(69vw - 48px), 600px"
+        priority
       />
     </Box>
   );

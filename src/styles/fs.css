@@ -3517,11 +3517,11 @@ select.lang-dropdown-select-element:focus {
     -webkit-box-shadow: none
 }
 
-select.lang-dropdown-select-element option,select.lang-dropdown-select-element option:hover,select.lang-dropdown-select-element option:focus,select.lang-dropdown-select-element option:visited,select.lang-dropdown-select-element option:active,select.lang-dropdown-select-element option:selected {
+select.lang-dropdown-select-element option,select.lang-dropdown-select-element option:hover,select.lang-dropdown-select-element option:focus,select.lang-dropdown-select-element option:visited,select.lang-dropdown-select-element option:active,select.lang-dropdown-select-element option:checked {
     background: #e20303
 }
 
-select.lang-dropdown-select-element option:selected {
+select.lang-dropdown-select-element option:checked {
     color: #ff0;
     -moz-appearance: none
 }

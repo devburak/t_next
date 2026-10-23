@@ -5,7 +5,8 @@ import {
   Typography,
   Dialog,
   DialogContent,
-  IconButton
+  IconButton,
+  useMediaQuery
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
@@ -80,6 +81,10 @@ function Campaign({
   layoutType = 'horizontal'
 }) {
   const { campaigns, loading, error } = useContext(CampaignContext);
+  const isDesktopRail = useMediaQuery('(min-width:600px)');
+  const imageSizes = placement === 'left_menu'
+    ? '(max-width: 400px) calc(100vw - 40px), (max-width: 599.95px) calc(92vw - 8px), (max-width: 1000px) calc(23vw - 26px), (max-width: 1360px) calc(25vw - 46px), 294px'
+    : '(max-width: 1000px) calc(100vw - 32px), (max-width: 1360px) calc(100vw - 80px), 1280px';
   const [activePopup, setActivePopup] = useState(null);
 
   const normalizedPageType = useMemo(() => {
@@ -171,7 +176,8 @@ function Campaign({
                     alt={activePopup.title}
                     fill
                     style={{ objectFit: 'contain' }}
-                    sizes="100vw"
+                    sizes="(max-width: 960px) calc(100vw - 80px), 880px"
+                    loading="eager"
                   />
                 </Box>
               ) : (
@@ -186,7 +192,7 @@ function Campaign({
             </a>
           ) : isImage ? (
             <Box sx={{ position: 'relative', width: '100%', height: { xs: 240, sm: 420 } }}>
-              <Image src={popupMedia.url} alt={activePopup.title} fill style={{ objectFit: 'contain' }} sizes="100vw" />
+              <Image src={popupMedia.url} alt={activePopup.title} fill style={{ objectFit: 'contain' }} sizes="(max-width: 960px) calc(100vw - 80px), 880px" loading="eager" />
             </Box>
           ) : (
             <iframe
@@ -204,12 +210,15 @@ function Campaign({
 
   return (
     <>
-      {filteredCampaigns.map((campaign) => {
+      {filteredCampaigns.map((campaign, index) => {
         const media = layoutType === 'horizontal' ? campaign.horizontalMedia : campaign.squareMedia;
 
         if (!media || !media.url) return null;
 
         const isImage = media.mediaType === 'image';
+        // Only the first visible desktop rail images compete with the headline for LCP.
+        const imageLoading = (placement === 'left_menu' && isDesktopRail && index < 2)
+          || (placement === 'banner' && index === 0) ? 'eager' : 'lazy';
 
         return (
           <Box key={campaign._id} sx={{ mb: 2, width: '100%' }}>
@@ -239,7 +248,8 @@ function Campaign({
                       alt={campaign.title}
                       fill
                       style={{ objectFit: layoutType === 'horizontal' ? 'contain' : 'fill' }}
-                      sizes="100vw"
+                      sizes={imageSizes}
+                      loading={imageLoading}
                     />
                   ) : (
                     <iframe
@@ -257,7 +267,8 @@ function Campaign({
                   alt={campaign.title}
                   fill
                   style={{ objectFit: layoutType === 'horizontal' ? 'contain' : 'fill' }}
-                  sizes="100vw"
+                  sizes={imageSizes}
+                  loading={imageLoading}
                 />
               ) : (
                 <iframe

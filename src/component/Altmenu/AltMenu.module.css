@@ -1,7 +1,7 @@
 .paneContent {
     padding: 10px;
   }
-  
+
   .nav {
     border: 1px solid #788590;
     background-color: #ecf0f1; /* Arka plan rengi */
@@ -32,4 +32,30 @@
     color: #ecf0f1;
     opacity: 0.6;
   }
-  
+
+  @media (max-width: 599.95px) {
+    .nav {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) max-content;
+    }
+
+    .nav li {
+      float: none;
+      min-width: 0;
+    }
+
+    .nav li a {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 44px;
+      height: 100%;
+      padding: 12px 8px;
+      text-align: left;
+    }
+
+    .nav li:nth-child(even) a {
+      justify-content: flex-end;
+      text-align: right;
+    }
+  }

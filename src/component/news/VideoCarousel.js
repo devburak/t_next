@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import VideoCard from './VideoCard';
+import CardCarouselFrame, { CAROUSEL_ITEM_HEIGHT } from '../basic/CardCarouselFrame';
 
 const Carousel = dynamic(() => import('react-material-ui-carousel'), { ssr: false });
 
@@ -86,7 +87,11 @@ export default function VideoCarousel({
     };
   }, [deferCarousel, disableCarousel]);
 
-  if (loading) return <Typography>Yükleniyor...</Typography>;
+  if (loading) return (
+    <CardCarouselFrame controls={!disableCarousel}>
+      <Box role="status" aria-label="Videolar yükleniyor" sx={{ height: '100%', bgcolor: 'grey.100' }} />
+    </CardCarouselFrame>
+  );
   if (!videoData || videoData.length === 0)
     return <Typography>Video bulunamadı.</Typography>;
 
@@ -132,14 +137,18 @@ export default function VideoCarousel({
   const firstVideo = videoData[0];
 
   return (
-    <Box sx={{ width: '100%', padding: 1 }}>
+    <>
+      <CardCarouselFrame controls={!disableCarousel}>
       {shouldRenderStatic ? (
-        firstVideo ? renderVideoItem(firstVideo, 'video-static') : null
+        <Box sx={{ height: disableCarousel ? '100%' : CAROUSEL_ITEM_HEIGHT, overflow: 'hidden' }}>
+          {firstVideo ? renderVideoItem(firstVideo, 'video-static') : null}
+        </Box>
       ) : (
-        <Carousel navButtonsAlwaysVisible={false} autoPlay={false}>
+        <Carousel height={CAROUSEL_ITEM_HEIGHT} sx={{ height: '100%' }} navButtonsAlwaysVisible={false} autoPlay={false}>
           {videoData.map((video) => renderVideoItem(video, video._id || video.videoId))}
         </Carousel>
       )}
+      </CardCarouselFrame>
 
       <Dialog
         open={open}
@@ -152,6 +161,6 @@ export default function VideoCarousel({
           {selectedVideo && renderVideoEmbed(selectedVideo)}
         </Box>
       </Dialog>
-    </Box>
+    </>
   );
 }

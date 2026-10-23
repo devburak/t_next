@@ -27,8 +27,8 @@ function Header() {
                             height={90}
                             priority
                             quality={100}
-                            sizes="(max-width: 900px) 366px, 366px"
-                            style={{ width: 'auto', height: '90px', maxWidth: '100%' }}
+                            sizes="(max-width: 960px) 280px, 366px"
+                            style={{ width: '100%', height: 'auto', maxWidth: '100%' }}
                         />
                     </button>
                 </div>

@@ -34,7 +34,7 @@ export default function VideoCard({ image, title, publishDate, onClick }) {
       }}
       onClick={onClick}
     >
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: 'relative', flexShrink: 0 }}>
         <AspectRatioMedia
           src={image}
           alt={title}
@@ -79,7 +79,7 @@ export default function VideoCard({ image, title, publishDate, onClick }) {
           </Typography>
         </Box>
       </Box>
-      <CardContent sx={{ minHeight: 96, maxHeight: 96, p: 1.5, display: 'flex', alignItems: 'flex-start' }}>
+      <CardContent sx={{ minHeight: 96, maxHeight: 96, flexShrink: 0, p: 1.5, display: 'flex', alignItems: 'flex-start' }}>
         <Typography
           variant="h6"
           component="div"
