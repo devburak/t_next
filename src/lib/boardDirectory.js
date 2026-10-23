@@ -1,53 +1,50 @@
 const TURKISH_CHAR_MAP = {
-  ç: 'c',
-  Ç: 'c',
-  ğ: 'g',
-  Ğ: 'g',
-  ı: 'i',
-  İ: 'i',
-  ö: 'o',
-  Ö: 'o',
-  ş: 's',
-  Ş: 's',
-  ü: 'u',
-  Ü: 'u',
+  ç: "c",
+  Ç: "c",
+  ğ: "g",
+  Ğ: "g",
+  ı: "i",
+  İ: "i",
+  ö: "o",
+  Ö: "o",
+  ş: "s",
+  Ş: "s",
+  ü: "u",
+  Ü: "u",
 };
 
-const MAX_BOARD_PAGES = 100;
-const BOARD_PAGE_LIMIT = 100;
-
-function normalizeTurkishText(value = '') {
+function normalizeTurkishText(value = "") {
   return String(value)
-    .split('')
+    .split("")
     .map((char) => TURKISH_CHAR_MAP[char] || char)
-    .join('');
+    .join("");
 }
 
-export function slugifyText(value = '') {
+export function slugifyText(value = "") {
   return normalizeTurkishText(value)
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 export function getEntityId(entity) {
   if (!entity) {
-    return '';
+    return "";
   }
 
-  if (typeof entity === 'string') {
+  if (typeof entity === "string") {
     return entity;
   }
 
-  return String(entity._id || entity.id || '');
+  return String(entity._id || entity.id || "");
 }
 
-export function getEntityName(entity, fallback = '') {
+export function getEntityName(entity, fallback = "") {
   if (!entity) {
     return fallback;
   }
 
-  if (typeof entity === 'string') {
+  if (typeof entity === "string") {
     return entity;
   }
 
@@ -55,203 +52,139 @@ export function getEntityName(entity, fallback = '') {
 }
 
 export function getChamberSlug(chamber) {
-  const shortName = String(chamber?.short || '').trim();
-  const chamberName = String(chamber?.name || '').trim();
+  const shortName = String(chamber?.short || "").trim();
+  const chamberName = String(chamber?.name || "").trim();
   return slugifyText(shortName || chamberName);
 }
 
-async function fetchJson(url, fallbackValue) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      return fallbackValue;
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error(`[BoardDirectory] Failed to fetch: ${url}`, error);
-    return fallbackValue;
-  }
-}
-
-async function fetchAllBoards(apiBaseUrl) {
-  let page = 1;
-  let totalPages = 1;
-  const allBoards = [];
-
-  while (page <= totalPages && page <= MAX_BOARD_PAGES) {
-    const params = new URLSearchParams({
-      page: String(page),
-      limit: String(BOARD_PAGE_LIMIT),
-    });
-
-    const payload = await fetchJson(`${apiBaseUrl}/boards?${params.toString()}`, {
-      data: [],
-      totalPages: 1,
-    });
-
-    const pageData = Array.isArray(payload?.data) ? payload.data : [];
-    allBoards.push(...pageData);
-
-    const nextTotalPages = Number(payload?.totalPages);
-    totalPages = Number.isFinite(nextTotalPages) && nextTotalPages > 0 ? nextTotalPages : 1;
-    page += 1;
-  }
-
-  return allBoards;
-}
-
-export async function fetchBoardDirectoryData(apiBaseUrl) {
-  const [boards, boardTypesPayload, chambersPayload, periodsPayload] = await Promise.all([
-    fetchAllBoards(apiBaseUrl),
-    fetchJson(`${apiBaseUrl}/board-types`, []),
-    fetchJson(`${apiBaseUrl}/chambers?page=1&limit=200`, { data: [] }),
-    fetchJson(`${apiBaseUrl}/periods?page=1&pageSize=200`, { periods: [] }),
-  ]);
-
-  const boardTypes = Array.isArray(boardTypesPayload) ? boardTypesPayload : [];
-  const chambers = Array.isArray(chambersPayload?.data) ? chambersPayload.data : [];
-  const periods = Array.isArray(periodsPayload?.periods) ? periodsPayload.periods : [];
-
-  return {
-    boards,
-    boardTypes,
-    chambers,
-    periods,
-  };
-}
-
-export function getDefaultPeriodIdForBoards(periods = [], boards = []) {
-  const boardPeriodIds = new Set(
-    boards
-      .map((board) => getEntityId(board?.period))
-      .filter(Boolean)
-  );
-
-  if (boardPeriodIds.size > 0) {
-    for (const period of periods) {
-      const periodId = getEntityId(period);
-      if (periodId && boardPeriodIds.has(periodId)) {
-        return periodId;
-      }
-    }
-  }
-
-  return getEntityId(periods[0]);
-}
-
 export function normalizeFilterValue(value) {
-  if (Array.isArray(value)) {
-    return normalizeFilterValue(value[0]);
+  return typeof value === "string" ? value.trim() : "";
+}
+export function formatTermDates(term) {
+  const start = term?.startDate?.slice(0, 4);
+  const end = term?.endDate?.slice(0, 4);
+  return start && end
+    ? start === end
+      ? start
+      : `${start}–${end}`
+    : start || end || "";
+}
+export function formatTermDateRange(term) {
+  const format = (value) => {
+    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value || "");
+    return match ? `${match[3]}.${match[2]}.${match[1]}` : "";
+  };
+  const start = format(term?.startDate);
+  const end = format(term?.endDate);
+  return start && end
+    ? `${start} – ${end}`
+    : start
+      ? `Başlangıç: ${start}`
+      : end
+        ? `Bitiş: ${end}`
+        : "";
+}
+export function toBoardView(board) {
+  return {
+    _id: board._id,
+    name: board.name || "",
+    term: board.term || null,
+    chamber: board.chamber || null,
+    type: board.type || null,
+    members: Array.isArray(board.members) ? board.members : [],
+  };
+}
+export function getArchiveTerms(terms, latestTerm, missingCount) {
+  const archived = terms.filter((term) => term.name !== latestTerm);
+  if (latestTerm && missingCount > 0)
+    archived.push({ name: "", missing: true, boardCount: missingCount });
+  return archived;
+}
+async function fetchJson(url) {
+  const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+  if (!response.ok) throw new Error("Kurul verisi alınamadı.");
+  return response.json();
+}
+export async function loadBoardDirectory(
+  apiBaseUrl,
+  query = {},
+  chamberSlug = "",
+) {
+  const empty = {
+    boards: [],
+    boardTypes: [],
+    chambers: [],
+    terms: [],
+    missingCount: 0,
+    latestTerm: null,
+    fixedChamber: null,
+    chamberSlug,
+    total: 0,
+    totalPages: 0,
+    page: 1,
+    initialFilters: { typeId: "", chamberId: "", donem: "", donemsiz: "" },
+    unavailable: false,
+  };
+  if (!apiBaseUrl) return { props: { ...empty, unavailable: true } };
+  try {
+    const [boardTypes, chambersPayload] = await Promise.all([
+      fetchJson(`${apiBaseUrl}/board-types`),
+      fetchJson(`${apiBaseUrl}/chambers?page=1&limit=200`),
+    ]);
+    const chambers = chambersPayload.data || [];
+    const fixedChamber = chamberSlug
+      ? chambers.find((item) => getChamberSlug(item) === chamberSlug)
+      : null;
+    if (chamberSlug && !fixedChamber) return { notFound: true };
+    const validId = (value, items) =>
+      items.some((item) => getEntityId(item) === value) ? value : "";
+    const chamberId =
+      getEntityId(fixedChamber) ||
+      validId(normalizeFilterValue(query.chamberId), chambers);
+    const typeId = validId(normalizeFilterValue(query.typeId), boardTypes);
+    const donem =
+      fixedChamber && typeof query.donem === "string" && query.donem.trim()
+        ? query.donem.slice(0, 120)
+        : "";
+    const donemsiz =
+      fixedChamber && !donem && query.donemsiz === "1" ? "1" : "";
+    const rawPage = normalizeFilterValue(query.page);
+    const page =
+      /^\d+$/.test(rawPage) && Number(rawPage) >= 1 && Number(rawPage) <= 100000
+        ? Number(rawPage)
+        : 1;
+    // Geçmiş dönem bağlantısı üstteki güncel kurulları değiştirmez.
+    const terms = fixedChamber
+      ? await fetchJson(
+          `${apiBaseUrl}/boards/terms?${new URLSearchParams({ chamber: chamberId })}`,
+        )
+      : { data: [], missingCount: 0 };
+    const latestTerm = terms.latest || terms.data?.[0]?.name || null;
+    const params = new URLSearchParams({ page: String(page), limit: "12" });
+    if (chamberId) params.set("chamber", chamberId);
+    if (typeId) params.set("type", typeId);
+    if (fixedChamber) {
+      if (latestTerm) params.set("term", latestTerm);
+      else params.set("termMissing", "true");
+    } else params.set("latest", "true");
+    const result = await fetchJson(`${apiBaseUrl}/boards?${params}`);
+    return {
+      props: {
+        ...empty,
+        boards: (result.data || []).map(toBoardView),
+        total: result.total || 0,
+        totalPages: result.totalPages || 0,
+        page,
+        boardTypes,
+        chambers,
+        fixedChamber,
+        latestTerm,
+        terms: terms.data || [],
+        missingCount: terms.missingCount || 0,
+        initialFilters: { chamberId, typeId, donem, donemsiz },
+      },
+    };
+  } catch {
+    return { props: { ...empty, unavailable: true } };
   }
-
-  return typeof value === 'string' ? value.trim() : '';
-}
-
-export function filterBoards(boards = [], { periodId = '', typeId = '', chamberId = '' } = {}) {
-  return boards.filter((board) => {
-    if (periodId && getEntityId(board?.period) !== periodId) {
-      return false;
-    }
-
-    if (typeId && getEntityId(board?.type) !== typeId) {
-      return false;
-    }
-
-    if (chamberId && getEntityId(board?.chamber) !== chamberId) {
-      return false;
-    }
-
-    return true;
-  });
-}
-
-export function sortByLocalizedName(items = [], nameGetter = (item) => getEntityName(item, '')) {
-  return [...items].sort((left, right) =>
-    nameGetter(left).localeCompare(nameGetter(right), 'tr', { sensitivity: 'base' })
-  );
-}
-
-export function sortBoardTypesByWeight(items = []) {
-  return [...items].sort((left, right) => {
-    const leftWeight = Number.parseInt(left?.sortWeight, 10);
-    const rightWeight = Number.parseInt(right?.sortWeight, 10);
-    const normalizedLeft = Number.isFinite(leftWeight) ? leftWeight : Number.MAX_SAFE_INTEGER;
-    const normalizedRight = Number.isFinite(rightWeight) ? rightWeight : Number.MAX_SAFE_INTEGER;
-
-    if (normalizedLeft !== normalizedRight) {
-      return normalizedLeft - normalizedRight;
-    }
-
-    return getEntityName(left, '').localeCompare(getEntityName(right, ''), 'tr', { sensitivity: 'base' });
-  });
-}
-
-function normalizeSortWeight(value) {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isFinite(parsed) ? parsed : Number.MAX_SAFE_INTEGER;
-}
-
-export function sortBoardsForDisplay(boards = [], boardTypes = []) {
-  const boardTypeWeightById = new Map();
-  const boardTypeNameById = new Map();
-
-  boardTypes.forEach((boardType) => {
-    const typeId = getEntityId(boardType);
-    if (!typeId) {
-      return;
-    }
-
-    boardTypeWeightById.set(typeId, normalizeSortWeight(boardType?.sortWeight));
-    boardTypeNameById.set(typeId, getEntityName(boardType, ''));
-  });
-
-  const resolveTypeWeight = (board) => {
-    const inlineWeight = normalizeSortWeight(board?.type?.sortWeight);
-    if (inlineWeight !== Number.MAX_SAFE_INTEGER) {
-      return inlineWeight;
-    }
-
-    const typeId = getEntityId(board?.type);
-    if (typeId && boardTypeWeightById.has(typeId)) {
-      return boardTypeWeightById.get(typeId);
-    }
-
-    return Number.MAX_SAFE_INTEGER;
-  };
-
-  const resolveTypeName = (board) => {
-    const inlineName = getEntityName(board?.type, '');
-    if (inlineName) {
-      return inlineName;
-    }
-
-    const typeId = getEntityId(board?.type);
-    if (typeId && boardTypeNameById.has(typeId)) {
-      return boardTypeNameById.get(typeId);
-    }
-
-    return '';
-  };
-
-  return [...boards].sort((left, right) => {
-    const normalizedLeftTypeWeight = resolveTypeWeight(left);
-    const normalizedRightTypeWeight = resolveTypeWeight(right);
-
-    if (normalizedLeftTypeWeight !== normalizedRightTypeWeight) {
-      return normalizedLeftTypeWeight - normalizedRightTypeWeight;
-    }
-
-    const typeDiff = resolveTypeName(left).localeCompare(
-      resolveTypeName(right),
-      'tr',
-      { sensitivity: 'base' }
-    );
-
-    if (typeDiff !== 0) {
-      return typeDiff;
-    }
-
-    return getEntityName(left, '').localeCompare(getEntityName(right, ''), 'tr', { sensitivity: 'base' });
-  });
 }

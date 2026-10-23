@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src",
-    "deploy": "rsync -avz --delete --exclude='.next' --exclude='node_modules' ./ frtmmob@demosrv.ikon-x.com.tr:/home/frtmmob/next/"
+    "deploy": "rsync -avz --delete --exclude='.next' --exclude='node_modules' ./ frtmmob@demosrv.ikon-x.com.tr:/home/frtmmob/next/",
+    "predev": "node scripts/check-runtime.cjs",
+    "prebuild": "node scripts/check-runtime.cjs",
+    "prestart": "node scripts/check-runtime.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -23,7 +26,7 @@
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "lexical": "^0.13.1",
-    "next": "^16.4.2",
+    "next": "16.4.2",
     "react": "^18",
     "react-calendar": "^4.8.0",
     "react-dom": "^18",
@@ -34,10 +37,10 @@
   },
   "devDependencies": {
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.4.2"
+    "eslint-config-next": "16.4.2"
   },
   "engines": {
-    "node": ">=24.0.0 <25",
+    "node": ">=24.22.1 <25",
     "npm": ">=11"
   }
 }

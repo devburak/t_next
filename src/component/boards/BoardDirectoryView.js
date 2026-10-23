@@ -1,162 +1,83 @@
-import { useEffect, useMemo, useState } from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
+import Head from "next/head";
+import { useRouter } from "next/router";
 import {
+  Alert,
   Container,
-  Divider,
   Grid,
+  Pagination,
   Paper,
   Stack,
   TextField,
   Typography,
-} from '@mui/material';
-import Layout from '../basic/layout';
-import ContentShareBar from '../basic/ContentShareBar';
+} from "@mui/material";
+import Layout from "../basic/layout";
+import ContentShareBar from "../basic/ContentShareBar";
+import BoardCard from "./BoardCard";
+import BoardHistory from "./BoardHistory";
+import { getEntityId } from "../../lib/boardDirectory";
 import {
-  filterBoards,
-  getEntityId,
-  getEntityName,
-  normalizeFilterValue,
-  sortBoardTypesByWeight,
-  sortBoardsForDisplay,
-  sortByLocalizedName,
-} from '../../lib/boardDirectory';
-import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
+  buildCanonicalUrl,
+  buildMetaDescription,
+  DEFAULT_OG_IMAGE,
+} from "../../lib/seo";
 
-function BoardDirectoryView({
+export default function BoardDirectoryView({
   title,
   description,
   canonicalPath,
-  initialBoards,
-  initialPeriods,
-  initialBoardTypes,
-  initialChambers,
+  boards,
+  terms,
+  boardTypes,
+  chambers,
   initialFilters,
-  fixedChamber = null,
+  fixedChamber,
+  total,
+  totalPages,
+  page,
+  missingCount,
+  latestTerm,
+  unavailable,
 }) {
   const router = useRouter();
-  const [periodId, setPeriodId] = useState(initialFilters.periodId || '');
-  const [typeId, setTypeId] = useState(initialFilters.typeId || '');
-  const [chamberId, setChamberId] = useState(initialFilters.chamberId || '');
-
-  const fixedChamberId = getEntityId(fixedChamber);
-  const showTypeFilter = !fixedChamber;
-  const showChamberFilter = !fixedChamber;
-
-  useEffect(() => {
-    const nextPeriodId = normalizeFilterValue(router.query.periodId) || initialFilters.periodId || '';
-    if (nextPeriodId !== periodId) {
-      setPeriodId(nextPeriodId);
-    }
-
-    if (showTypeFilter) {
-      const nextTypeId = normalizeFilterValue(router.query.typeId);
-      if (nextTypeId !== typeId) {
-        setTypeId(nextTypeId);
-      }
-    }
-
-    if (showChamberFilter) {
-      const nextChamberId = normalizeFilterValue(router.query.chamberId);
-      if (nextChamberId !== chamberId) {
-        setChamberId(nextChamberId);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query.periodId, router.query.typeId, router.query.chamberId, showTypeFilter, showChamberFilter]);
-
-  const periods = initialPeriods;
-  const boardTypes = useMemo(
-    () => sortBoardTypesByWeight(initialBoardTypes),
-    [initialBoardTypes]
-  );
-  const chambers = useMemo(
-    () => sortByLocalizedName(initialChambers, (chamber) => getEntityName(chamber, '')),
-    [initialChambers]
-  );
-
-  const effectiveFilters = useMemo(
-    () => ({
-      periodId,
-      typeId: showTypeFilter ? typeId : '',
-      chamberId: fixedChamberId || (showChamberFilter ? chamberId : ''),
-    }),
-    [periodId, typeId, chamberId, showTypeFilter, showChamberFilter, fixedChamberId]
-  );
-
-  const filteredBoards = useMemo(
-    () => sortBoardsForDisplay(filterBoards(initialBoards, effectiveFilters), boardTypes),
-    [initialBoards, effectiveFilters, boardTypes]
-  );
-
+  const { chamberId, typeId, donem, donemsiz } = initialFilters;
   const updateQuery = (nextValues) => {
-    const query = {
-      ...router.query,
-      ...nextValues,
-    };
-
-    if (!query.periodId) {
-      delete query.periodId;
-    }
-    if (!query.typeId) {
-      delete query.typeId;
-    }
-    if (!query.chamberId || fixedChamberId) {
-      delete query.chamberId;
-    }
-
-    router.push(
-      {
-        pathname: router.pathname,
-        query,
-      },
-      undefined,
-      { shallow: true }
-    );
+    const query = { ...router.query, ...nextValues };
+    // Eski TMMOB dönem URL'leri oda filtrelerine taşınmaz.
+    delete query.periodId;
+    for (const field of ["typeId", "chamberId", "donem", "donemsiz", "page"])
+      if (!query[field]) delete query[field];
+    if (fixedChamber) delete query.chamberId;
+    router.push({ pathname: router.pathname, query });
   };
-
-  const handlePeriodChange = (event) => {
-    const nextPeriodId = event.target.value;
-    setPeriodId(nextPeriodId);
-    updateQuery({ periodId: nextPeriodId });
-  };
-
-  const handleTypeChange = (event) => {
-    const nextTypeId = event.target.value;
-    setTypeId(nextTypeId);
-    updateQuery({ typeId: nextTypeId });
-  };
-
-  const handleChamberChange = (event) => {
-    const nextChamberId = event.target.value;
-    setChamberId(nextChamberId);
-    updateQuery({ chamberId: nextChamberId });
-  };
-
+  const canonicalQuery = new URLSearchParams();
+  if (donem) canonicalQuery.set("donem", donem);
+  if (donemsiz) canonicalQuery.set("donemsiz", "1");
+  if (typeId) canonicalQuery.set("typeId", typeId);
+  if (!fixedChamber && chamberId) canonicalQuery.set("chamberId", chamberId);
+  if (page > 1) canonicalQuery.set("page", String(page));
+  const canonicalUrl = buildCanonicalUrl(
+    `${canonicalPath}${canonicalQuery.size ? `?${canonicalQuery}` : ""}`,
+  );
   const shareTitle = `${title} | TMMOB`;
-  const canonicalUrl = buildCanonicalUrl(canonicalPath);
-  const pageDescription = buildMetaDescription(description);
-
   return (
     <Layout>
       <Head>
         <title>{shareTitle}</title>
-        <meta name="description" content={pageDescription} />
+        <meta name="description" content={buildMetaDescription(description)} />
         <link rel="canonical" href={canonicalUrl} />
         <meta property="og:site_name" content="TMMOB" />
         <meta property="og:locale" content="tr_TR" />
         <meta property="og:title" content={shareTitle} />
-        <meta property="og:description" content={pageDescription} />
+        <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta property="og:image:alt" content={title} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={shareTitle} />
-        <meta name="twitter:description" content={pageDescription} />
+        <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       </Head>
-
       <Container maxWidth="md" sx={{ mt: 6, mb: 6 }}>
         <Typography variant="h4" component="h1" sx={{ mb: 1 }}>
           {title}
@@ -165,158 +86,116 @@ function BoardDirectoryView({
           {description}
         </Typography>
         <ContentShareBar title={title} url={canonicalUrl} />
-
-        <Grid container spacing={2} alignItems="center" sx={{ mt: 1, mb: 3 }}>
-          <Grid item xs={12} md={showTypeFilter || showChamberFilter ? 4 : 3} sx={!showTypeFilter && !showChamberFilter ? { ml: { md: 'auto' } } : undefined}>
-            <TextField
-              select
-              label="Dönem"
-              size="small"
-              fullWidth
-              value={periodId}
-              onChange={handlePeriodChange}
-              InputLabelProps={{ shrink: true }}
-              SelectProps={{ native: true }}
-            >
-              {periods.map((period) => {
-                const value = getEntityId(period);
-                return (
-                  <option key={value} value={value}>
-                    {getEntityName(period, '')}
-                  </option>
-                );
-              })}
-            </TextField>
-          </Grid>
-
-          {showTypeFilter ? (
-            <Grid item xs={12} md={4}>
-              <TextField
-                select
-                label="Kurul Türü"
-                size="small"
-                fullWidth
-                value={typeId}
-                onChange={handleTypeChange}
-                InputLabelProps={{ shrink: true }}
-                SelectProps={{ native: true }}
-              >
-                <option value="">Tümü</option>
-                {boardTypes.map((boardType) => {
-                  const value = getEntityId(boardType);
-                  return (
-                    <option key={value} value={value}>
-                      {getEntityName(boardType, '')}
-                    </option>
-                  );
-                })}
-              </TextField>
-            </Grid>
-          ) : null}
-
-          {showChamberFilter ? (
-            <Grid item xs={12} md={4}>
+        {unavailable && (
+          <Alert severity="error" sx={{ my: 2 }}>
+            Kurul bilgilerine şu anda ulaşılamıyor. Lütfen daha sonra tekrar
+            deneyin.
+          </Alert>
+        )}
+        <Grid container spacing={2} sx={{ mt: 1, mb: 3 }}>
+          {!fixedChamber && (
+            <Grid item xs={12} sm={6}>
               <TextField
                 select
                 label="Oda"
-                size="small"
                 fullWidth
-                value={chamberId}
-                onChange={handleChamberChange}
-                InputLabelProps={{ shrink: true }}
+                size="small"
                 SelectProps={{ native: true }}
+                InputLabelProps={{ shrink: true }}
+                value={chamberId}
+                onChange={(event) =>
+                  updateQuery({ chamberId: event.target.value, page: "" })
+                }
               >
                 <option value="">Tümü</option>
-                {chambers.map((chamber) => {
-                  const value = getEntityId(chamber);
-                  return (
-                    <option key={value} value={value}>
-                      {getEntityName(chamber, '')}
+                {[...chambers]
+                  .sort((a, b) => a.name.localeCompare(b.name, "tr"))
+                  .map((chamber) => (
+                    <option key={chamber._id} value={chamber._id}>
+                      {chamber.name}
                     </option>
-                  );
-                })}
+                  ))}
               </TextField>
             </Grid>
-          ) : null}
+          )}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              label="Kurul türü"
+              fullWidth
+              size="small"
+              SelectProps={{ native: true }}
+              InputLabelProps={{ shrink: true }}
+              value={typeId}
+              onChange={(event) =>
+                updateQuery({ typeId: event.target.value, page: "" })
+              }
+            >
+              <option value="">Tümü</option>
+              {[...boardTypes]
+                .sort(
+                  (a, b) =>
+                    (a.sortWeight ?? 100) - (b.sortWeight ?? 100) ||
+                    a.name.localeCompare(b.name, "tr"),
+                )
+                .map((type) => (
+                  <option key={type._id} value={type._id}>
+                    {type.name}
+                  </option>
+                ))}
+            </TextField>
+          </Grid>
         </Grid>
-
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Toplam {filteredBoards.length} kurul bulundu.
-        </Typography>
-
+        {fixedChamber && !unavailable && (
+          <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+            {latestTerm ? "Güncel kurullar" : "Dönem belirtilmemiş kurullar"}
+          </Typography>
+        )}
+        {!unavailable && (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Toplam {total} kurul bulundu.
+          </Typography>
+        )}
         <Stack spacing={2}>
-          {filteredBoards.map((board) => {
-            const boardId = getEntityId(board);
-            const boardType = getEntityName(board?.type, 'Kurul Türü Belirtilmemiş');
-            const boardChamber = getEntityName(board?.chamber, 'Oda Belirtilmemiş');
-            const boardPeriod = getEntityName(board?.period, 'Dönem Belirtilmemiş');
-            const chamberPeriod = String(board?.chamberPeriod || '').trim();
-            const members = Array.isArray(board?.members) ? board.members : [];
-
-            return (
-              <Paper key={boardId || board.name} elevation={1} sx={{ p: 2 }}>
-                <Typography variant="h6" component="h2" sx={{ mb: 1 }}>
-                  {board?.name || 'Kurul'}
-                </Typography>
-                {fixedChamber ? (
-                  chamberPeriod ? (
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                      <strong>Oda Dönemi:</strong> {chamberPeriod}
-                    </Typography>
-                  ) : null
-                ) : (
-                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 1.5 }}>
-                    <Typography variant="caption" sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: '#f3f4f6' }}>
-                      {boardType}
-                    </Typography>
-                    <Typography variant="caption" sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: '#f3f4f6' }}>
-                      {boardChamber}
-                    </Typography>
-                    <Typography variant="caption" sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: '#f3f4f6' }}>
-                      {boardPeriod}
-                    </Typography>
-                    {chamberPeriod ? (
-                      <Typography variant="caption" sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: '#f3f4f6' }}>
-                        Oda Dönemi: {chamberPeriod}
-                      </Typography>
-                    ) : null}
-                  </Stack>
-                )}
-                <Divider sx={{ mb: 1.5 }} />
-                {members.length > 0 ? (
-                  <Stack spacing={0.5}>
-                    {members.map((member, index) => (
-                      <Typography key={`${boardId}-member-${index}`} variant="body2">
-                        {member?.title ? (
-                          <Typography component="span" sx={{ fontWeight: 700 }}>
-                            {member.title}:
-                          </Typography>
-                        ) : null}
-                        {member?.title ? ' ' : ''}
-                        {member?.name || '-'}
-                      </Typography>
-                    ))}
-                  </Stack>
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    Üye bilgisi bulunamadı.
-                  </Typography>
-                )}
-              </Paper>
-            );
-          })}
-
-          {filteredBoards.length === 0 ? (
-            <Paper elevation={0} sx={{ p: 3, border: '1px solid #e5e7eb' }}>
-              <Typography color="text.secondary">
+          {boards.map((board) => (
+            <BoardCard
+              key={board._id}
+              board={board}
+              showChamber={!fixedChamber}
+              heading={fixedChamber ? "h3" : "h2"}
+            />
+          ))}
+          {!unavailable && !boards.length && (
+            <Paper sx={{ p: 3 }}>
+              <Typography>
                 Seçilen filtrelere uygun kurul bulunamadı.
               </Typography>
             </Paper>
-          ) : null}
+          )}
         </Stack>
+        {totalPages > 1 && (
+          <Pagination
+            sx={{ mt: 3 }}
+            count={totalPages}
+            page={page}
+            onChange={(_, value) =>
+              updateQuery({ page: value === 1 ? "" : String(value) })
+            }
+          />
+        )}
+        {fixedChamber && !unavailable && (
+          <BoardHistory
+            key={`${getEntityId(fixedChamber)}-${typeId}-${donem}-${donemsiz}`}
+            chamberId={getEntityId(fixedChamber)}
+            terms={terms}
+            latestTerm={latestTerm}
+            missingCount={missingCount}
+            typeId={typeId}
+            requestedTerm={donem}
+            requestedMissing={Boolean(donemsiz)}
+          />
+        )}
       </Container>
     </Layout>
   );
 }
-
-export default BoardDirectoryView;
