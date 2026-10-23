@@ -6,6 +6,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import VideoCard from './VideoCard';
+import VideoPlayer from '../VideoPlayer';
+import { videoThumbnail } from '../../lib/video.mjs';
+import { DEFAULT_OG_IMAGE } from '../../lib/seo';
 import CardCarouselFrame, { CAROUSEL_ITEM_HEIGHT } from '../basic/CardCarouselFrame';
 
 const Carousel = dynamic(() => import('react-material-ui-carousel'), { ssr: false });
@@ -105,27 +108,12 @@ export default function VideoCarousel({
     setSelectedVideo(null);
   };
 
-  const renderVideoEmbed = (video) => {
-    if (video.provider === "youtube" && video.videoId) {
-      return (
-        <iframe
-          width="100%"
-          height="360"
-          src={`https://www.youtube.com/embed/${video.videoId}`}
-          title={video.title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
-      );
-    }
-    return <Typography>Video oynatılamıyor</Typography>;
-  };
+  const renderVideoEmbed = (video) => <VideoPlayer video={video} />;
 
   const renderVideoItem = (video, key) => (
     <Box key={key} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
       <VideoCard
-        image={`https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`}
+        image={videoThumbnail(video, DEFAULT_OG_IMAGE)}
         title={video.title}
         publishDate={video.createdAt}
         onClick={() => handleOpen(video)}

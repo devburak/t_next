@@ -1,19 +1,20 @@
+import { videoEmbedUrl } from '../lib/video.mjs';
+
 const VideoPlayer = ({ video }) => {
-  if (video.provider === 'youtube') {
-    return (
+  const src = videoEmbedUrl(video);
+  if (!src) return <p>Video oynatılamıyor.</p>;
+  return (
+    <div style={{ width: '100%', aspectRatio: '16 / 9' }}>
       <iframe
-        width="400"
-        height="265"
-        src={`https://www.youtube.com/embed/${video.videoId}`}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        src={src}
+        title={video.title || 'Video'}
+        style={{ width: '100%', height: '100%', border: 0 }}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
         allowFullScreen
-      ></iframe>
-    );
-  } else {
-    return (
-      <div dangerouslySetInnerHTML={{ __html: video.embedCode }} />
-    );
-  }
+      />
+    </div>
+  );
 };
 
 export default VideoPlayer;

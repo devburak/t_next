@@ -168,13 +168,14 @@ export default function BoardHistory({
   terms,
   latestTerm,
   missingCount,
+  missingArchiveCount,
   typeId,
   requestedTerm = "",
   requestedMissing = false,
 }) {
   const id = useId();
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const archives = getArchiveTerms(terms, latestTerm, missingCount);
+  const archives = getArchiveTerms(terms, latestTerm, missingCount, missingArchiveCount);
   const requestedKey = requestedMissing
     ? "missing"
     : requestedTerm && requestedTerm !== latestTerm

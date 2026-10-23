@@ -35,6 +35,7 @@ export default function BoardDirectoryView({
   totalPages,
   page,
   missingCount,
+  missingArchiveCount,
   latestTerm,
   unavailable,
 }) {
@@ -190,6 +191,7 @@ export default function BoardDirectoryView({
             terms={terms}
             latestTerm={latestTerm}
             missingCount={missingCount}
+            missingArchiveCount={missingArchiveCount}
             typeId={typeId}
             requestedTerm={donem}
             requestedMissing={Boolean(donemsiz)}

@@ -94,9 +94,9 @@ export function toBoardView(board) {
     members: Array.isArray(board.members) ? board.members : [],
   };
 }
-export function getArchiveTerms(terms, latestTerm, missingCount) {
+export function getArchiveTerms(terms, latestTerm, missingCount, missingArchiveCount = 0) {
   const archived = terms.filter((term) => term.name !== latestTerm);
-  if (latestTerm && missingCount > 0)
+  if ((latestTerm || missingArchiveCount > 0) && missingCount > 0)
     archived.push({ name: "", missing: true, boardCount: missingCount });
   return archived;
 }
@@ -116,6 +116,7 @@ export async function loadBoardDirectory(
     chambers: [],
     terms: [],
     missingCount: 0,
+    missingArchiveCount: 0,
     latestTerm: null,
     fixedChamber: null,
     chamberSlug,
@@ -159,11 +160,12 @@ export async function loadBoardDirectory(
           `${apiBaseUrl}/boards/terms?${new URLSearchParams({ chamber: chamberId })}`,
         )
       : { data: [], missingCount: 0 };
-    const latestTerm = terms.latest || terms.data?.[0]?.name || null;
+    const latestTerm = Object.hasOwn(terms, "latest") ? terms.latest : terms.data?.[0]?.name || null;
     const params = new URLSearchParams({ page: String(page), limit: "12" });
     if (chamberId) params.set("chamber", chamberId);
     if (typeId) params.set("type", typeId);
     if (fixedChamber) {
+      params.set("archived", "false");
       if (latestTerm) params.set("term", latestTerm);
       else params.set("termMissing", "true");
     } else params.set("latest", "true");
@@ -181,6 +183,7 @@ export async function loadBoardDirectory(
         latestTerm,
         terms: terms.data || [],
         missingCount: terms.missingCount || 0,
+        missingArchiveCount: terms.missingArchiveCount || 0,
         initialFilters: { chamberId, typeId, donem, donemsiz },
       },
     };
