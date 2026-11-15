@@ -3,6 +3,7 @@
 import React from 'react';
 import { Chip, Container, Typography, Box, Link, Stack, Divider } from '@mui/material';
 import Layout from '@/component/basic/layout';
+import { slugifyText } from '@/lib/boardDirectory';
 
 // SSR ile tüm IKK'ları çekiyoruz
 export async function getServerSideProps() {
@@ -29,7 +30,7 @@ export default function IKKPage({ ikkList }) {
     <Layout>
       <Container maxWidth="md" sx={{ mt: 6 }}>
         {ikkList.map((ikk, idx) => (
-          <Box key={ikk._id} sx={{ mb: 2 }}>
+          <Box key={ikk._id} id={slugifyText(ikk.title)} sx={{ mb: 2, scrollMarginTop: '100px' }}>
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, fontSize: '1.5rem' }}>
               {ikk.title}
             </Typography>

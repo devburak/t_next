@@ -1,0 +1,1327 @@
+[
+  {
+    "path": "/kategori/birlik-haberleri-orta-sayfa",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/yayinlar/birlik-haberleri-orta-sayfa",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/birlik-haberleri-orta-sayfa",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/kitap",
+    "status": 301,
+    "location": "/yayin-turu/kitap"
+  },
+  {
+    "path": "/kategori/yayinlar/kitap",
+    "status": 301,
+    "location": "/yayin-turu/kitap"
+  },
+  {
+    "path": "/belgeler/liste/kitap",
+    "status": 301,
+    "location": "/yayin-turu/kitap"
+  },
+  {
+    "path": "/kategori/kitaplar",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/yayinlar/kitaplar",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/kitaplar",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/tmmob-bulteni",
+    "status": 301,
+    "location": "/yayin-turu/tmmob-bulteni"
+  },
+  {
+    "path": "/kategori/yayinlar/tmmob-bulteni",
+    "status": 301,
+    "location": "/yayin-turu/tmmob-bulteni"
+  },
+  {
+    "path": "/belgeler/liste/tmmob-bulteni",
+    "status": 301,
+    "location": "/yayin-turu/tmmob-bulteni"
+  },
+  {
+    "path": "/kategori/100-yil-etkinlikleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/100-yil-etkinlikleri-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/100-yil-etkinlikleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/100-yil-etkinlikleri-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/2b-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/2b-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/2b-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/2b-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/657-sayili-devlet-memurlari-kanunu-degisikligi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/657-sayili-devlet-memurlari-kanunu-degisikligi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/657-sayili-devlet-memurlari-kanunu-degisikligi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/657-sayili-devlet-memurlari-kanunu-degisikligi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/9-kalkinma-plani-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/9-kalkinma-plani-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/9-kalkinma-plani-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/9-kalkinma-plani-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/ab-muzarekeci-sureci-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ab-muzarekeci-sureci-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/ab-muzarekeci-sureci-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ab-muzarekeci-sureci-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/adiyaman-ikk",
+    "status": 301,
+    "location": "/ikk#adiyaman-ikk"
+  },
+  {
+    "path": "/belgeler/liste/adiyaman-ikk",
+    "status": 301,
+    "location": "/ikk#adiyaman-ikk"
+  },
+  {
+    "path": "/kategori/afet-sonrasi-eylem-plani-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/afet-sonrasi-eylem-plani-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/afet-sonrasi-eylem-plani-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/afet-sonrasi-eylem-plani-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/altin-isletmeciligi-faaliyetleri-ve-sonuclari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/altin-isletmeciligi-faaliyetleri-ve-sonuclari-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/altin-isletmeciligi-faaliyetleri-ve-sonuclari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/altin-isletmeciligi-faaliyetleri-ve-sonuclari-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/antalya-kursunlu-tasocagi-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/antalya-kursunlu-tasocagi-komisyonu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/antalya-kursunlu-tasocagi-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/antalya-kursunlu-tasocagi-komisyonu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/approved",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/approved",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/artvin-ikk",
+    "status": 301,
+    "location": "/ikk#artvin-ikk"
+  },
+  {
+    "path": "/kategori/ikk-haberleri/artvin-ikk",
+    "status": 301,
+    "location": "/ikk#artvin-ikk"
+  },
+  {
+    "path": "/belgeler/liste/artvin-ikk",
+    "status": 301,
+    "location": "/ikk#artvin-ikk"
+  },
+  {
+    "path": "/kategori/bartin-ikk",
+    "status": 301,
+    "location": "/ikk#bartin-ikk"
+  },
+  {
+    "path": "/belgeler/liste/bartin-ikk",
+    "status": 301,
+    "location": "/ikk#bartin-ikk"
+  },
+  {
+    "path": "/kategori/bartin-termik-santral-inceleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/bartin-termik-santral-inceleme-komisyonu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/bartin-termik-santral-inceleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/bartin-termik-santral-inceleme-komisyonu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/bilirkisilik-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/bilirkisilik-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/belgeler/liste/bilirkisilik-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/bilirkisilik-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/kategori/bingol-ikk",
+    "status": 301,
+    "location": "/ikk#bingol-ikk"
+  },
+  {
+    "path": "/belgeler/liste/bingol-ikk",
+    "status": 301,
+    "location": "/ikk#bingol-ikk"
+  },
+  {
+    "path": "/kategori/birlik-haberleri",
+    "status": 301,
+    "location": "/yayin-turu/birlik-haberleri"
+  },
+  {
+    "path": "/belgeler/liste/birlik-haberleri",
+    "status": 301,
+    "location": "/yayin-turu/birlik-haberleri"
+  },
+  {
+    "path": "/kategori/bitlis-ikk",
+    "status": 301,
+    "location": "/ikk#bitlis-ikk"
+  },
+  {
+    "path": "/belgeler/liste/bitlis-ikk",
+    "status": 301,
+    "location": "/ikk#bitlis-ikk"
+  },
+  {
+    "path": "/kategori/books",
+    "status": 301,
+    "location": "/yayin-turu/books"
+  },
+  {
+    "path": "/belgeler/liste/books",
+    "status": 301,
+    "location": "/yayin-turu/books"
+  },
+  {
+    "path": "/kategori/boren-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/boren-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/boren-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/boren-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/burdur-ikk",
+    "status": 301,
+    "location": "/ikk#burdur-ikk"
+  },
+  {
+    "path": "/belgeler/liste/burdur-ikk",
+    "status": 301,
+    "location": "/ikk#burdur-ikk"
+  },
+  {
+    "path": "/kategori/bursa-akademik-odalar-birligi-yerleskesi-inceleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/bursa-akademik-odalar-birligi-yerleskesi-inceleme-komisyonu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/bursa-akademik-odalar-birligi-yerleskesi-inceleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/bursa-akademik-odalar-birligi-yerleskesi-inceleme-komisyonu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/chamber-news",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/chamber-news",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/court-orders",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/court-orders",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/calisma-izinleri-izleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/calisma-izinleri-izleme-komisyonu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/calisma-izinleri-izleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/calisma-izinleri-izleme-komisyonu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/calisma-izni-inceleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/calisma-izni-inceleme-komisyonu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/calisma-izni-inceleme-komisyonu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/calisma-izni-inceleme-komisyonu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/cevre-politikalari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/cevre-politikalari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/cevre-politikalari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/cevre-politikalari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/cevre-politikalari-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/cevre-politikalari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/cevre-politikalari-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/cevre-politikalari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/denied",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/denied",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/devlet-denetleme-kurulu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/devlet-denetleme-kurulu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/devlet-denetleme-kurulu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/devlet-denetleme-kurulu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/diger",
+    "status": 301,
+    "location": "/takvim"
+  },
+  {
+    "path": "/belgeler/liste/diger",
+    "status": 301,
+    "location": "/takvim"
+  },
+  {
+    "path": "/kategori/edirne-ikk",
+    "status": 301,
+    "location": "/ikk#edirne-ikk"
+  },
+  {
+    "path": "/belgeler/liste/edirne-ikk",
+    "status": 301,
+    "location": "/ikk#edirne-ikk"
+  },
+  {
+    "path": "/kategori/edremit-ikk",
+    "status": 301,
+    "location": "/ikk#edremit-ikk"
+  },
+  {
+    "path": "/belgeler/liste/edremit-ikk",
+    "status": 301,
+    "location": "/ikk#edremit-ikk"
+  },
+  {
+    "path": "/kategori/elbistan-maden-kazasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/elbistan-maden-kazasi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/elbistan-maden-kazasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/elbistan-maden-kazasi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/enerji-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/enerji-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/belgeler/liste/enerji-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/enerji-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/kategori/eskisehir-ikk",
+    "status": 301,
+    "location": "/ikk#eskisehir-ikk"
+  },
+  {
+    "path": "/belgeler/liste/eskisehir-ikk",
+    "status": 301,
+    "location": "/ikk#eskisehir-ikk"
+  },
+  {
+    "path": "/kategori/etkinliklerde-destek-ve-sponsorluk-uygulama-usul-ve-esaslarini-belirleme-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/etkinliklerde-destek-ve-sponsorluk-uygulama-usul-ve-esaslarini-belirleme-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/etkinliklerde-destek-ve-sponsorluk-uygulama-usul-ve-esaslarini-belirleme-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/etkinliklerde-destek-ve-sponsorluk-uygulama-usul-ve-esaslarini-belirleme-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/gaziantep-ikk",
+    "status": 301,
+    "location": "/ikk#gaziantep-ikk"
+  },
+  {
+    "path": "/belgeler/liste/gaziantep-ikk",
+    "status": 301,
+    "location": "/ikk#gaziantep-ikk"
+  },
+  {
+    "path": "/kategori/gida-politikalari-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/gida-politikalari-calisma-grubu?periodId=677a7fa6462c50ea94fa020a"
+  },
+  {
+    "path": "/belgeler/liste/gida-politikalari-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/gida-politikalari-calisma-grubu?periodId=677a7fa6462c50ea94fa020a"
+  },
+  {
+    "path": "/kategori/gonderi",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/gonderi",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/hakkari-ikk",
+    "status": 301,
+    "location": "/ikk#hakkari-ikk"
+  },
+  {
+    "path": "/belgeler/liste/hakkari-ikk",
+    "status": 301,
+    "location": "/ikk#hakkari-ikk"
+  },
+  {
+    "path": "/kategori/hasankeyf-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/hasankeyf-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/hasankeyf-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/hasankeyf-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/hatay-ikk",
+    "status": 301,
+    "location": "/ikk#hatay-ikk"
+  },
+  {
+    "path": "/belgeler/liste/hatay-ikk",
+    "status": 301,
+    "location": "/ikk#hatay-ikk"
+  },
+  {
+    "path": "/kategori/hes-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/hes-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/hes-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/hes-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/isparta-ikk",
+    "status": 301,
+    "location": "/ikk#isparta-ikk"
+  },
+  {
+    "path": "/belgeler/liste/isparta-ikk",
+    "status": 301,
+    "location": "/ikk#isparta-ikk"
+  },
+  {
+    "path": "/kategori/iki-diploma-sahibi-uyeler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/iki-diploma-sahibi-uyeler-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/iki-diploma-sahibi-uyeler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/iki-diploma-sahibi-uyeler-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/iller-bankasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/iller-bankasi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/iller-bankasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/iller-bankasi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/iller-bankasi-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/iller-bankasi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/iller-bankasi-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/iller-bankasi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/iskenderun-ikk",
+    "status": 301,
+    "location": "/ikk#iskenderun-ikk"
+  },
+  {
+    "path": "/belgeler/liste/iskenderun-ikk",
+    "status": 301,
+    "location": "/ikk#iskenderun-ikk"
+  },
+  {
+    "path": "/kategori/is-sagligi-ve-guvenligi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/is-sagligi-ve-guvenligi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/is-sagligi-ve-guvenligi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/is-sagligi-ve-guvenligi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/isci-sagligi-ve-is-guvenligi-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/isci-sagligi-ve-is-guvenligi-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/belgeler/liste/isci-sagligi-ve-is-guvenligi-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/isci-sagligi-ve-is-guvenligi-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/kategori/jeotermal-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/jeotermal-yasasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/jeotermal-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/jeotermal-yasasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/kadin-uyeler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kadin-uyeler-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/kadin-uyeler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kadin-uyeler-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/kamu-ihale-kanunu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kamu-ihale-kanunu-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/kamu-ihale-kanunu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kamu-ihale-kanunu-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/kamulastirma-bilirkisiligi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kamulastirma-bilirkisiligi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/kamulastirma-bilirkisiligi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kamulastirma-bilirkisiligi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/karadeniz-eregli-ikk",
+    "status": 301,
+    "location": "/ikk#karadeniz-eregli-ikk"
+  },
+  {
+    "path": "/belgeler/liste/karadeniz-eregli-ikk",
+    "status": 301,
+    "location": "/ikk#karadeniz-eregli-ikk"
+  },
+  {
+    "path": "/kategori/karasu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/karasu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/karasu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/karasu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/kayseri-ikk",
+    "status": 301,
+    "location": "/ikk#kayseri-ikk"
+  },
+  {
+    "path": "/belgeler/liste/kayseri-ikk",
+    "status": 301,
+    "location": "/ikk#kayseri-ikk"
+  },
+  {
+    "path": "/kategori/kentlesme-surasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kentlesme-surasi-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/kentlesme-surasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kentlesme-surasi-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/kentlesme-ve-yerel-yonetimler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kentlesme-ve-yerel-yonetimler-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/kentlesme-ve-yerel-yonetimler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kentlesme-ve-yerel-yonetimler-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/kirklareli-ikk",
+    "status": 301,
+    "location": "/ikk#kirklareli-ikk"
+  },
+  {
+    "path": "/belgeler/liste/kirklareli-ikk",
+    "status": 301,
+    "location": "/ikk#kirklareli-ikk"
+  },
+  {
+    "path": "/kategori/kocaeli-ikk",
+    "status": 301,
+    "location": "/ikk#kocaeli-ikk"
+  },
+  {
+    "path": "/belgeler/liste/kocaeli-ikk",
+    "status": 301,
+    "location": "/ikk#kocaeli-ikk"
+  },
+  {
+    "path": "/kategori/konya-ikk",
+    "status": 301,
+    "location": "/ikk#konya-ikk"
+  },
+  {
+    "path": "/belgeler/liste/konya-ikk",
+    "status": 301,
+    "location": "/ikk#konya-ikk"
+  },
+  {
+    "path": "/kategori/kutahya-eti-gumus-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kutahya-eti-gumus-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/kutahya-eti-gumus-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/kutahya-eti-gumus-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/law-amendment",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/law-amendment",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/lpg-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/lpg-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/belgeler/liste/lpg-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/lpg-calisma-grubu?periodId=ccfdac51b3ec7ca6dbdf5cbc"
+  },
+  {
+    "path": "/kategori/madencilik-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/madencilik-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/madencilik-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/madencilik-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/main-regulation",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/main-regulation",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/malatya-ikk",
+    "status": 301,
+    "location": "/ikk#malatya-ikk"
+  },
+  {
+    "path": "/belgeler/liste/malatya-ikk",
+    "status": 301,
+    "location": "/ikk#malatya-ikk"
+  },
+  {
+    "path": "/kategori/manisa-ikk",
+    "status": 301,
+    "location": "/ikk#manisa-ikk"
+  },
+  {
+    "path": "/belgeler/liste/manisa-ikk",
+    "status": 301,
+    "location": "/ikk#manisa-ikk"
+  },
+  {
+    "path": "/kategori/mardin-ikk",
+    "status": 301,
+    "location": "/ikk#mardin-ikk"
+  },
+  {
+    "path": "/belgeler/liste/mardin-ikk",
+    "status": 301,
+    "location": "/ikk#mardin-ikk"
+  },
+  {
+    "path": "/kategori/mersin-ikk",
+    "status": 301,
+    "location": "/ikk#mersin-ikk"
+  },
+  {
+    "path": "/belgeler/liste/mersin-ikk",
+    "status": 301,
+    "location": "/ikk#mersin-ikk"
+  },
+  {
+    "path": "/kategori/meslek-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/meslek-yasasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/meslek-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/meslek-yasasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/mesleki-denetim-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/mesleki-denetim-calisma-grubu?periodId=66e8ad1f0ac6d879063962df"
+  },
+  {
+    "path": "/belgeler/liste/mesleki-denetim-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/mesleki-denetim-calisma-grubu?periodId=66e8ad1f0ac6d879063962df"
+  },
+  {
+    "path": "/kategori/milas-ikk",
+    "status": 301,
+    "location": "/ikk#milas-ikk"
+  },
+  {
+    "path": "/belgeler/liste/milas-ikk",
+    "status": 301,
+    "location": "/ikk#milas-ikk"
+  },
+  {
+    "path": "/kategori/mugla-ikk",
+    "status": 301,
+    "location": "/ikk#mugla-ikk"
+  },
+  {
+    "path": "/belgeler/liste/mugla-ikk",
+    "status": 301,
+    "location": "/ikk#mugla-ikk"
+  },
+  {
+    "path": "/kategori/muhendislik-mimarlik-profili-arastirmasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/muhendislik-mimarlik-profili-arastirmasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/muhendislik-mimarlik-profili-arastirmasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/muhendislik-mimarlik-profili-arastirmasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/muhendislik-unvani-denklik-ve-yeterlilik-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/muhendislik-unvani-denklik-ve-yeterlilik-calisma-grubu?periodId=66e8ad180ac6d879063962c7"
+  },
+  {
+    "path": "/belgeler/liste/muhendislik-unvani-denklik-ve-yeterlilik-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/muhendislik-unvani-denklik-ve-yeterlilik-calisma-grubu?periodId=66e8ad180ac6d879063962c7"
+  },
+  {
+    "path": "/kategori/oda-etkinligi",
+    "status": 301,
+    "location": "/takvim"
+  },
+  {
+    "path": "/belgeler/liste/oda-etkinligi",
+    "status": 301,
+    "location": "/takvim"
+  },
+  {
+    "path": "/kategori/opened-lawsuits",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/opened-lawsuits",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/opening-speeches",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/opening-speeches",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/orman-tuzuk-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/orman-tuzuk-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/orman-tuzuk-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/orman-tuzuk-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/ozellestirme-ve-sonuclarinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ozellestirme-ve-sonuclarinin-takibi-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/ozellestirme-ve-sonuclarinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ozellestirme-ve-sonuclarinin-takibi-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/ozellestirmelerin-ve-sonuclarinin-takibi-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ozellestirmelerin-ve-sonuclarinin-takibi-calisma-grubu?periodId=66e8ad130ac6d879063962af"
+  },
+  {
+    "path": "/belgeler/liste/ozellestirmelerin-ve-sonuclarinin-takibi-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ozellestirmelerin-ve-sonuclarinin-takibi-calisma-grubu?periodId=66e8ad130ac6d879063962af"
+  },
+  {
+    "path": "/kategori/pcc-news",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/pcc-news",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/pending",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/pending",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/petrol-ve-madencilik-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/petrol-ve-madencilik-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/petrol-ve-madencilik-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/petrol-ve-madencilik-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/planlama-yerlesim-donusum-politikalari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/planlama-yerlesim-donusum-politikalari-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/planlama-yerlesim-donusum-politikalari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/planlama-yerlesim-donusum-politikalari-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/regulations",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/regulations",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/resulting-lawsuits",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/resulting-lawsuits",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/rize-ikk",
+    "status": 301,
+    "location": "/ikk#rize-ikk"
+  },
+  {
+    "path": "/belgeler/liste/rize-ikk",
+    "status": 301,
+    "location": "/ikk#rize-ikk"
+  },
+  {
+    "path": "/kategori/samandag-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/samandag-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/samandag-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/samandag-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/samsun-ikk",
+    "status": 301,
+    "location": "/ikk#samsun-ikk"
+  },
+  {
+    "path": "/belgeler/liste/samsun-ikk",
+    "status": 301,
+    "location": "/ikk#samsun-ikk"
+  },
+  {
+    "path": "/kategori/sinir-guvenlik-barajlari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/sinir-guvenlik-barajlari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/sinir-guvenlik-barajlari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/sinir-guvenlik-barajlari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/siirt-ikk",
+    "status": 301,
+    "location": "/ikk#siirt-ikk"
+  },
+  {
+    "path": "/belgeler/liste/siirt-ikk",
+    "status": 301,
+    "location": "/ikk#siirt-ikk"
+  },
+  {
+    "path": "/kategori/sonuclanan-davalar",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/sonuclanan-davalar",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/staj-kanunu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/staj-kanunu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/staj-kanunu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/staj-kanunu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/staj-kanunu-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/staj-kanunu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/staj-kanunu-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/staj-kanunu-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/su-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/su-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/su-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/su-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/sanliurfa-ikk",
+    "status": 301,
+    "location": "/ikk#sanliurfa-ikk"
+  },
+  {
+    "path": "/belgeler/liste/sanliurfa-ikk",
+    "status": 301,
+    "location": "/ikk#sanliurfa-ikk"
+  },
+  {
+    "path": "/kategori/tasarim-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tasarim-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/tasarim-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tasarim-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/tas-komuru-kurumu-ucretlendirme-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tas-komuru-kurumu-ucretlendirme-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/tas-komuru-kurumu-ucretlendirme-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tas-komuru-kurumu-ucretlendirme-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/teknoloji-fakulteleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/teknoloji-fakulteleri-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/teknoloji-fakulteleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/teknoloji-fakulteleri-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/test2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test2?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/belgeler/liste/test2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test2?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/kategori/test3",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test3?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/belgeler/liste/test3",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test3?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/kategori/test4",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test4?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/belgeler/liste/test4",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test4?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/kategori/test5",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test5?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/belgeler/liste/test5",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/test5?periodId=66e8ad160ac6d879063962bb"
+  },
+  {
+    "path": "/kategori/tmmob-journal",
+    "status": 301,
+    "location": "/yayin-turu/tmmob-journal"
+  },
+  {
+    "path": "/belgeler/liste/tmmob-journal",
+    "status": 301,
+    "location": "/yayin-turu/tmmob-journal"
+  },
+  {
+    "path": "/kategori/tmmob-kent-sempozyumu",
+    "status": 301,
+    "location": "/takvim"
+  },
+  {
+    "path": "/belgeler/liste/tmmob-kent-sempozyumu",
+    "status": 301,
+    "location": "/takvim"
+  },
+  {
+    "path": "/kategori/tmmob-orgutlulugunun-gelistirilmesi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tmmob-orgutlulugunun-gelistirilmesi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/tmmob-orgutlulugunun-gelistirilmesi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tmmob-orgutlulugunun-gelistirilmesi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/tmmob-radyosu-kurulmasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tmmob-radyosu-kurulmasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/tmmob-radyosu-kurulmasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tmmob-radyosu-kurulmasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/trabzon-ikk",
+    "status": 301,
+    "location": "/ikk#trabzon-ikk"
+  },
+  {
+    "path": "/belgeler/liste/trabzon-ikk",
+    "status": 301,
+    "location": "/ikk#trabzon-ikk"
+  },
+  {
+    "path": "/kategori/trt-elektron-tupleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/trt-elektron-tupleri-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/trt-elektron-tupleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/trt-elektron-tupleri-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/tsf-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tsf-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/tsf-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/tsf-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/tunceli-ikk",
+    "status": 301,
+    "location": "/ikk#tunceli-ikk"
+  },
+  {
+    "path": "/belgeler/liste/tunceli-ikk",
+    "status": 301,
+    "location": "/ikk#tunceli-ikk"
+  },
+  {
+    "path": "/kategori/turkiye-sosyal-forumu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/turkiye-sosyal-forumu-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/turkiye-sosyal-forumu-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/turkiye-sosyal-forumu-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/ucretli-calisan-uyeler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ucretli-calisan-uyeler-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/belgeler/liste/ucretli-calisan-uyeler-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/ucretli-calisan-uyeler-calisma-grubu?periodId=66e8ad090ac6d87906396297"
+  },
+  {
+    "path": "/kategori/universite-doner-sermayeleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/universite-doner-sermayeleri-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/universite-doner-sermayeleri-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/universite-doner-sermayeleri-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/uye-aidat-borclari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/uye-aidat-borclari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/uye-aidat-borclari-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/uye-aidat-borclari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/uye-aidat-borclari-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/uye-aidat-borclari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/uye-aidat-borclari-calisma-grubu-2",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/uye-aidat-borclari-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/van-ikk",
+    "status": 301,
+    "location": "/ikk#van-ikk"
+  },
+  {
+    "path": "/belgeler/liste/van-ikk",
+    "status": 301,
+    "location": "/ikk#van-ikk"
+  },
+  {
+    "path": "/kategori/work-schedule",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/work-schedule",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/yapi-denetimi-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/yapi-denetimi-yasasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/belgeler/liste/yapi-denetimi-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/yapi-denetimi-yasasi-calisma-grubu?periodId=66e8ad050ac6d8790639628b"
+  },
+  {
+    "path": "/kategori/yasa-degisikligi",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/yasa-degisikligi",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/yasa-ve-yonetmelik-degisikliklerinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/yasa-ve-yonetmelik-degisikliklerinin-takibi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/belgeler/liste/yasa-ve-yonetmelik-degisikliklerinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/belgeler/calisma-gruplari/yasa-ve-yonetmelik-degisikliklerinin-takibi-calisma-grubu?periodId=66e8ad100ac6d879063962a3"
+  },
+  {
+    "path": "/kategori/yayinlar",
+    "status": 301,
+    "location": "/yayin-turu/yayinlar"
+  },
+  {
+    "path": "/belgeler/liste/yayinlar",
+    "status": 301,
+    "location": "/yayin-turu/yayinlar"
+  },
+  {
+    "path": "/kategori/zonguldak-ikk",
+    "status": 301,
+    "location": "/ikk#zonguldak-ikk"
+  },
+  {
+    "path": "/belgeler/liste/zonguldak-ikk",
+    "status": 301,
+    "location": "/ikk#zonguldak-ikk"
+  }
+]
