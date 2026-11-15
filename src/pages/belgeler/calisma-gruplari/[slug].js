@@ -8,12 +8,15 @@ function readQueryValue(query = {}, key) {
   return typeof value === 'string' && value.trim() ? value.trim() : '';
 }
 
-export default function WorkGroupDetailRoute({ workGroup, reports, decisions, canonicalPath }) {
+export default function WorkGroupDetailRoute({ workGroup, reports, decisions, relatedContents, contentPage, contentTotalPages, canonicalPath }) {
   return (
     <WorkGroupDetailPage
       workGroup={workGroup}
       reports={reports}
       decisions={decisions}
+      relatedContents={relatedContents}
+      contentPage={contentPage}
+      contentTotalPages={contentTotalPages}
       canonicalPath={canonicalPath}
     />
   );
@@ -53,13 +56,16 @@ export async function getServerSideProps({ params, query }) {
       ...(effectivePeriodId ? { period: effectivePeriodId } : {}),
     });
 
-    const [reportsRes, decisionsRes] = await Promise.all([
+    const contentPage = Math.max(1, Number.parseInt(readQueryValue(query, 'contentPage'), 10) || 1);
+    const [reportsRes, decisionsRes, contentsRes] = await Promise.all([
       fetch(`${apiBaseUrl}/reports?${reportQuery.toString()}`),
       fetch(`${apiBaseUrl}/decisions?${decisionQuery.toString()}`),
+      fetch(`${apiBaseUrl}/contents/work-group/${workGroup._id}?page=${contentPage}&limit=10`),
     ]);
 
     const reportsPayload = reportsRes.ok ? await reportsRes.json() : { data: [] };
     const decisionsPayload = decisionsRes.ok ? await decisionsRes.json() : { data: [] };
+    const contentsPayload = contentsRes.ok ? await contentsRes.json() : { contents: [], totalPages: 0 };
     const canonicalPath = `/belgeler/calisma-gruplari/${workGroup.slug || slug}${
       effectivePeriodId ? `?periodId=${encodeURIComponent(effectivePeriodId)}` : ''
     }`;
@@ -70,6 +76,9 @@ export async function getServerSideProps({ params, query }) {
         reports: reportsPayload.data || [],
         decisions: decisionsPayload.data || [],
         canonicalPath,
+        relatedContents: contentsPayload.contents || [],
+        contentPage,
+        contentTotalPages: contentsPayload.totalPages || 0,
       },
     };
   } catch (error) {

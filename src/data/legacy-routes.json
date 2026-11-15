@@ -1323,5 +1323,835 @@
     "path": "/belgeler/liste/zonguldak-ikk",
     "status": 301,
     "location": "/ikk#zonguldak-ikk"
+  },
+  {
+    "path": "/kategori/1",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/1",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/2",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/2",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/3",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/3",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/4",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/4",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/5",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/5",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/6",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/6",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/7",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/7",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/8",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/8",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/9",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/9",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/10",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/10",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/11",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/11",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/12",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/12",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/13",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/13",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/14",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/14",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/15",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/15",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/16",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/16",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/17",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/17",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/18",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/18",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/19",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/19",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/20",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/20",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/21",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/21",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/22",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/22",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/23",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/23",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/24",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/24",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/25",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/25",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/26",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/26",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/27",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/27",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/28",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/28",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/29",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/29",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/30",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/30",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/31",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/31",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/32",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/32",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/33",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/33",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/34",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/34",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/35",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/35",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/36",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/36",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/37",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/37",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/38",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/38",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/39",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/39",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/40",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/40",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/41",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/41",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/42",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/belgeler/liste/42",
+    "status": 410,
+    "location": null
+  },
+  {
+    "path": "/kategori/komisyonlar/butce-komisyonu",
+    "status": 301,
+    "location": "/kategori/butce-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/butce-komisyonu",
+    "status": 301,
+    "location": "/kategori/butce-komisyonu"
+  },
+  {
+    "path": "/kategori/komisyonlar/ced-komisyonu",
+    "status": 301,
+    "location": "/kategori/ced-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/ced-komisyonu",
+    "status": 301,
+    "location": "/kategori/ced-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/bilirkisilik-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/bilirkisilik-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/burdur-golu-havzasi-raporu-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/burdur-golu-havzasi-raporu-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/enerji-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/enerji-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/gida-politikalari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/gida-politikalari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/isci-sagligi-ve-is-guvenligi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/isci-sagligi-ve-is-guvenligi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/kadin-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/kadin-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/kentsel-donusum-uygulamalari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/kentsel-donusum-uygulamalari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/lpg-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/lpg-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mesleki-denetim-uygulamalari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/mesleki-denetim-uygulamalari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/ozellestirmelerin-ve-sonuclarinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ozellestirmelerin-ve-sonuclarinin-takibi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/plan-yapim-yonetmeligi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/plan-yapim-yonetmeligi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/sinop-termik-santrali-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/sinop-termik-santrali-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/santiye-sefligi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/santiye-sefligi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/tmmob-cinsiyet-ayrimciligi-takip-sekretaryasi",
+    "status": 301,
+    "location": "/kategori/tmmob-cinsiyet-ayrimciligi-takip-sekretaryasi"
+  },
+  {
+    "path": "/belgeler/liste/uzaktan-egitim-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/uzaktan-egitim-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/yapi-denetimi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/yapi-denetimi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/yerel-yonetimler-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/yerel-yonetimler-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mali-isler-uygulama-esaslari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/mali-isler-uygulama-esaslari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/test",
+    "status": 301,
+    "location": "/kategori/test"
+  },
+  {
+    "path": "/belgeler/liste/soma-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/soma-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/staj-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/staj-yasasi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/kamuda-calisan-muhendis-mimar-sehir-plancilari-ozluk-haklari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/kamuda-calisan-muhendis-mimar-sehir-plancilari-ozluk-haklari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mesleki-etik-sorunlari-izleme-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/mesleki-etik-sorunlari-izleme-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mevsimlik-iscilik-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/mevsimlik-iscilik-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/zorunlu-goc-yaz-okulu-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/zorunlu-goc-yaz-okulu-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/engelli-muhendis-mimar-sehir-plancilari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/engelli-muhendis-mimar-sehir-plancilari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/doga-ve-cevre-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/doga-ve-cevre-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/muhendis-mimar-sehir-plancilari-asgari-ucret-komisyonu",
+    "status": 301,
+    "location": "/kategori/muhendis-mimar-sehir-plancilari-asgari-ucret-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/6360-sayili-buyuksehir-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/6360-sayili-buyuksehir-yasasi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mesleki-denetim-calisma-grubu-2",
+    "status": 301,
+    "location": "/kategori/mesleki-denetim-calisma-grubu-2"
+  },
+  {
+    "path": "/belgeler/liste/buyuksehir-yasasi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/buyuksehir-yasasi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/kamuda-calisan-muhendis-mimar-sehir-plancilari-ozluk-haklari-komisyonu",
+    "status": 301,
+    "location": "/kategori/kamuda-calisan-muhendis-mimar-sehir-plancilari-ozluk-haklari-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/engelli-muhendis-mimar-sehir-plancilari-calisma-grubu-2",
+    "status": 301,
+    "location": "/kategori/engelli-muhendis-mimar-sehir-plancilari-calisma-grubu-2"
+  },
+  {
+    "path": "/belgeler/liste/ucretli-issiz-ve-emekli-muhendis-mimar-sehir-plancisi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ucretli-issiz-ve-emekli-muhendis-mimar-sehir-plancisi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/muhendislik-mimarlik-ve-sehir-plancisi-egitimi-unvani-denklik-ve-yeterlilik-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/muhendislik-mimarlik-ve-sehir-plancisi-egitimi-unvani-denklik-ve-yeterlilik-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mevzuat-izleme-ve-gelistirme-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/mevzuat-izleme-ve-gelistirme-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/savasin-etkiledigi-kentlerin-yapisal-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/savasin-etkiledigi-kentlerin-yapisal-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/oda-aidat-uygulamalari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/oda-aidat-uygulamalari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/kamuda-calisan-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/kamuda-calisan-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/ucretli-issiz-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ucretli-issiz-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/emekli-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/emekli-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/engelli-muhendis-mimar-sehir-plancilari-calisma-grubu-3",
+    "status": 301,
+    "location": "/kategori/engelli-muhendis-mimar-sehir-plancilari-calisma-grubu-3"
+  },
+  {
+    "path": "/belgeler/liste/khk-ile-ihrac-edilen-muhendis-mimar-ve-sehir-plancilari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/khk-ile-ihrac-edilen-muhendis-mimar-ve-sehir-plancilari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/oda-aidat-uygulamalari-komisyonu",
+    "status": 301,
+    "location": "/kategori/oda-aidat-uygulamalari-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/unvan-denklik-ve-yeterlilik-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/unvan-denklik-ve-yeterlilik-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/imar-affi-komisyonu",
+    "status": 301,
+    "location": "/kategori/imar-affi-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/binalarin-yangindan-korunmasi-hk-yonetmelik-komisyonu",
+    "status": 301,
+    "location": "/kategori/binalarin-yangindan-korunmasi-hk-yonetmelik-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/kanal-istanbul-raporu-komisyonu",
+    "status": 301,
+    "location": "/kategori/kanal-istanbul-raporu-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/akkuyu-nukleer-guc-santrali-izleme-komisyonu",
+    "status": 301,
+    "location": "/kategori/akkuyu-nukleer-guc-santrali-izleme-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/jeotermal-enerji-santrallerinin-buyuk-menderes-havzasina-cevresel-etkileri-raporu-komisyonu",
+    "status": 301,
+    "location": "/kategori/jeotermal-enerji-santrallerinin-buyuk-menderes-havzasina-cevresel-etkileri-raporu-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/buyuk-mega-projelerin-surecleri-ve-sonuclarinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/buyuk-mega-projelerin-surecleri-ve-sonuclarinin-takibi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/sanayi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/sanayi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/uzaktan-muhendislik-egitimi-ve-akreditasyonu-degerlendirme-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/uzaktan-muhendislik-egitimi-ve-akreditasyonu-degerlendirme-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/yuksek-ogrenim-komisyonu",
+    "status": 301,
+    "location": "/kategori/yuksek-ogrenim-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/ankapark-tmmob-heyeti-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ankapark-tmmob-heyeti-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/belediyelere-atanan-kayyum-uygulamalarinin-takibi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/belediyelere-atanan-kayyum-uygulamalarinin-takibi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/meslek-ici-egitim-ve-ogrenme-merkezi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/meslek-ici-egitim-ve-ogrenme-merkezi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/doga-kaynakli-afetler-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/doga-kaynakli-afetler-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/muhendislik-mimarlik-ve-sehir-planlama-egitimi-ve-staj-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/muhendislik-mimarlik-ve-sehir-planlama-egitimi-ve-staj-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/ekokirim-ve-cevresel-suclar-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ekokirim-ve-cevresel-suclar-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/denizcilik-politikalari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/denizcilik-politikalari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/erzincan-ilic-madeni-komisyonu",
+    "status": 301,
+    "location": "/kategori/erzincan-ilic-madeni-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/filyos-komisyonu",
+    "status": 301,
+    "location": "/kategori/filyos-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/kanal-istanbul-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/kanal-istanbul-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/ucretli-calisan-ve-issiz-muhendislerin-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ucretli-calisan-ve-issiz-muhendislerin-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/biyosidal-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/biyosidal-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/cografi-bilgi-sistemleri-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/cografi-bilgi-sistemleri-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/enerji-kimlik-belgesi-komisyonu",
+    "status": 301,
+    "location": "/kategori/enerji-kimlik-belgesi-komisyonu"
+  },
+  {
+    "path": "/belgeler/liste/yapay-zeka-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/yapay-zeka-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/elektrikli-araclarin-kullanimi-ve-yangin-guvenligi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/elektrikli-araclarin-kullanimi-ve-yangin-guvenligi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/ekokirim-doga-kaynakli-afetler-ve-cevresel-suclar-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/ekokirim-doga-kaynakli-afetler-ve-cevresel-suclar-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/engelli-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/engelli-muhendis-mimar-ve-sehir-plancilarinin-sorunlari-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/muhendislik-mimarlik-sehir-planlama-egitimi-ve-staj-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/muhendislik-mimarlik-sehir-planlama-egitimi-ve-staj-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/afet-ekokirim-kent-ve-cevre-suclarina-karsi-mucadele-ve-hukuksal-etkilerini-takip-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/afet-ekokirim-kent-ve-cevre-suclarina-karsi-mucadele-ve-hukuksal-etkilerini-takip-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/mmsp-ozluk-haklari-ve-emek-mucadelesinin-gelistirilmesi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/mmsp-ozluk-haklari-ve-emek-mucadelesinin-gelistirilmesi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/muhendislik-mimarlik-sehir-planlama-egitimi-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/muhendislik-mimarlik-sehir-planlama-egitimi-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/veri-politikalari-ve-yapay-zeka-calisma-grubu",
+    "status": 301,
+    "location": "/kategori/veri-politikalari-ve-yapay-zeka-calisma-grubu"
+  },
+  {
+    "path": "/belgeler/liste/6-ve-20-subat-2023-depremleri-takip-komisyonu",
+    "status": 301,
+    "location": "/kategori/6-ve-20-subat-2023-depremleri-takip-komisyonu"
   }
 ]

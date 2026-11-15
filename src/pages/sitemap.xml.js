@@ -167,7 +167,13 @@ export async function getServerSideProps({ res }) {
 
   if (apiBaseUrl) {
     try {
-      const categories = await fetchJson(`${apiBaseUrl}/category`);
+      const activeCategories = await fetchJson(`${apiBaseUrl}/category`);
+      let legacyGroupCategories = [];
+      try { legacyGroupCategories = await fetchJson(`${apiBaseUrl}/legacy/work-group-categories`); } catch { /* Backend-first rollout compatibility. */ }
+      const categories = Array.from(new Map([
+        ...(Array.isArray(activeCategories) ? activeCategories : []),
+        ...(Array.isArray(legacyGroupCategories) ? legacyGroupCategories : []),
+      ].map(category => [asId(category._id), category])).values());
       const categoryMap = new Map(
         (Array.isArray(categories) ? categories : []).map((category) => [asId(category._id), category])
       );

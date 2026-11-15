@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import {
   Box,
@@ -6,6 +7,7 @@ import {
   Container,
   Grid,
   Paper,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -94,7 +96,11 @@ export default function WorkGroupDetailPage({
   reports = [],
   decisions = [],
   canonicalPath = '',
+  relatedContents = [],
+  contentPage = 1,
+  contentTotalPages = 0,
 }) {
+  const router = useRouter();
   if (!workGroup) {
     return null;
   }
@@ -238,6 +244,22 @@ export default function WorkGroupDetailPage({
               )}
             </Paper>
           </Grid>
+          {relatedContents.length > 0 ? (
+            <Grid item xs={12}>
+              <Paper variant="outlined" sx={{ p: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1.5 }}>İlgili İçerikler</Typography>
+                <Box sx={{ display: 'grid', gap: 1.5 }}>
+                  {relatedContents.map(content => (
+                    <Box key={content._id}>
+                      <Link href={`/${content.slug}`} style={{ color: 'var(--tmmob-red)', textDecoration: 'none', fontWeight: 600 }}>{content.title}</Link>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>{formatDate(content.publishDate)}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+                {contentTotalPages > 1 ? <Pagination sx={{ mt: 2 }} count={contentTotalPages} page={contentPage} onChange={(event, page) => router.push({ pathname: router.pathname, query: { ...router.query, contentPage: page } })} /> : null}
+              </Paper>
+            </Grid>
+          ) : null}
         </Grid>
       </Container>
     </Layout>
