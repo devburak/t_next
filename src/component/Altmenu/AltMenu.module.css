@@ -1,61 +1,79 @@
 .paneContent {
-    padding: 10px;
-  }
+  padding: 0;
+}
 
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px;
+  border: 1px solid #788590;
+  background-color: #ecf0f1;
+  margin-top: 8px;
+  padding: 4px;
+}
+
+.nav li {
+  list-style: none;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.428571429;
+}
+
+.nav li a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  height: 100%;
+  padding: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav li a:hover {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+}
+
+.nav li a:focus-visible {
+  outline: 3px solid var(--tmmob-red);
+  outline-offset: -3px;
+}
+
+@media (min-width: 1200px) {
   .nav {
-    border: 1px solid #788590;
-    background-color: #ecf0f1; /* Arka plan rengi */
-    margin-top: 12px;
-    padding: 0;
-    overflow: hidden; /* Float'ların dışarı taşmasını engeller */
+    flex-wrap: nowrap;
   }
-  
+}
+
+@media (max-width: 599.95px) {
+  .nav {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    gap: 0;
+  }
+
   .nav li {
-    list-style: none;
-    float: left; /* Yan yana dizilim */
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.428571429;
+    min-width: 0;
   }
-  
+
   .nav li a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #000;
-    transition: background-color 0.3s, color 0.3s;
-    background-color: #ecf0f1; /* Link arka plan rengini eşitle */
-  }
-  
-  .nav li a:hover {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    opacity: 0.6;
+    justify-content: flex-start;
+    padding: 12px 8px;
+    white-space: normal;
+    text-align: left;
   }
 
-  @media (max-width: 599.95px) {
-    .nav {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) max-content;
-    }
-
-    .nav li {
-      float: none;
-      min-width: 0;
-    }
-
-    .nav li a {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 44px;
-      height: 100%;
-      padding: 12px 8px;
-      text-align: left;
-    }
-
-    .nav li:nth-child(even) a {
-      justify-content: flex-end;
-      text-align: right;
-    }
+  .nav li:nth-child(even) a {
+    justify-content: flex-end;
+    text-align: right;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav li a {
+    transition: none;
+  }
+}

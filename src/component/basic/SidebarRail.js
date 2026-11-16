@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Stack, Typography, Skeleton } from '@mui/material';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import QuickAccessMenu from '../QuickAccessMenu';
 
@@ -30,10 +31,18 @@ function SidebarRail({
         <Campaign pageType={pageType} placement="left_menu" layoutType="square" />
         <Box mb={1} sx={{ maxWidth: { xs: 'none', sm: 480 }, mx: { xs: -2, sm: 'auto' } }}>
           <Stack
+            component={Link}
+            href="/takvim"
             direction="row"
             spacing={1}
             alignItems="center"
-            sx={{ p: 2, color: 'var(--site-ink)' }}
+            sx={{
+              p: 2,
+              color: 'var(--site-ink)',
+              borderRadius: 2,
+              '&:hover': { textDecoration: 'underline' },
+              '&:focus-visible': { outline: '3px solid var(--tmmob-red)', outlineOffset: -3 },
+            }}
           >
             <CalendarMonthIcon sx={{ color: 'var(--tmmob-red)' }} />
             <Typography component="h2" sx={{ m: 0, fontSize: '20px !important', fontWeight: 700 }}>

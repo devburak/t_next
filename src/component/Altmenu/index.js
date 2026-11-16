@@ -12,7 +12,7 @@ const AltMenu = () => {
   ];
 
   return (
-    <div className={styles.paneContent}>
+    <nav className={styles.paneContent} aria-label="İçerik kategorileri">
       <ul className={styles.nav}>
         {menuItems.map((item, index) => (
           <li
@@ -24,7 +24,7 @@ const AltMenu = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 };
 

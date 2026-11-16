@@ -225,16 +225,14 @@ export default function CustomCalendar({
       </Box>
       <Box sx={{ minHeight: 32, mt: 1 }}>
         <CalendarStatus loading={loading} error={error} onRetry={retry} compact />
-        {!loading && !error && (
+        {!loading && !error && events.length === 0 && (
           <Typography
             component="div"
             variant="caption"
             color="text.secondary"
             sx={{ px: 1, mt: 1 }}
           >
-            {events.length
-              ? 'Noktalı günlere dokunarak etkinlikleri açın.'
-              : 'Bu ay için etkinlik bulunmuyor.'}
+            Bu ay için etkinlik bulunmuyor.
           </Typography>
         )}
       </Box>

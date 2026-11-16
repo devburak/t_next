@@ -40,6 +40,19 @@ function InfoRow({ icon: Icon, label, children }) {
 }
 export default function EventSummary({ event, showTitle = true, showDetailLink = true }) {
   const googleUrl = googleCalendarUrl(event, getSiteUrl());
+  const actionCount = 1 + Number(showDetailLink) + Number(Boolean(googleUrl));
+  const actionSx = {
+    ...calendarButtonSx,
+    minWidth: 0,
+    px: 1,
+    py: 1,
+    flexDirection: { xs: 'column', sm: 'row' },
+    gap: 0.5,
+    fontSize: { xs: 12, sm: 13 },
+    lineHeight: 1.4,
+    whiteSpace: 'normal',
+    '& .MuiButton-startIcon': { m: 0, flexShrink: 0 },
+  };
   return (
     <Box sx={{ ...calendarUiSx, minWidth: 0 }}>
       <Stack spacing={2}>
@@ -85,14 +98,20 @@ export default function EventSummary({ event, showTitle = true, showDetailLink =
             {event.spot}
           </Typography>
         )}
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} useFlexGap flexWrap="wrap">
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${actionCount}, minmax(0, 1fr))`,
+            gap: 1,
+          }}
+        >
           {showDetailLink && (
             <Button
               component={Link}
               href={eventHref(event)}
-              endIcon={<ArrowForwardRounded />}
+              startIcon={<ArrowForwardRounded />}
               variant="contained"
-              sx={{ ...calendarButtonSx, bgcolor: 'var(--calendar-ink)' }}
+              sx={{ ...actionSx, bgcolor: 'var(--calendar-ink)' }}
             >
               Etkinlik detayı
             </Button>
@@ -105,7 +124,7 @@ export default function EventSummary({ event, showTitle = true, showDetailLink =
               rel="noopener noreferrer"
               startIcon={<Google />}
               variant="outlined"
-              sx={calendarButtonSx}
+              sx={actionSx}
             >
               Google Takvim’e ekle
             </Button>
@@ -115,11 +134,11 @@ export default function EventSummary({ event, showTitle = true, showDetailLink =
             href={`/api/events/${encodeURIComponent(event._id)}/ics`}
             startIcon={<FileDownloadOutlined />}
             variant="outlined"
-            sx={calendarButtonSx}
+            sx={actionSx}
           >
             Apple / Outlook (ICS)
           </Button>
-        </Stack>
+        </Box>
         {!eventRange(event)?.hasEnd && (
           <Typography component="div" variant="caption" color="text.secondary">
             Bitiş saati belirtilmemiş. Takvime eklerken 1 saatlik bir aralık açılır; kaydetmeden
