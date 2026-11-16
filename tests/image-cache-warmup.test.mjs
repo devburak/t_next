@@ -18,6 +18,15 @@ test('warmup ignores external URLs, scripts, normal images and malformed links',
   assert.deepEqual(getWarmupPaths(html, 'http://localhost'), []);
 });
 
+test('first lazy headline remains warmable without preloading it in the browser', () => {
+  const headline = '<img loading="lazy" data-home-slider-image="true" src="/_next/image?url=%2Fhero.jpg&amp;w=1080&amp;q=75" srcSet="/_next/image?url=%2Fhero.jpg&amp;w=384&amp;q=75 384w, /_next/image?url=%2Fhero.jpg&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fhero.jpg&amp;w=1080&amp;q=75 1080w">';
+  assert.equal(getWarmupPaths(headline, 'http://localhost').length, 3);
+  assert.deepEqual(getWarmupPaths(headline.replace('data-home-slider-image="true"', ''), 'http://localhost'), []);
+  assert.deepEqual(getWarmupPaths('<img data-home-slider-image="true" src="https://outside.example/_next/image?w=640">', 'http://localhost'), []);
+  assert.deepEqual(getWarmupPaths(headline.replaceAll('/_next/image', '/original'), 'http://localhost'), []);
+  assert.equal(getWarmupPaths(headline.repeat(20), 'http://localhost').length, 3);
+});
+
 test('warmup rejects credential-bearing or non-root destinations before fetching', async () => {
   for (const origin of ['file:///tmp/', 'http://user:password@localhost/', 'http://localhost/api', 'http://localhost/?token=private']) {
     await assert.rejects(warmImageCache(origin), /Site kökü/);

@@ -4,15 +4,17 @@ import { fileURLToPath } from 'node:url';
 const TARGET_WIDTHS = [384, 640, 1080];
 const MAX_IMAGES = 6;
 
-// Only warm Next Image variants declared as image preloads in server-rendered
-// HTML. Never follow arbitrary page links or fetch an image origin directly.
+// Warm image preloads and the explicitly marked first lazy headline in SSR HTML.
+// Never follow arbitrary page links or fetch an image origin directly.
 export function getWarmupPaths(html, origin) {
   const paths = new Set();
-  const tags = html.match(/<link\b[^>]*>/gi) || [];
+  const tags = html.match(/<(?:link|img)\b[^>]*>/gi) || [];
   for (const tag of tags) {
-    if (!/\brel="preload"/i.test(tag) || !/\bas="image"/i.test(tag)) continue;
-    const srcset = tag.match(/\bimagesrcset="([^"]+)"/i)?.[1];
-    const href = tag.match(/\bhref="([^"]+)"/i)?.[1];
+    const isHeadline = /^<img\b/i.test(tag) && /\bdata-home-slider-image="true"/i.test(tag);
+    const isPreload = /^<link\b/i.test(tag) && /\brel="preload"/i.test(tag) && /\bas="image"/i.test(tag);
+    if (!isHeadline && !isPreload) continue;
+    const srcset = tag.match(isHeadline ? /\bsrcset="([^"]+)"/i : /\bimagesrcset="([^"]+)"/i)?.[1];
+    const href = tag.match(isHeadline ? /\bsrc="([^"]+)"/i : /\bhref="([^"]+)"/i)?.[1];
     const candidates = (srcset ? srcset.split(',').map((part) => part.trim().split(/\s+/)[0]) : [href])
       .filter(Boolean)
       .flatMap((value) => {

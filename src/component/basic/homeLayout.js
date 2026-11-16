@@ -64,7 +64,7 @@ function HomePage({
             <HomeSlider slides={slides} />
             <AltMenu />
           </div>
-          <Grid container spacing={2}>
+          <Grid container columnSpacing={2} rowSpacing={1}>
             <Grid item xs={12}>
               <TitleComponent icon={<NewspaperIcon />} title={'Haberler'} link={'/kategori/haberler'} />
               <NewsCarousel
@@ -113,7 +113,7 @@ function HomePage({
       </Grid>
 
       {/* Görüşler ve Konuşmalar - Tam Genişlik */}
-      <Grid container spacing={3} sx={{ mt: 1 }}>
+      <Grid container columnSpacing={3} rowSpacing={2} sx={{ mt: 0 }}>
         <Grid item xs={12} sm={6}>
           <TitleComponent icon={<RecordVoiceOverIcon />} title={'Görüşler'} link={'/kategori/gorusler'} />
           <NewsCarousel
@@ -134,7 +134,7 @@ function HomePage({
         </Grid>
       </Grid>
 
-      <Grid container spacing={3} sx={{ mt: 1 }}>
+      <Grid container columnSpacing={3} rowSpacing={2} sx={{ mt: 0 }}>
         <Grid item xs={12} sm={4}>
           <TitleComponent icon={<NewspaperIcon />} title={'Birlik Haberleri'} link={'/yayin-turu/birlik-haberleri'} />
           <PublicationCarousel
