@@ -1,238 +1,256 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Calendar from 'react-calendar';
-import { Popper, Box, Typography, CircularProgress } from '@mui/material';
-import 'react-calendar/dist/Calendar.css';
+import React, { useEffect, useId, useRef, useState } from 'react';
+import { Box, Button, ButtonBase, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
+import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
+import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import {
+  calendarDay,
+  calendarToday,
+  nativeCalendarDate,
+  dayHref,
+  eventsOnDay,
+  formatEventTime,
+} from '../../lib/calendar.mjs';
+import { calendarUiSx } from './calendarStyles';
+import CalendarStatus from './CalendarStatus';
+import EventDialog from './EventDialog';
+import useCalendarEvents from './useCalendarEvents';
 
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-// Tarih aralığını günceller ve etkinlikleri çeker
-const updateEventsForMonth = (date, lastFetchedDateRef, fetchEvents) => {
-  // Eğer geçerli bir Date nesnesi değilse bugünün tarihini kullan
-  const validDate = date instanceof Date ? date : new Date();
-
-  const currentMonth = validDate.getMonth();
-  const currentYear = validDate.getFullYear();
-
-  // Eğer ay ve yıl değişmediyse, tekrar fetch yapılmaz
-  if (
-    lastFetchedDateRef.current &&
-    lastFetchedDateRef.current.month === currentMonth &&
-    lastFetchedDateRef.current.year === currentYear
-  ) {
-    return;
-  }
-
-  // Ay ve yıl değişmişse API'den veri çek
-  const startDate = new Date(currentYear, currentMonth, 1).toISOString();
-  const endDate = new Date(currentYear, currentMonth + 1, 0).toISOString();
-
-  fetchEvents(startDate, endDate);
-
-  // Yeni tarih aralığını sakla
-  lastFetchedDateRef.current = { month: currentMonth, year: currentYear };
-};
-
-
-const CustomCalendar = ({ value = new Date(), onChange, events: externalEvents, onMonthChange }) => {
-  const [currentDate, setCurrentDate] = useState(value); // Seçili tarih
-  const [events, setEvents] = useState([]); // Etkinlikler (dahili)
-  const [isLoading, setIsLoading] = useState(false); // Yüklenme durumu
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [popperEtkinlik, setPopperEtkinlik] = useState(null);
-  const lastFetchedDateRef = useRef(null); // En son çekilen ay ve yıl bilgisi
-  const lastActiveMonthRef = useRef({ y: null, m: null });
-  const open = Boolean(anchorEl);
-
-  const isSameDay = (a, b) => {
-    if (!(a instanceof Date) || !(b instanceof Date)) return false;
-    return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+const weekDays = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+export default function CustomCalendar({
+  value,
+  onChange,
+  events: externalEvents,
+  onMonthChange,
+  loading: parentLoading = false,
+  error: parentError = '',
+  onRetry,
+}) {
+  const router = useRouter(),
+    labelId = useId(),
+    root = useRef(null),
+    focusRequested = useRef(false);
+  const [selected, setSelected] = useState(() => calendarDay(value || calendarToday()));
+  const [visibleMonth, setVisibleMonth] = useState(null);
+  const selectedDay = value ? calendarDay(value) : selected;
+  const month = calendarDay(visibleMonth || selectedDay).startOf('month');
+  const monthKey = month.format('YYYY-MM');
+  const [focusDay, setFocusDay] = useState(() => selectedDay.format('YYYY-MM-DD'));
+  const [dialog, setDialog] = useState({ events: [], date: null });
+  const source = useCalendarEvents(month, 'monthly', { externalEvents });
+  const { events } = source;
+  const loading = parentLoading || source.loading;
+  const error = parentError || source.error;
+  const retry = onRetry || source.retry;
+  const start = month.subtract((month.day() + 6) % 7, 'day');
+  const days = Array.from({ length: 42 }, (_, index) => start.add(index, 'day'));
+  useEffect(() => {
+    if (focusRequested.current) {
+      root.current?.querySelector(`[data-calendar-day="${focusDay}"]`)?.focus();
+      focusRequested.current = false;
+    }
+  }, [focusDay, monthKey]);
+  const navigate = (amount) => {
+    const next = month.add(amount, 'month');
+    setFocusDay(next.format('YYYY-MM-DD'));
+    if (onMonthChange) onMonthChange(nativeCalendarDate(next));
+    else setVisibleMonth(next);
   };
-
- // Etkinlikleri API'den çekme
- const fetchEvents = async (startDate, endDate) => {
-  // Eğer dışarıdan events veriliyorsa dahili fetch yapma
-  if (externalEvents && Array.isArray(externalEvents)) {
-    setEvents(externalEvents);
-    return;
-  }
-  setIsLoading(true);
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/events/list?startDate=${startDate}&endDate=${endDate}`);
-    if (!res.ok) {
-      console.error('API İsteği Başarısız:', res.status, res.statusText);
-      setIsLoading(false);
+  const selectDay = (date) => {
+    setSelected(date);
+    setFocusDay(date.format('YYYY-MM-DD'));
+    const matches = eventsOnDay(events, date);
+    if (onChange) {
+      onChange(nativeCalendarDate(date));
       return;
     }
-    const data = await res.json();
-    setEvents(data.events || []); // Gelen etkinlikleri güncelle
-  } catch (error) {
-    console.error('Etkinlikleri çekerken hata:', error);
-  } finally {
-    setIsLoading(false); // Her durumda yükleme durumu kapatılır
-  }
-};
-
-// İlk render ve tarih değişiminde etkinlikleri kontrol et
-useEffect(() => {
-  // Dışarıdan gelen events her değiştiğinde güncelle
-  if (externalEvents && Array.isArray(externalEvents)) {
-    setEvents(externalEvents);
-  }
-}, [externalEvents]);
-
-// Ebeveyn value değiştiğinde senkronize et
-useEffect(() => {
-  if (value instanceof Date && !isNaN(value)) {
-    // Gün bazında karşılaştırma; aynı günse state güncellemeyelim
-    if (!isSameDay(currentDate, value)) {
-      setCurrentDate(value);
-    }
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [value]);
-
-useEffect(() => {
-  updateEventsForMonth(currentDate, lastFetchedDateRef, fetchEvents);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [currentDate]);
-
-// const updateEventsForMonth = (date) => {
-//   // Eğer geçerli bir Date nesnesi değilse bugünün tarihini kullan
-//   const validDate = date instanceof Date ? date : new Date();
-
-//   const startDate = new Date(validDate.getFullYear(), validDate.getMonth(), 1).toISOString();
-//   const endDate = new Date(validDate.getFullYear(), validDate.getMonth() + 1, 0).toISOString();
-
-//   fetchEvents(startDate, endDate);
-// };
-
-
-
-  const handleDateChange = (date) => {
-    if (date instanceof Date) {
-      setCurrentDate(date);
-      if (onChange) {
-        onChange(date); // Tarih değişikliğini dışarıya bildirme
-      }
-    } else {
-      console.error('Geçersiz tarih:', date);
+    if (matches.length) setDialog({ events: matches, date });
+    else if (!onChange) router.push(dayHref(date));
+  };
+  const keyboard = (event, date) => {
+    const offsets = {
+      ArrowLeft: -1,
+      ArrowRight: 1,
+      ArrowUp: -7,
+      ArrowDown: 7,
+      Home: -(date.day() + 6) % 7,
+      End: 6 - ((date.day() + 6) % 7),
+    };
+    if (!Object.hasOwn(offsets, event.key)) return;
+    event.preventDefault();
+    const next = date.add(offsets[event.key], 'day');
+    focusRequested.current = true;
+    setFocusDay(next.format('YYYY-MM-DD'));
+    if (!next.isSame(month, 'month')) {
+      if (onMonthChange) onMonthChange(nativeCalendarDate(next.startOf('month')));
+      else setVisibleMonth(next.startOf('month'));
     }
   };
-
-  // Ay navigasyonu (react-calendar içi oklar veya swipe) yakalamak için
-  const handleActiveStartDateChange = ({ activeStartDate, view }) => {
-    if (view === 'month' && activeStartDate instanceof Date) {
-      const y = activeStartDate.getFullYear();
-      const m = activeStartDate.getMonth();
-      const last = lastActiveMonthRef.current;
-      // Sadece yıl/ay değiştiyse işlem yap
-      if (last.y !== y || last.m !== m) {
-        lastActiveMonthRef.current = { y, m };
-        if (typeof onMonthChange === 'function') {
-          onMonthChange(activeStartDate);
-        }
-        // Ay başlangıcını seçili tarih olarak atarken gün bazında gereksiz güncellemeyi önle
-        if (!isSameDay(currentDate, activeStartDate)) {
-          setCurrentDate(activeStartDate);
-        }
-      }
-    }
-  };
-
-  const tileClassName = ({ date, view }) => {
-    if (view === 'month') {
-      const today = new Date();
-      // Bugünü özel stil ile göster
-      if (
-        date instanceof Date &&
-        date.getFullYear() === today.getFullYear() &&
-        date.getMonth() === today.getMonth() &&
-        date.getDate() === today.getDate()
-      ) {
-        return 'todayStyle';
-      }
-
-      // Etkinlik günlerini özel stil ile göster
-  // Gün içinde etkinlik var mı? Sadece noktayı göstereceğiz, sınıf döndürmeyeceğiz
-  // const hasEvent = events.some(event => {
-  //   const start = new Date(event.startDate);
-  //   const end = event.endDate ? new Date(event.endDate) : start;
-  //   const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  //   return d >= new Date(start.getFullYear(), start.getMonth(), start.getDate()) &&
-  //          d <= new Date(end.getFullYear(), end.getMonth(), end.getDate());
-  // });
-  // if (hasEvent) return 'eventDay';
-    }
-  };
-
-  const handleMouseEnter = (event, etkinlik) => {
-    setAnchorEl(event.currentTarget);
-    setPopperEtkinlik(etkinlik);
-  };
-
-  const handleMouseLeave = () => {
-    setAnchorEl(null);
-    setPopperEtkinlik(null);
-  };
-
-  const tileContent = ({ date, view }) => {
-    if (view === 'month') {
-      // Seçili tarih için etkinlikleri kontrol et
-      const etkinlik = events.find(event => {
-        if (!event.startDate) return false; // startDate yoksa kontrolü atla
-        const start = new Date(event.startDate);
-        const end = event.endDate ? new Date(event.endDate) : start;
-        const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        return d >= new Date(start.getFullYear(), start.getMonth(), start.getDate()) &&
-               d <= new Date(end.getFullYear(), end.getMonth(), end.getDate());
-      });
-
-      if (etkinlik) {
-        return (
-          <div
-            onMouseEnter={(e) => handleMouseEnter(e, etkinlik)}
-            onMouseLeave={handleMouseLeave}
-          >
-            <span style={{ color: 'purple', fontSize: '16px', fontWeight: 'bold' }}>•</span>
-          </div>
-        );
-      }
-    }
-    return null; // Eğer etkinlik yoksa içerik gösterme
-  };
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-        <CircularProgress size={24} />
-      </Box>
-    );
-  }
-
   return (
-    <>
-      <Calendar
-        className="customCalendar"
-        value={currentDate} // Seçili tarih
-        onChange={handleDateChange} // Tarih değişikliklerini yönetir
-        tileClassName={tileClassName}
-        tileContent={tileContent}
-        onActiveStartDateChange={handleActiveStartDateChange}
-        locale='tr-TR'
+    <Box
+      ref={root}
+      data-calendar-mini
+      sx={{
+        ...calendarUiSx,
+        bgcolor: 'var(--calendar-surface)',
+        border: '1px solid var(--calendar-border)',
+        borderRadius: 4,
+        p: { xs: 0.5, sm: 1 },
+        width: '100%',
+        minWidth: 0,
+      }}
+    >
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+        <Typography
+          id={labelId}
+          component="h3"
+          sx={{ m: 0, fontSize: '18px !important', fontWeight: 700 }}
+        >
+          {month.format('MMMM YYYY')}
+        </Typography>
+        <Stack direction="row">
+          <IconButton
+            aria-label="Önceki ay"
+            onClick={() => navigate(-1)}
+            sx={{ width: 44, height: 44 }}
+          >
+            <ChevronLeftRounded />
+          </IconButton>
+          <IconButton
+            aria-label="Sonraki ay"
+            onClick={() => navigate(1)}
+            sx={{ width: 44, height: 44 }}
+          >
+            <ChevronRightRounded />
+          </IconButton>
+        </Stack>
+      </Stack>
+      <Box
+        role="group"
+        aria-labelledby={labelId}
+        sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))' }}
+      >
+        {weekDays.map((day) => (
+          <Typography
+            key={day}
+            component="div"
+            sx={{
+              textAlign: 'center',
+              py: 1,
+              fontSize: 12,
+              fontWeight: 600,
+              color: 'text.secondary',
+            }}
+          >
+            {day}
+          </Typography>
+        ))}
+        {days.map((day) => {
+          const matches = eventsOnDay(events, day),
+            key = day.format('YYYY-MM-DD'),
+            today = day.isSame(calendarToday(), 'day');
+          const button = (
+            <ButtonBase
+              data-calendar-day={key}
+              aria-label={`${day.format('D MMMM YYYY, dddd')}, ${matches.length} etkinlik`}
+              aria-current={today ? 'date' : undefined}
+              aria-pressed={day.isSame(selectedDay, 'day')}
+              tabIndex={key === focusDay ? 0 : -1}
+              onKeyDown={(event) => keyboard(event, day)}
+              onClick={() => selectDay(day)}
+              sx={{
+                minWidth: 0,
+                width: '100%',
+                minHeight: 48,
+                borderRadius: 2,
+                flexDirection: 'column',
+                gap: 0.25,
+                fontSize: 14,
+                color: day.isSame(month, 'month') ? 'var(--calendar-ink)' : 'text.disabled',
+                fontWeight: matches.length ? 700 : 400,
+                bgcolor: today
+                  ? 'var(--calendar-accent)'
+                  : day.isSame(selectedDay, 'day')
+                    ? 'var(--calendar-muted)'
+                    : 'transparent',
+                ...(today ? { color: '#fff' } : {}),
+                '&:hover': { bgcolor: today ? 'var(--calendar-accent)' : 'var(--calendar-muted)' },
+              }}
+            >
+              <Box component="span">{day.date()}</Box>
+              <Stack component="span" direction="row" spacing={0.5} sx={{ height: 5 }}>
+                {matches.slice(0, 3).map((item) => (
+                  <Box
+                    component="span"
+                    key={item._id}
+                    sx={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: '50%',
+                      bgcolor: today ? 'currentColor' : 'var(--calendar-accent)',
+                    }}
+                  />
+                ))}
+              </Stack>
+            </ButtonBase>
+          );
+          return matches.length ? (
+            <Tooltip
+              key={key}
+              describeChild
+              arrow
+              placement="top"
+              disableInteractive
+              disableTouchListener
+              title={
+                <Box sx={{ maxWidth: 260, p: 0.5, overflowWrap: 'anywhere' }}>
+                  <Typography component="div" sx={{ fontSize: 13, fontWeight: 700 }}>
+                    {matches[0].title}
+                  </Typography>
+                  <Typography component="div" sx={{ fontSize: 12 }}>
+                    {formatEventTime(matches[0])}
+                    {matches.length > 1 ? ` · +${matches.length - 1} etkinlik` : ''}
+                  </Typography>
+                </Box>
+              }
+            >
+              {button}
+            </Tooltip>
+          ) : (
+            React.cloneElement(button, { key })
+          );
+        })}
+      </Box>
+      <Box sx={{ minHeight: 32, mt: 1 }}>
+        <CalendarStatus loading={loading} error={error} onRetry={retry} compact />
+        {!loading && !error && (
+          <Typography
+            component="div"
+            variant="caption"
+            color="text.secondary"
+            sx={{ px: 1, mt: 1 }}
+          >
+            {events.length
+              ? 'Noktalı günlere dokunarak etkinlikleri açın.'
+              : 'Bu ay için etkinlik bulunmuyor.'}
+          </Typography>
+        )}
+      </Box>
+      <Button
+        component={Link}
+        href={`/takvim/${month.format('YYYY/MM')}`}
+        endIcon={<ArrowForwardRounded />}
+        sx={{ mt: 1, minHeight: 44, width: '100%', borderRadius: 2 }}
+      >
+        Tüm takvimi aç
+      </Button>
+      <EventDialog
+        events={dialog.events}
+        date={dialog.date}
+        onClose={() => setDialog({ events: [], date: null })}
       />
-      <Popper open={open} anchorEl={anchorEl} placement="top">
-        <Box sx={{ border: 1, p: 1, bgcolor: 'background.paper' }}>
-          {popperEtkinlik && (
-            <>
-              <Typography>{popperEtkinlik.title}</Typography>
-              <Typography>{popperEtkinlik.location}</Typography>
-              <Typography>{new Date(popperEtkinlik.startDate).toLocaleTimeString()}</Typography>
-            </>
-          )}
-        </Box>
-      </Popper>
-    </>
+    </Box>
   );
-};
-
-export default CustomCalendar;
+}

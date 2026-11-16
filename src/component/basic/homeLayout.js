@@ -59,7 +59,7 @@ function HomePage({
         <Campaign pageType="home" placement="popup" />
         </Grid>
        
-        <Grid item xs={12} sm={9} order={isMobile ? 1 : 2}>
+        <Grid item xs={12} lg={8} order={isMobile ? 1 : 2}>
           <div style={{ padding: '8px', minHeight: 250 }}>
             <HomeSlider slides={slides} />
             <AltMenu />
@@ -103,7 +103,7 @@ function HomePage({
         </Grid>
 
 
-        <Grid item xs={12} sm={3} order={isMobile ? 3 : 3} sx={{paddingTop:"1px"}}>
+        <Grid item xs={12} lg={4} order={isMobile ? 3 : 3} sx={{paddingTop:"1px"}}>
           <SidebarRail
             pageType="home"
             initialRightMenuItems={rightMenuItems}

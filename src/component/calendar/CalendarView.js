@@ -1,84 +1,71 @@
-// components/CalendarView.js
-import React, { useEffect } from 'react';
-import { Box, Button, Typography } from '@mui/material';
-import dayjs from 'dayjs'; // Tarih yönetimi için dayjs kütüphanesi
-import 'dayjs/locale/tr'; // Türkçe dil desteği
+import React, { useState } from 'react';
+import { Box, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { calendarDay, eventsOnDay } from '../../lib/calendar.mjs';
 import DailyView from './DailyView';
 import WeeklyView from './WeeklyView';
 import MonthlyView from './MonthlyView';
-
-dayjs.locale('tr'); // Türkçe dil ayarı
-
-const CalendarView = ({ events, initialView, selectedDate, setView, onDateChange }) => {
-  const [internalView, setInternalView] = React.useState(initialView || 'monthly'); // Varsayılan görünüm
-
-  // Eğer dışarıdan bir setView fonksiyonu gelirse onu kullan, yoksa kendi iç fonksiyonumuzu kullan
-  const handleViewChange = (newView) => {
-    if (setView) {
-      setView(newView);
-    } else {
-      setInternalView(newView);
-    }
+import EventDialog from './EventDialog';
+import { calendarUiSx } from './calendarStyles';
+export default function CalendarView({
+  events = [],
+  initialView = 'monthly',
+  selectedDate,
+  setView,
+  onDateChange = () => {},
+}) {
+  const [internalView, setInternalView] = useState(initialView);
+  const [dialog, setDialog] = useState({ events: [], date: null });
+  const view = setView ? initialView : internalView;
+  const eventClick = (event) => setDialog({ events: [event], date: event.startDate });
+  const dayClick = (date) => {
+    onDateChange(calendarDay(date));
+    const matches = eventsOnDay(events, date);
+    if (matches.length) setDialog({ events: matches, date });
   };
-
-  const handleTodayClick = () => {
-    onDateChange(dayjs());
-  };
-
-  useEffect(() => {
-    // Eğer view prop'u değişirse, bunu bileşen içi duruma yansıt
-    setInternalView(initialView);
-  }, [initialView]);
-
-  const currentView = setView ? initialView : internalView; // Güncel görünümü belirle
-
   return (
-    <Box>
-      {/* Görünüm değiştirici düğmeler */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2, gap: 2 }}>
-        <Button variant={selectedDate.isSame(dayjs(), 'day') ? 'contained' : 'outlined'} onClick={handleTodayClick}>
-          Bugün
-        </Button>
-        <Button variant={currentView === 'daily' ? 'contained' : 'outlined'} onClick={() => handleViewChange('daily')}>
-          Günlük Görünüm
-        </Button>
-        <Button variant={currentView === 'weekly' ? 'contained' : 'outlined'} onClick={() => handleViewChange('weekly')}>
-          Haftalık Görünüm
-        </Button>
-        <Button variant={currentView === 'monthly' ? 'contained' : 'outlined'} onClick={() => handleViewChange('monthly')}>
-          Aylık Görünüm
-        </Button>
-      </Box>
-
-      {/* Seçili görünüme göre bileşen gösterimi */}
-      {currentView === 'daily' && (
-        <DailyView
-          events={events}
-          selectedDate={selectedDate.toDate()} // Date nesnesi olarak geç
-        />
-      )}
-      {currentView === 'weekly' && (
-        <WeeklyView
-          events={events}
-          selectedDate={selectedDate.toDate()} // Date nesnesi olarak geç
-          setSelectedDate={onDateChange}
-        />
-      )}
-      {currentView === 'monthly' && (
+    <Box sx={calendarUiSx}>
+      <ToggleButtonGroup
+        exclusive
+        value={view}
+        onChange={(event, value) => {
+          if (value) (setView || setInternalView)(value);
+        }}
+        aria-label="Takvim görünümü"
+        sx={{
+          mb: 3,
+          display: 'flex',
+          '& .MuiToggleButton-root': {
+            minHeight: 44,
+            flex: 1,
+            fontSize: 14,
+            textTransform: 'none',
+            fontWeight: 600,
+          },
+        }}
+      >
+        <ToggleButton value="monthly">Ay</ToggleButton>
+        <ToggleButton value="weekly">Hafta</ToggleButton>
+        <ToggleButton value="daily">Gün</ToggleButton>
+      </ToggleButtonGroup>
+      {view === 'monthly' && (
         <MonthlyView
+          selectedDate={selectedDate}
           events={events}
-          selectedDate={selectedDate.toDate()} // Date nesnesi olarak geç
-          setSelectedDate={onDateChange}
+          onEventClick={eventClick}
+          onDayClick={dayClick}
         />
       )}
+      {view === 'weekly' && (
+        <WeeklyView selectedDate={selectedDate} events={events} onEventClick={eventClick} />
+      )}
+      {view === 'daily' && (
+        <DailyView selectedDate={selectedDate} events={events} onEventClick={eventClick} />
+      )}
+      <EventDialog
+        events={dialog.events}
+        date={dialog.date}
+        onClose={() => setDialog({ events: [], date: null })}
+      />
     </Box>
   );
-};
-
-// Varsayılan props değerleri
-CalendarView.defaultProps = {
-  initialView: 'monthly',
-  onDateChange: () => {}, // Tarih değişim fonksiyonu yoksa iç durumu kullan
-};
-
-export default CalendarView;
+}

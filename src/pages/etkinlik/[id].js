@@ -1,9 +1,11 @@
 import { useRouter } from 'next/router';
-import { Container } from '@mui/material';
-import Layout from '../../component/basic/layout';  // Layout bileşeninin yolu
+import { Box, Container, Typography } from '@mui/material';
+import EventSummary from '../../component/calendar/EventSummary';
+import { calendarUiSx } from '../../component/calendar/calendarStyles';
+import Layout from '../../component/basic/layout'; // Layout bileşeninin yolu
 // import { getEventById } from '@/api';
 import Head from 'next/head';
-import {getImageUrlFromBodyHtml} from '../../component/utils';
+import { getImageUrlFromBodyHtml } from '../../component/utils';
 import {
   buildCanonicalUrl,
   buildMetaDescription,
@@ -21,41 +23,43 @@ const EventDetailPage = ({ event }) => {
     return <div>Loading...</div>;
   }
 
-  const imageUrl = 
-  getImageUrlFromBodyHtml(event?.bodyHtml) ||  
-  DEFAULT_OG_IMAGE;
+  const imageUrl = getImageUrlFromBodyHtml(event?.bodyHtml) || DEFAULT_OG_IMAGE;
 
   const canonicalUrl = buildCanonicalUrl(`/etkinlik/${event._id}`);
-  const description = buildMetaDescription(event?.spot || event?.bodyHtml, DEFAULT_META_DESCRIPTION);
-  const keywords = event?.keywords?.length > 0 
-  ? event.keywords.join(', ') 
-    : event?.title 
-    ? event.title.split(' ').join(', ') 
-    : 'TMMOB, etkinlikler, mühendislik, mimarlık';
+  const description = buildMetaDescription(
+    event?.spot || event?.bodyHtml,
+    DEFAULT_META_DESCRIPTION
+  );
+  const keywords =
+    event?.keywords?.length > 0
+      ? event.keywords.join(', ')
+      : event?.title
+        ? event.title.split(' ').join(', ')
+        : 'TMMOB, etkinlikler, mühendislik, mimarlık';
 
   const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    "name": event?.title || 'TMMOB Etkinliği',
-    "description": description,
-    "startDate": toIsoDate(event?.startDate),
-    "endDate": toIsoDate(event?.endDate || event?.startDate),
-    "eventStatus": "https://schema.org/EventScheduled",
-    "eventAttendanceMode": event?.location
-      ? "https://schema.org/OfflineEventAttendanceMode"
-      : "https://schema.org/OnlineEventAttendanceMode",
-    "image": [imageUrl],
-    "organizer": {
-      "@type": "Organization",
-      "name": "TMMOB",
-      "url": getSiteUrl(),
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event?.title || 'TMMOB Etkinliği',
+    description: description,
+    startDate: toIsoDate(event?.startDate),
+    endDate: toIsoDate(event?.endDate || event?.startDate),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: event?.location
+      ? 'https://schema.org/OfflineEventAttendanceMode'
+      : 'https://schema.org/OnlineEventAttendanceMode',
+    image: [imageUrl],
+    organizer: {
+      '@type': 'Organization',
+      name: 'TMMOB',
+      url: getSiteUrl(),
     },
     ...(event?.location
       ? {
-          "location": {
-            "@type": "Place",
-            "name": event.location,
-            "address": event.location,
+          location: {
+            '@type': 'Place',
+            name: event.location,
+            address: event.location,
           },
         }
       : {}),
@@ -84,47 +88,44 @@ const EventDetailPage = ({ event }) => {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </Head>
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-       
-      <h1>{event.title}</h1>
-      <Container
-        maxWidth="md"
-        sx={{
-          mt: 2,
-          p: 2,
-          backgroundColor: '#f9f9f9',
-          borderRadius: '8px',
-          boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-      {event.spot && <p><strong>{event.spot}</strong></p>}
-      <p>
-        <strong>Başlangıç Tarihi:</strong> {new Date(event.startDate).toLocaleString('tr-TR')}
-      </p>
-      {event.endDate && (
-        <p>
-          <strong>Bitiş Tarihi:</strong> {new Date(event.endDate).toLocaleString('tr-TR')}
-        </p>
-      )}
-      <p>
-        <strong>Yer:</strong> {event.location || 'Belirtilmemiş'}
-      </p>
-      <p>
-        <strong>Etkinlik Türü:</strong> {event.eventType}
-      </p>
-      </Container>
-      <Container
-        maxWidth="md"
-        sx={{
-          mt: 2,
-          p: 2,
-          backgroundColor: '#f9f9f9',
-          borderRadius: '8px',
-          boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <div dangerouslySetInnerHTML={{ __html: event.bodyHtml }} />
-      </Container>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Box sx={calendarUiSx}>
+          <Typography
+            component="h1"
+            sx={{
+              m: 0,
+              mb: 3,
+              fontSize: '28px !important',
+              lineHeight: '1.35 !important',
+              fontWeight: 700,
+              overflowWrap: 'anywhere',
+            }}
+          >
+            {event.title}
+          </Typography>
+          <Box
+            sx={{
+              p: { xs: 2, md: 3 },
+              border: '1px solid var(--calendar-border)',
+              borderRadius: 4,
+              bgcolor: 'var(--calendar-surface)',
+            }}
+          >
+            <EventSummary event={event} showTitle={false} showDetailLink={false} />
+          </Box>
+        </Box>
+        <Container
+          maxWidth="md"
+          sx={{
+            mt: 2,
+            p: 2,
+            backgroundColor: '#f9f9f9',
+            borderRadius: '8px',
+            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <div dangerouslySetInnerHTML={{ __html: event.bodyHtml }} />
+        </Container>
       </Container>
     </Layout>
   );
@@ -139,7 +140,9 @@ export async function getServerSideProps(context) {
   try {
     // Backend'den etkinlik detayını getir
     const res = await fetch(`${apiBaseUrl}/events/${id}`);
+    if (!res.ok) return { notFound: true };
     const event = await res.json();
+    if (!event?._id) return { notFound: true };
     return {
       props: {
         event,

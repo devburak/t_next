@@ -1,28 +1,29 @@
-import { Button, Typography } from '@mui/material';
-
-export default function CalendarSubscription() {
-  // Mevcut yılı al
-  const currentYear = new Date().getFullYear();
-
-  // Dinamik başlangıç ve bitiş tarihleri
-  const startDate = `${currentYear}-01-01`;
-  const endDate = `${currentYear}-12-31`;
-
+import { Box, Button, Typography } from '@mui/material';
+import FileDownloadOutlined from '@mui/icons-material/FileDownloadOutlined';
+import { calendarButtonSx } from './calendarStyles';
+export default function CalendarSubscription({ year = new Date().getFullYear() }) {
+  const query = new URLSearchParams({ startDate: `${year}-01-01`, endDate: `${year}-12-31` });
   return (
-    <div style={{ marginTop: '2rem' }}>
-      <Typography variant="subtitle1" gutterBottom>Takvim Abonelik</Typography>
-      <hr />
+    <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid var(--calendar-border)' }}>
+      <Typography component="h3" sx={{ m: 0, mb: 1, fontSize: '16px !important', fontWeight: 700 }}>
+        Takviminizde saklayın
+      </Typography>
+      <Typography
+        component="div"
+        sx={{ fontSize: 13, lineHeight: 1.6, color: 'text.secondary', mb: 2 }}
+      >
+        Google Takvim’e eklemek için bir etkinlik açın. Yıllık takvimi Apple ve Outlook için
+        indirebilirsiniz.
+      </Typography>
       <Button
         component="a"
-        href={`/api/events/ics?startDate=${startDate}&endDate=${endDate}`}
-        target="_blank"
+        href={`/api/events/ics?${query}`}
         variant="outlined"
-        size="small"
-        download
+        startIcon={<FileDownloadOutlined />}
+        sx={{ ...calendarButtonSx, width: '100%' }}
       >
-        {currentYear} yılı etkinliklerini indir (ICS)
+        {year} takvimini indir (ICS)
       </Button>
-    </div>
+    </Box>
   );
 }
-  

@@ -16,7 +16,7 @@ function Layout({ children , LeftSide , RigthSide}) {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const hasCustomLeftSide = Boolean(LeftSide);
   const showRightRail = typeof RigthSide === 'boolean' ? RigthSide : !hasCustomLeftSide;
-  const mainColumnWidth = hasCustomLeftSide ? (showRightRail ? 6 : 9) : (showRightRail ? 9 : 12);
+  const mainColumnWidth = hasCustomLeftSide ? (showRightRail ? 5 : 9) : (showRightRail ? 8 : 12);
 
   return (
     <div>
@@ -25,17 +25,17 @@ function Layout({ children , LeftSide , RigthSide}) {
       <Box className="site-shell site-shell--content">
       <Grid container spacing={3}>
         {hasCustomLeftSide && (
-          <Grid item xs={12} sm={3} order={isMobile ? 2 : 1}>
+          <Grid item xs={12} lg={3} order={isMobile ? 2 : 1}>
             {LeftSide}
           </Grid>
         )}
-        <Grid item xs={12} sm={mainColumnWidth} order={isMobile ? 1 : 2}>
+        <Grid item xs={12} lg={mainColumnWidth} order={isMobile ? 1 : 2}>
           <div style={{ padding: '5px' }}>
             {children}
           </div>
         </Grid>
         {showRightRail && (
-          <Grid item xs={12} sm={3} order={isMobile ? 3 : 3}>
+          <Grid item xs={12} lg={4} order={isMobile ? 3 : 3}>
             <SidebarRail pageType="detail" />
           </Grid>
         )}
