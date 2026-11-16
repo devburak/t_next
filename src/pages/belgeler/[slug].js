@@ -140,7 +140,7 @@ export async function getServerSideProps({ params, query }) {
       });
 
       const [workGroupsRes, periodsRes, categoryContentRes] = await Promise.all([
-        fetch(`${apiBaseUrl}/work-groups?${workGroupQueryParams.toString()}`),
+        fetch(`${apiBaseUrl}/work-group-families?${workGroupQueryParams.toString()}`),
         fetch(`${apiBaseUrl}/periods`),
         fetch(`${apiBaseUrl}/contents/slug/${slug}`),
       ]);
@@ -181,7 +181,7 @@ export async function getServerSideProps({ params, query }) {
       });
       const workGroupsRequest = lockReportWorkGroup
         ? Promise.resolve(null)
-        : fetch(`${apiBaseUrl}/work-groups?${workGroupQueryParams.toString()}`);
+        : fetch(`${apiBaseUrl}/work-group-families?${workGroupQueryParams.toString()}`);
 
       const [reportsRes, periodsRes, workGroupsRes] = await Promise.all([
         fetch(`${apiBaseUrl}/reports?${queryParams.toString()}`),
@@ -229,7 +229,7 @@ export async function getServerSideProps({ params, query }) {
       const [decisionsRes, periodsRes, workGroupsRes] = await Promise.all([
         fetch(`${apiBaseUrl}/decisions?${queryParams.toString()}`),
         fetch(`${apiBaseUrl}/periods`),
-        fetch(`${apiBaseUrl}/work-groups?${workGroupQueryParams.toString()}`),
+        fetch(`${apiBaseUrl}/work-group-families?${workGroupQueryParams.toString()}`),
       ]);
 
       const decisionsPayload = decisionsRes.ok

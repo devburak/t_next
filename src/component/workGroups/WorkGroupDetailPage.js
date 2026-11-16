@@ -15,6 +15,8 @@ import {
   TableHead,
   TableRow,
   Typography,
+  TextField,
+  MenuItem,
 } from '@mui/material';
 import Layout from '../basic/layout';
 import { buildCanonicalUrl, buildMetaDescription, DEFAULT_OG_IMAGE } from '../../lib/seo';
@@ -97,6 +99,7 @@ export default function WorkGroupDetailPage({
   decisions = [],
   canonicalPath = '',
   relatedContents = [],
+  periods = [],
   contentPage = 1,
   contentTotalPages = 0,
 }) {
@@ -137,6 +140,10 @@ export default function WorkGroupDetailPage({
           <Typography variant="h4" component="h1" sx={{ fontWeight: 700 }}>
             {workGroup.name}
           </Typography>
+          {periods.length > 0 && <TextField select label="Dönem" size="small" fullWidth value={workGroup.period?._id || ''}
+            sx={{ mt: 2, maxWidth: 420 }} onChange={event => router.push({ pathname: `/belgeler/calisma-gruplari/${workGroup.slug}`, query: { periodId: event.target.value } })}>
+            {periods.map(period => <MenuItem key={period._id} value={period._id}>{period.name}</MenuItem>)}
+          </TextField>}
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1.2 }}>
             {workGroup?.period?.name ? <Chip size="small" label={`Dönem: ${workGroup.period.name}`} /> : null}
             <Chip size="small" variant="outlined" label={`Üye: ${workGroup.memberCount || 0}`} />

@@ -8,10 +8,11 @@ function readQueryValue(query = {}, key) {
   return typeof value === 'string' && value.trim() ? value.trim() : '';
 }
 
-export default function WorkGroupDetailRoute({ workGroup, reports, decisions, relatedContents, contentPage, contentTotalPages, canonicalPath }) {
+export default function WorkGroupDetailRoute({ workGroup, reports, decisions, relatedContents, contentPage, contentTotalPages, canonicalPath, periods }) {
   return (
     <WorkGroupDetailPage
       workGroup={workGroup}
+      periods={periods}
       reports={reports}
       decisions={decisions}
       relatedContents={relatedContents}
@@ -31,41 +32,37 @@ export async function getServerSideProps({ params, query }) {
   const selectedPeriodId = readQueryValue(query, 'periodId');
 
   try {
-    const workGroupQuery = new URLSearchParams(
-      selectedPeriodId ? { period: selectedPeriodId } : {}
-    );
-    const workGroupRes = await fetch(
-      `${apiBaseUrl}/work-groups/slug/${slug}${workGroupQuery.toString() ? `?${workGroupQuery.toString()}` : ''}`
-    );
-
-    if (!workGroupRes.ok) {
-      return { notFound: true };
-    }
-
-    const workGroup = await workGroupRes.json();
-    const effectivePeriodId = selectedPeriodId || workGroup?.period?._id || '';
+    const workGroupQuery = new URLSearchParams({ isListed: 'true', ...(selectedPeriodId ? { period: selectedPeriodId } : {}) });
+    const familyRes = await fetch(`${apiBaseUrl}/work-group-families/${encodeURIComponent(slug)}?${workGroupQuery}`);
+    if (!familyRes.ok) return { notFound: true };
+    const family = await familyRes.json();
+    const term = family.activeTerm;
+    const workGroup = { ...(term || {}), _id: term?._id || family._id, name: family.name, slug: family.slug,
+      description: term?.description || family.description, familyId: family._id };
+    const periods = (family.periods || []).map(row => row.period).filter(Boolean);
+    const effectivePeriodId = term?.period?._id || '';
 
     const reportQuery = new URLSearchParams({
-      workGroupSlug: slug,
+      workGroup: term?._id || family._id,
       limit: String(LIST_LIMIT),
       ...(effectivePeriodId ? { period: effectivePeriodId } : {}),
     });
     const decisionQuery = new URLSearchParams({
-      workGroupSlug: slug,
+      workGroup: term?._id || family._id,
       limit: String(LIST_LIMIT),
       ...(effectivePeriodId ? { period: effectivePeriodId } : {}),
     });
 
     const contentPage = Math.max(1, Number.parseInt(readQueryValue(query, 'contentPage'), 10) || 1);
     const [reportsRes, decisionsRes, contentsRes] = await Promise.all([
-      fetch(`${apiBaseUrl}/reports?${reportQuery.toString()}`),
-      fetch(`${apiBaseUrl}/decisions?${decisionQuery.toString()}`),
-      fetch(`${apiBaseUrl}/contents/work-group/${workGroup._id}?page=${contentPage}&limit=10`),
+      term ? fetch(`${apiBaseUrl}/reports?${reportQuery.toString()}`) : Promise.resolve(null),
+      term ? fetch(`${apiBaseUrl}/decisions?${decisionQuery.toString()}`) : Promise.resolve(null),
+      term ? fetch(`${apiBaseUrl}/contents/work-group/${term._id}?page=${contentPage}&limit=10`) : Promise.resolve(null),
     ]);
 
-    const reportsPayload = reportsRes.ok ? await reportsRes.json() : { data: [] };
-    const decisionsPayload = decisionsRes.ok ? await decisionsRes.json() : { data: [] };
-    const contentsPayload = contentsRes.ok ? await contentsRes.json() : { contents: [], totalPages: 0 };
+    const reportsPayload = reportsRes?.ok ? await reportsRes.json() : { data: [] };
+    const decisionsPayload = decisionsRes?.ok ? await decisionsRes.json() : { data: [] };
+    const contentsPayload = contentsRes?.ok ? await contentsRes.json() : { contents: [], totalPages: 0 };
     const canonicalPath = `/belgeler/calisma-gruplari/${workGroup.slug || slug}${
       effectivePeriodId ? `?periodId=${encodeURIComponent(effectivePeriodId)}` : ''
     }`;
@@ -73,6 +70,7 @@ export async function getServerSideProps({ params, query }) {
     return {
       props: {
         workGroup,
+        periods,
         reports: reportsPayload.data || [],
         decisions: decisionsPayload.data || [],
         canonicalPath,
