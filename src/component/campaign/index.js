@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   CircularProgress,
@@ -11,67 +11,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import PropTypes from 'prop-types';
-import { CampaignContext } from './CampaignContext';
-
-const getCampaignPages = (campaign) => {
-  if (Array.isArray(campaign?.targetPages) && campaign.targetPages.length > 0) {
-    return campaign.targetPages;
-  }
-
-  const fallback = [];
-  if (campaign?.displayOnHome) fallback.push('home');
-  if (campaign?.displayOnDetail) fallback.push('detail');
-  return fallback;
-};
-
-const shouldDisplayOnPage = (campaign, pageType) => {
-  const pages = getCampaignPages(campaign);
-  if (!pages.length) return false;
-  if (pages.includes('all')) return true;
-  return pages.includes(pageType);
-};
-
-const canShowPopup = (campaign) => {
-  if (typeof window === 'undefined') return false;
-  const frequency = campaign?.popupFrequency || 'every_login';
-  const key = `campaign_popup_${campaign._id}`;
-
-  if (frequency === 'every_login') {
-    return sessionStorage.getItem(key) !== 'shown';
-  }
-
-  if (frequency === 'daily') {
-    const lastShownAt = Number(localStorage.getItem(key) || 0);
-    const oneDayMs = 24 * 60 * 60 * 1000;
-    return !lastShownAt || Date.now() - lastShownAt >= oneDayMs;
-  }
-
-  if (frequency === 'once') {
-    return localStorage.getItem(key) !== 'shown';
-  }
-
-  return true;
-};
-
-const markPopupAsShown = (campaign) => {
-  if (typeof window === 'undefined') return;
-  const frequency = campaign?.popupFrequency || 'every_login';
-  const key = `campaign_popup_${campaign._id}`;
-
-  if (frequency === 'every_login') {
-    sessionStorage.setItem(key, 'shown');
-    return;
-  }
-
-  if (frequency === 'daily') {
-    localStorage.setItem(key, String(Date.now()));
-    return;
-  }
-
-  if (frequency === 'once') {
-    localStorage.setItem(key, 'shown');
-  }
-};
+import useCampaigns from './useCampaigns';
 
 function Campaign({
   displayOnHome = false,
@@ -80,45 +20,12 @@ function Campaign({
   placement = 'banner',
   layoutType = 'horizontal'
 }) {
-  const { campaigns, loading, error } = useContext(CampaignContext);
+  const normalizedPageType = displayOnHome ? 'home' : displayOnDetail ? 'detail' : pageType;
+  const { campaigns: filteredCampaigns, loading, error, popupCampaign: activePopup, dismissPopup: handlePopupClose } = useCampaigns({ pageType: normalizedPageType, placement });
   const isDesktopRail = useMediaQuery('(min-width:600px)');
   const imageSizes = placement === 'left_menu'
     ? '(max-width: 400px) calc(100vw - 40px), (max-width: 599.95px) calc(92vw - 8px), (max-width: 1000px) calc(23vw - 26px), (max-width: 1360px) calc(25vw - 46px), 294px'
     : '(max-width: 1000px) calc(100vw - 32px), (max-width: 1360px) calc(100vw - 80px), 1280px';
-  const [activePopup, setActivePopup] = useState(null);
-
-  const normalizedPageType = useMemo(() => {
-    if (displayOnHome) return 'home';
-    if (displayOnDetail) return 'detail';
-    return pageType;
-  }, [displayOnHome, displayOnDetail, pageType]);
-
-  const filteredCampaigns = useMemo(() => {
-    return (campaigns || []).filter((campaign) => {
-      if (!campaign?.isActive) return false;
-      if (!shouldDisplayOnPage(campaign, normalizedPageType)) return false;
-      if ((campaign?.placement || 'banner') !== placement) return false;
-      return true;
-    });
-  }, [campaigns, normalizedPageType, placement]);
-
-  useEffect(() => {
-    if (placement !== 'popup') return;
-    const popupCandidate = filteredCampaigns.find((campaign) => canShowPopup(campaign));
-    if (popupCandidate) {
-      setActivePopup(popupCandidate);
-    } else {
-      setActivePopup(null);
-    }
-  }, [filteredCampaigns, placement]);
-
-  const handlePopupClose = () => {
-    if (activePopup) {
-      markPopupAsShown(activePopup);
-    }
-    setActivePopup(null);
-  };
-
   if (loading) {
     return (
       <Box
@@ -163,6 +70,7 @@ function Campaign({
         <DialogContent sx={{ p: 1, position: 'relative' }}>
           <IconButton
             onClick={handlePopupClose}
+            aria-label="Kampanya penceresini kapat"
             sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, bgcolor: 'rgba(255,255,255,.8)' }}
           >
             <CloseIcon />

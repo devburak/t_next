@@ -1,60 +1,57 @@
-// components/CampaignContext.js
-
-import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { getCampaigns, invalidateClientCache } from '../../lib/campaignCache';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
+import { getCampaigns, invalidateClientCache, seedClientCampaigns } from '../../lib/campaignCache';
 
 export const CampaignContext = createContext();
 
 export const CampaignProvider = ({ children, initialCampaigns = null }) => {
-  const [campaigns, setCampaigns] = useState(initialCampaigns || []);
-  const [loading, setLoading] = useState(!initialCampaigns);
-  const [error, setError] = useState(null);
-
-  const fetchCampaigns = useCallback(async (signal) => {
-    try {
-      setLoading(true);
-      const data = await getCampaigns({ signal });
-
-      if (signal?.aborted) {
-        return;
-      }
-
-      setCampaigns(Array.isArray(data) ? data : []);
-      setError(null);
-    } catch (err) {
-      if (err?.name === 'AbortError' || signal?.aborted) {
-        return;
-      }
-      console.error('Error fetching campaigns:', err);
-      setError(err.message);
-    } finally {
-      if (!signal?.aborted) {
-        setLoading(false);
-      }
-    }
+  const [snapshot, setSnapshot] = useState(() => ({
+    source: initialCampaigns,
+    data: initialCampaigns || [],
+  }));
+  const [loading, setLoading] = useState(!Array.isArray(initialCampaigns));
+  const requestId = useRef(0);
+  const campaigns = snapshot.source === initialCampaigns ? snapshot.data : initialCampaigns || [];
+  const invalidatePendingRequests = useCallback(() => {
+    requestId.current++;
   }, []);
 
-  // Server-side'dan gelen initial data yoksa client'ta fetch et
+  const fetchCampaigns = useCallback(
+    async (signal, force = false) => {
+      const id = ++requestId.current;
+      const data = await getCampaigns({ signal, force });
+      if (signal?.aborted || id !== requestId.current) return;
+      setSnapshot({ source: initialCampaigns, data: Array.isArray(data) ? data : [] });
+      setLoading(false);
+    },
+    [initialCampaigns]
+  );
+
   useEffect(() => {
     const controller = new AbortController();
+    if (Array.isArray(initialCampaigns)) seedClientCampaigns(initialCampaigns);
+    else fetchCampaigns(controller.signal);
 
-    if (!initialCampaigns) {
-      fetchCampaigns(controller.signal);
-    }
-
+    // SSR page props are authoritative: no polling or focus-based requests.
     return () => {
       controller.abort();
+      invalidatePendingRequests();
     };
-  }, [initialCampaigns, fetchCampaigns]);
+  }, [initialCampaigns, fetchCampaigns, invalidatePendingRequests]);
 
-  // Cache'i invalidate edip yeniden fetch et (webhook sonrası kullanılabilir)
   const refreshCampaigns = useCallback(async () => {
     invalidateClientCache();
-    await fetchCampaigns();
+    await fetchCampaigns(undefined, true);
   }, [fetchCampaigns]);
 
   return (
-    <CampaignContext.Provider value={{ campaigns, loading, error, refreshCampaigns }}>
+    <CampaignContext.Provider
+      value={{
+        campaigns,
+        loading: loading && !Array.isArray(initialCampaigns),
+        error: null,
+        refreshCampaigns,
+      }}
+    >
       {children}
     </CampaignContext.Provider>
   );

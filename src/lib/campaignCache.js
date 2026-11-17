@@ -1,214 +1,113 @@
-/**
- * Campaign Cache System
- * 
- * Server-tarafında in-memory cache tutar.
- * Webhook geldiğinde cache invalidate edilir ve yeni veri çekilir.
- * Client-tarafında memory + localStorage kullanır.
- */
-
-const CAMPAIGN_CACHE_KEY = 'tmmob:campaigns:v1';
-const CAMPAIGN_CACHE_TTL_MS = 1000 * 60 * 60; // 1 saat
-
-// Server-side in-memory cache
-let serverCache = {
-  data: null,
-  expiresAt: 0,
-  fetchPromise: null
-};
-
-// Client-side memory cache
-let clientMemoryCache = [];
+// The homepage already uses ISR. Fetch fresh data whenever it regenerates;
+// a second server memory cache would outlive the page and differ across bundles.
+const CAMPAIGN_CACHE_KEY = 'tmmob:campaigns:v2';
+const LEGACY_CACHE_KEY = 'tmmob:campaigns:v1';
+export const CAMPAIGN_CACHE_TTL_MS = 60_000;
+let clientMemoryCache = null;
 let clientExpiresAt = 0;
-
+let clientGeneration = 0;
+const activeCampaigns = (items) =>
+  Array.isArray(items) ? items.filter((item) => item?.isActive === true) : [];
 const getApiBaseUrl = () => process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
 
-/**
- * Kampanyaları API'den çeker
- */
-async function fetchCampaignsFromApi(options = {}) {
-  const { signal } = options;
-
+async function fetchCampaignsFromApi({ signal } = {}) {
   try {
-    const apiBaseUrl = getApiBaseUrl();
-    const response = await fetch(`${apiBaseUrl}/campaigns/active`, {
-      cache: 'no-store', // Next.js fetch cache'ini devre dışı bırak
+    const response = await fetch(`${getApiBaseUrl()}/campaigns/active`, {
+      cache: 'no-store',
       signal,
     });
-    if (!response.ok) {
-      throw new Error(`Campaign API error: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`Campaign API error: ${response.status}`);
     const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    if (!Array.isArray(data)) throw new Error('Invalid campaign response');
+    return activeCampaigns(data);
   } catch (error) {
-    if (error?.name === 'AbortError') {
-      return null;
-    }
-    console.error('Failed to fetch campaigns from API:', error);
+    if (error?.name !== 'AbortError')
+      console.error('[CampaignCache] Campaigns could not be loaded');
     return null;
   }
 }
 
-/**
- * Server-side: Cache'i invalidate et (webhook tarafından çağrılır)
- */
-export function invalidateServerCache() {
-  serverCache = {
-    data: null,
-    expiresAt: 0,
-    fetchPromise: null
-  };
-  console.log('[CampaignCache] Server cache invalidated');
-}
-
-/**
- * Server-side: Kampanyaları getir (cache'li)
- */
 export async function getServerCampaigns() {
-  const now = Date.now();
-
-  // Cache geçerli ise kullan
-  if (serverCache.data && serverCache.expiresAt > now) {
-    return serverCache.data;
-  }
-
-  // Zaten bir fetch işlemi varsa onu bekle (de-dupe)
-  if (serverCache.fetchPromise) {
-    return serverCache.fetchPromise;
-  }
-
-  // Yeni fetch başlat
-  serverCache.fetchPromise = (async () => {
-    const data = await fetchCampaignsFromApi();
-    
-    if (data !== null) {
-      serverCache.data = data;
-      serverCache.expiresAt = now + CAMPAIGN_CACHE_TTL_MS;
-    }
-    
-    serverCache.fetchPromise = null;
-    return serverCache.data || [];
-  })();
-
-  return serverCache.fetchPromise;
+  return (await fetchCampaignsFromApi()) || [];
 }
 
-/**
- * Client-side: localStorage'dan cache oku
- */
 function readClientStoredCache() {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
+  if (typeof window === 'undefined') return null;
   try {
-    const rawValue = window.localStorage.getItem(CAMPAIGN_CACHE_KEY);
-    if (!rawValue) return null;
-
-    const parsed = JSON.parse(rawValue);
-    if (!parsed || !Array.isArray(parsed.data)) return null;
-
-    // Expire kontrolü
-    if (typeof parsed.expiresAt === 'number' && parsed.expiresAt > Date.now()) {
-      return parsed.data;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Failed to read campaign cache:', error);
+    window.localStorage.removeItem(LEGACY_CACHE_KEY);
+    const parsed = JSON.parse(window.localStorage.getItem(CAMPAIGN_CACHE_KEY) || 'null');
+    if (
+      !Array.isArray(parsed?.data) ||
+      !Number.isFinite(parsed.expiresAt) ||
+      parsed.expiresAt <= Date.now() ||
+      parsed.expiresAt > Date.now() + CAMPAIGN_CACHE_TTL_MS
+    )
+      return null;
+    return { data: activeCampaigns(parsed.data), expiresAt: parsed.expiresAt };
+  } catch {
     return null;
   }
 }
 
-/**
- * Client-side: Cache'i localStorage'a kaydet
- */
 function persistClientCache(data) {
-  const nextData = Array.isArray(data) ? data : [];
-  const expiresAt = Date.now() + CAMPAIGN_CACHE_TTL_MS;
-
-  clientMemoryCache = nextData;
-  clientExpiresAt = expiresAt;
-
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  try {
-    window.localStorage.setItem(
-      CAMPAIGN_CACHE_KEY,
-      JSON.stringify({
-        data: nextData,
-        expiresAt
-      })
-    );
-  } catch (error) {
-    console.error('Failed to persist campaign cache:', error);
+  clientMemoryCache = activeCampaigns(data);
+  clientExpiresAt = Date.now() + CAMPAIGN_CACHE_TTL_MS;
+  if (typeof window !== 'undefined') {
+    try {
+      window.localStorage.removeItem(LEGACY_CACHE_KEY);
+      window.localStorage.setItem(
+        CAMPAIGN_CACHE_KEY,
+        JSON.stringify({ data: clientMemoryCache, expiresAt: clientExpiresAt })
+      );
+    } catch {
+      /* Campaigns still work when browser storage is unavailable. */
+    }
   }
 }
 
-/**
- * Client-side: Cache'i invalidate et (webhook sonrası client refresh için)
- */
 export function invalidateClientCache() {
-  clientMemoryCache = [];
+  clientGeneration++;
+  clientMemoryCache = null;
   clientExpiresAt = 0;
-
   if (typeof window !== 'undefined') {
     try {
       window.localStorage.removeItem(CAMPAIGN_CACHE_KEY);
-    } catch (error) {
-      console.error('Failed to clear campaign cache:', error);
+      window.localStorage.removeItem(LEGACY_CACHE_KEY);
+    } catch {
+      /* Storage may be disabled. */
     }
   }
 }
 
-/**
- * Client-side: Kampanyaları getir (cache'li)
- */
-export async function getClientCampaigns(options = {}) {
-  const { signal } = options;
-  const now = Date.now();
-
-  // Memory cache geçerli ise kullan
-  if (clientMemoryCache.length > 0 && clientExpiresAt > now) {
-    return clientMemoryCache;
-  }
-
-  // localStorage'dan dene
-  const storedCache = readClientStoredCache();
-  if (storedCache) {
-    clientMemoryCache = storedCache;
-    clientExpiresAt = now + CAMPAIGN_CACHE_TTL_MS;
-    return storedCache;
-  }
-
-  // API'den çek
-  const data = await fetchCampaignsFromApi({ signal });
-  if (data !== null) {
-    persistClientCache(data);
-    return data;
-  }
-
-  return [];
-}
-
-/**
- * Kampanyaları getir - ortama göre doğru cache kullanır
- */
-export async function getCampaigns(options = {}) {
-  if (typeof window === 'undefined') {
-    // Server-side
-    return getServerCampaigns();
-  }
-  // Client-side
-  return getClientCampaigns(options);
-}
-
-/**
- * Cache'i zorunlu olarak yenile (webhook sonrası)
- */
-export async function refreshCampaigns() {
-  invalidateServerCache();
+// New page props are authoritative, including an empty active campaign list.
+export function seedClientCampaigns(data) {
   invalidateClientCache();
-  return fetchCampaignsFromApi();
+  persistClientCache(data);
+}
+
+export async function getClientCampaigns({ signal, force = false } = {}) {
+  if (!force) {
+    if (clientMemoryCache !== null && clientExpiresAt > Date.now()) return clientMemoryCache;
+    const stored = readClientStoredCache();
+    if (stored) {
+      clientMemoryCache = stored.data;
+      clientExpiresAt = stored.expiresAt; // Never extend a stored entry just by reading it.
+      return stored.data;
+    }
+  }
+  const generation = clientGeneration;
+  const data = await fetchCampaignsFromApi({ signal });
+  if (signal?.aborted) return [];
+  if (generation !== clientGeneration) return clientMemoryCache || [];
+  if (data !== null) persistClientCache(data);
+  return data || [];
+}
+
+export async function getCampaigns(options = {}) {
+  return typeof window === 'undefined' ? getServerCampaigns() : getClientCampaigns(options);
+}
+
+export async function refreshCampaigns() {
+  invalidateClientCache();
+  return getCampaigns({ force: true });
 }

@@ -1,10 +1,10 @@
 import { verifySignature } from '../../lib/webhookSignature';
-import { invalidateServerCache } from '../../lib/campaignCache';
 import { invalidateServerMainMenuCache } from '../../lib/mainMenuCache';
 import { invalidateServerRightMenuCache } from '../../lib/rightMenuCache';
 import { invalidateServerSettingsCache } from '../../lib/settingsCache';
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
   // Sadece POST kabul et
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -24,8 +24,8 @@ export default async function handler(req, res) {
 
   try {
     // Event türüne göre cache invalidate et
-    if (event && event.startsWith('campaign.')) {
-      invalidateServerCache();
+    if (typeof event === 'string' && event.startsWith('campaign.')) {
+      await res.revalidate('/');
       console.log(`[Webhook] Campaign cache invalidated for event: ${event}`);
     }
 
@@ -34,27 +34,27 @@ export default async function handler(req, res) {
       console.log(`[Webhook] Settings cache invalidated for event: ${event}`);
     }
 
-    if (event && event.startsWith('menu.')) {
+    if (typeof event === 'string' && event.startsWith('menu.')) {
       invalidateServerMainMenuCache();
       invalidateServerRightMenuCache();
       console.log(`[Webhook] Menu caches invalidated for event: ${event}`);
     }
 
     // Content events için de eklenebilir
-    if (event && event.startsWith('content.')) {
+    if (typeof event === 'string' && event.startsWith('content.')) {
       console.log(`[Webhook] Content event received: ${event}`);
       // İleride content cache eklenebilir
     }
 
-    return res.status(200).json({ 
-      success: true, 
-      message: `Webhook processed: ${event}` 
+    return res.status(200).json({
+      success: true,
+      message: `Webhook processed: ${event}`,
     });
   } catch (error) {
     console.error('[Webhook] Processing error:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       error: 'Internal server error',
-      message: error.message 
+      message: 'Webhook could not be processed',
     });
   }
 }
