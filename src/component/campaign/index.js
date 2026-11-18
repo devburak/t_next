@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Box,
+  Button,
   CircularProgress,
   Typography,
   Dialog,
@@ -9,7 +10,7 @@ import {
   useMediaQuery
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Image from 'next/image';
+import CampaignMedia from './CampaignMedia';
 import PropTypes from 'prop-types';
 import useCampaigns from './useCampaigns';
 
@@ -63,54 +64,18 @@ function Campaign({
 
     if (!popupMedia?.url) return null;
 
-    const isImage = popupMedia.mediaType === 'image';
-
     return (
       <Dialog open onClose={handlePopupClose} maxWidth="md" fullWidth>
         <DialogContent sx={{ p: 1, position: 'relative' }}>
-          <IconButton
-            onClick={handlePopupClose}
-            aria-label="Kampanya penceresini kapat"
-            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, bgcolor: 'rgba(255,255,255,.8)' }}
-          >
+          <IconButton onClick={handlePopupClose} aria-label="Kampanya penceresini kapat"
+            sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, bgcolor: 'rgba(255,255,255,.8)' }}>
             <CloseIcon />
           </IconButton>
-          {activePopup.link ? (
-            <a href={activePopup.link} target="_blank" rel="noopener noreferrer">
-              {isImage ? (
-                <Box sx={{ position: 'relative', width: '100%', height: { xs: 240, sm: 420 } }}>
-                  <Image
-                    src={popupMedia.url}
-                    alt={activePopup.title}
-                    fill
-                    style={{ objectFit: 'contain' }}
-                    sizes="(max-width: 960px) calc(100vw - 80px), 880px"
-                    loading="eager"
-                  />
-                </Box>
-              ) : (
-                <iframe
-                  src={popupMedia.url}
-                  title={activePopup.title}
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                  style={{ width: '100%', height: 420, border: 'none' }}
-                />
-              )}
-            </a>
-          ) : isImage ? (
-            <Box sx={{ position: 'relative', width: '100%', height: { xs: 240, sm: 420 } }}>
-              <Image src={popupMedia.url} alt={activePopup.title} fill style={{ objectFit: 'contain' }} sizes="(max-width: 960px) calc(100vw - 80px), 880px" loading="eager" />
-            </Box>
-          ) : (
-            <iframe
-              src={popupMedia.url}
-              title={activePopup.title}
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              style={{ width: '100%', height: 420, border: 'none' }}
-            />
-          )}
+          <Box sx={{ position: 'relative', width: '100%', height: { xs: 240, sm: 420 } }}>
+            <CampaignMedia media={popupMedia} title={activePopup.title} link={activePopup.link}
+              sizes="(max-width: 960px) calc(100vw - 80px), 880px" loading="eager" />
+          </Box>
+          {popupMedia.mediaType === 'video' && activePopup.link && <Button component="a" href={activePopup.link} target="_blank" rel="noopener noreferrer" sx={{ mt: 1 }}>Kampanyaya git</Button>}
         </DialogContent>
       </Dialog>
     );
@@ -119,11 +84,11 @@ function Campaign({
   return (
     <>
       {filteredCampaigns.map((campaign, index) => {
-        const media = layoutType === 'horizontal' ? campaign.horizontalMedia : campaign.squareMedia;
+        const preferred = layoutType === 'horizontal' ? campaign.horizontalMedia : campaign.squareMedia;
+        const media = preferred?.url ? preferred : layoutType === 'horizontal' ? campaign.squareMedia : campaign.horizontalMedia;
 
         if (!media || !media.url) return null;
 
-        const isImage = media.mediaType === 'image';
         // Only the first visible desktop rail images compete with the headline for LCP.
         const imageLoading = (placement === 'left_menu' && isDesktopRail && index < 2)
           || (placement === 'banner' && index === 0) ? 'eager' : 'lazy';
@@ -138,56 +103,16 @@ function Campaign({
                 alignItems: 'center',
                 justifyContent: 'center',
                 width: '100%',
-                paddingTop: layoutType === 'horizontal' ? '25%' : '100%',
+                paddingTop: layoutType === 'horizontal' ? (media.mediaType === 'video' ? { xs: '56.25%', sm: '25%' } : '25%') : '100%',
+                minHeight: media.mediaType === 'video' ? 200 : undefined,
                 overflow: 'hidden',
                 borderRadius: 1
               }}
             >
-              {campaign.link ? (
-                <a
-                  href={campaign.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
-                >
-                  {isImage ? (
-                    <Image
-                      src={media.url}
-                      alt={campaign.title}
-                      fill
-                      style={{ objectFit: layoutType === 'horizontal' ? 'contain' : 'fill' }}
-                      sizes={imageSizes}
-                      loading={imageLoading}
-                    />
-                  ) : (
-                    <iframe
-                      src={media.url}
-                      title={campaign.title}
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                      style={{ width: '100%', height: '100%', border: 'none' }}
-                    />
-                  )}
-                </a>
-              ) : isImage ? (
-                <Image
-                  src={media.url}
-                  alt={campaign.title}
-                  fill
-                  style={{ objectFit: layoutType === 'horizontal' ? 'contain' : 'fill' }}
-                  sizes={imageSizes}
-                  loading={imageLoading}
-                />
-              ) : (
-                <iframe
-                  src={media.url}
-                  title={campaign.title}
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                  style={{ width: '100%', height: '100%', border: 'none' }}
-                />
-              )}
+              <CampaignMedia media={media} title={campaign.title} link={campaign.link} sizes={imageSizes}
+                loading={imageLoading} fit={layoutType === 'horizontal' ? 'contain' : 'fill'} />
             </Box>
+            {media.mediaType === 'video' && campaign.link && <Button component="a" href={campaign.link} target="_blank" rel="noopener noreferrer" sx={{ mt: 1 }}>Kampanyaya git</Button>}
           </Box>
         );
       })}
