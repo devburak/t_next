@@ -1,10 +1,11 @@
 import React from 'react';
+import ContentHtml from '../ContentHtml';
 import PropTypes from 'prop-types';
 
 function LexicalFallbackContent({ htmlContent }) {
   return (
-    <div
-      dangerouslySetInnerHTML={{ __html: htmlContent }}
+    <ContentHtml
+      html={htmlContent}
       style={{
         whiteSpace: 'pre-line', // Yeni satırları korur
         fontFamily: 'Arial, sans-serif', // Varsayılan bir font seçimi

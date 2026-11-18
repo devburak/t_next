@@ -1,3 +1,4 @@
+import ContentHtml from '../ContentHtml';
 import Head from 'next/head';
 import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import Layout from '../basic/layout';
@@ -168,7 +169,7 @@ export default function ReportDetailPage({ report }) {
           ) : null}
 
           <Box className="content-print-body" sx={{ overflowX: 'auto', pt: 2 }}>
-            <div dangerouslySetInnerHTML={{ __html: report.bodyHtml || '' }} />
+            <ContentHtml html={report.bodyHtml || ''} />
           </Box>
         </Box>
       </Container>

@@ -1,3 +1,4 @@
+import ContentHtml from '../../component/ContentHtml';
 import { useRouter } from 'next/router';
 import { Box, Container, Typography } from '@mui/material';
 import EventSummary from '../../component/calendar/EventSummary';
@@ -124,7 +125,7 @@ const EventDetailPage = ({ event }) => {
             boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <div dangerouslySetInnerHTML={{ __html: event.bodyHtml }} />
+          <ContentHtml html={event.bodyHtml} />
         </Container>
       </Container>
     </Layout>

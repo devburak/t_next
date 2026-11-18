@@ -1,3 +1,4 @@
+import ContentHtml from '../../component/ContentHtml';
 import { Global, css } from '@emotion/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -144,7 +145,7 @@ const CalismaProgramiPage = ({ initialContent, initialPeriods, initialPeriodId }
         <ContentShareBar title={title} url={canonicalUrl} />
         <Box sx={{ mt: 4 }}>
           {content?.bodyHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: content.bodyHtml }} />
+            <ContentHtml html={content.bodyHtml} />
           ) : (
             <Typography color="text.secondary">Icerik bulunamadi.</Typography>
           )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
-import { Box, Button, ButtonBase, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Button, ButtonBase, IconButton, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
 import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
@@ -100,8 +100,10 @@ export default function CustomCalendar({
         p: { xs: 0.5, sm: 1 },
         width: '100%',
         minWidth: 0,
+        position: 'relative',
       }}
     >
+      {loading && <LinearProgress aria-label="Etkinlikler yükleniyor" sx={{ position: 'absolute', top: 0, left: 12, right: 12, height: 3 }} />}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
         <Typography
           id={labelId}
@@ -223,8 +225,8 @@ export default function CustomCalendar({
           );
         })}
       </Box>
-      <Box sx={{ minHeight: 32, mt: 1 }}>
-        <CalendarStatus loading={loading} error={error} onRetry={retry} compact />
+      {(error || (!loading && events.length === 0)) && <Box sx={{ mt: 1 }}>
+        <CalendarStatus loading={false} error={error} onRetry={retry} compact />
         {!loading && !error && events.length === 0 && (
           <Typography
             component="div"
@@ -235,7 +237,7 @@ export default function CustomCalendar({
             Bu ay için etkinlik bulunmuyor.
           </Typography>
         )}
-      </Box>
+      </Box>}
       <Button
         component={Link}
         href={`/takvim/${month.format('YYYY/MM')}`}

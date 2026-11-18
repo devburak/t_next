@@ -1,7 +1,6 @@
 // component/basic/ContentPageRenderer.js
 import Layout from './layout';
 import ContentContainer from '../ContentContainer';
-import Script from 'next/script';
 import Head from 'next/head';
 import { getImageUrlFromBodyHtml} from '../utils';
 import {
@@ -100,7 +99,6 @@ export default function ContentPageRenderer({
         showPublishDate={showPublishDate}
         shareUrl={canonicalUrl}
       />
-      <Script id="carusel-js" type="text/javascript" src="/js/carousel.js" strategy="lazyOnload" />
     </Layout>
   );
 }

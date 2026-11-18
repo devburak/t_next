@@ -1,3 +1,4 @@
+import ContentHtml from '../../component/ContentHtml';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../component/basic/layout';
@@ -186,7 +187,7 @@ const CalismaRaporuPage = ({ initialContent, initialPeriods, initialPeriodId }) 
 
         <Box sx={{ mt: 4 }}>
           {content?.bodyHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: content.bodyHtml }} />
+            <ContentHtml html={content.bodyHtml} />
           ) : (
             <Typography color="text.secondary">Icerik bulunamadi.</Typography>
           )}

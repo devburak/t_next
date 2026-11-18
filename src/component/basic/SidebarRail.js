@@ -10,7 +10,7 @@ const DynamicCalendar = dynamic(() => import('../calendar'), {
   loading: () => (
     <Box
       aria-label="Etkinlikler yükleniyor"
-      sx={{ height: { xs: 476, sm: 484 }, p: 2, border: '1px solid var(--site-border)', borderRadius: 4 }}
+      sx={{ height: { xs: 436, sm: 444 }, p: 2, border: '1px solid var(--site-border)', borderRadius: 4 }}
     >
       <Skeleton height={40} />
       <Skeleton height={300} />

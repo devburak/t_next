@@ -1,3 +1,4 @@
+import ContentHtml from '../component/ContentHtml';
 import { serialize } from '../component/LX/NewRichTextParser';
 import Layout from '@/component/basic/layout';
 import LexicalJSONRenderer from  '../component/LX/LexicalJSONRenderer';
@@ -298,7 +299,7 @@ function DetailPage() {
             </div> */}
             <div>
                 {/* {htmlContentRx.map((htmlContent, index) => (
-                    <div key={index} dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                    <ContentHtml key={index} html={htmlContent} />
                 ))} */}
                 {content}
             </div>

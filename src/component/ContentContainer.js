@@ -4,6 +4,7 @@ import FeaturedImage from './basic/FeaturedImage';
 import PublishDate from './basic/PublishDate';
 import ContentShareBar from './basic/ContentShareBar';
 import SpotText from './basic/SpotText';
+import ContentHtml from './ContentHtml';
 
 function ContentContainer({
   title,
@@ -38,7 +39,7 @@ function ContentContainer({
         <SpotText text={spot} />
       </Box>
       <Box className="content-print-body" sx={{ overflowX: 'auto', paddingTop: 2 }}>
-        <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        <ContentHtml html={htmlContent} />
       </Box>
     </Box>
   );

@@ -1,3 +1,4 @@
+import ContentHtml from '../ContentHtml';
 import Head from 'next/head';
 import {
   Box,
@@ -213,7 +214,7 @@ export default function DecisionDetailPage({ decision }) {
           ) : null}
 
           <Box className="content-print-body" sx={{ overflowX: 'auto', pt: 2 }}>
-            <div dangerouslySetInnerHTML={{ __html: decision.bodyHtml || '' }} />
+            <ContentHtml html={decision.bodyHtml || ''} />
           </Box>
         </Box>
       </Container>

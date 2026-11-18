@@ -225,11 +225,11 @@ a {
   margin: 0 auto;
 }
 
-#carousel-container > div,
-[data-carousel-container] > div,
+#carousel-container > div:first-child,
+[data-carousel-container] > div:first-child,
 [data-carousel-slides] {
   display: flex;
-  width: 300%; /* Slide sayısına göre genişletin */
+  width: 100% !important; /* Each slide occupies one viewport, regardless of image count. */
   transition: transform 0.5s ease;
 }
 
