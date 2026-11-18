@@ -1,6 +1,7 @@
 import { getServerRightMenu } from '../../../lib/rightMenuCache';
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -8,7 +9,7 @@ export default async function handler(req, res) {
   try {
     const menu = await getServerRightMenu();
 
-    res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=3600');
+    if (!menu) throw new Error('Menu unavailable');
 
     return res.status(200).json({
       success: true,

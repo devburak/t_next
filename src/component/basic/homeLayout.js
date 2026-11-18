@@ -50,7 +50,6 @@ function HomePage({
       <Header />
       <TopMenu
         initialMenuItems={mainMenuItems}
-        disableClientFetch={Boolean(mainMenuItems?.length)}
       />
       <Box className="site-shell site-shell--content">
       <Grid container spacing={3}>
@@ -107,7 +106,6 @@ function HomePage({
           <SidebarRail
             pageType="home"
             initialRightMenuItems={rightMenuItems}
-            disableRightMenuFetch={Boolean(rightMenuItems?.length)}
           />
         </Grid>
       </Grid>

@@ -1,9 +1,9 @@
+import { refreshMenuCaches } from '../../../lib/refreshMenus';
 import { verifySignature } from '../../../lib/webhookSignature';
-import { invalidateServerMainMenuCache } from '../../../lib/mainMenuCache';
-import { invalidateServerRightMenuCache } from '../../../lib/rightMenuCache';
 import { invalidateServerSettingsCache } from '../../../lib/settingsCache';
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store');
   // Sadece POST kabul et
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -21,20 +21,23 @@ export default async function handler(req, res) {
 
   console.log(`[Webhook] Received event: ${event}`);
 
-  // System variable event'i için cache invalidate et
-  if (event === 'system.variable.update') {
-    invalidateServerSettingsCache();
-    console.log(`[Webhook] Settings cache invalidated for event: ${event}`);
-  }
+  try {
+    // System variable event'i için cache invalidate et
+    if (event === 'system.variable.update') {
+      invalidateServerSettingsCache();
+      console.log(`[Webhook] Settings cache invalidated for event: ${event}`);
+    }
 
-  if (event && event.startsWith('menu.')) {
-    invalidateServerMainMenuCache();
-    invalidateServerRightMenuCache();
-    console.log(`[Webhook] Menu caches invalidated for event: ${event}`);
-  }
+    if (typeof event === 'string' && event.startsWith('menu.')) {
+      await refreshMenuCaches(res);
+      console.log(`[Webhook] Menu caches invalidated for event: ${event}`);
+    }
 
-  return res.status(200).json({ 
-    success: true, 
-    message: `Webhook processed: ${event}` 
-  });
+    return res.status(200).json({
+      success: true,
+      message: `Webhook processed: ${event}`
+    });
+  } catch {
+    return res.status(500).json({ error: 'Webhook could not be processed' });
+  }
 }

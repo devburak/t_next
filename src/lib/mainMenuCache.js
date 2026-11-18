@@ -1,3 +1,5 @@
+import { createServerMenuCache } from './serverMenuCache.mjs';
+
 const DEFAULT_MAIN_MENU_SLUG = 'ana-menu';
 const DEFAULT_MENU_CACHE_TTL_MS = 1000 * 60 * 5;
 const EXTERNAL_SCHEME_REGEX = /^[a-z][a-z0-9+.-]*:/i;
@@ -6,12 +8,6 @@ const parsedMenuCacheTtl = Number.parseInt(process.env.MAIN_MENU_CACHE_TTL_MS ||
 const MAIN_MENU_CACHE_TTL_MS = Number.isFinite(parsedMenuCacheTtl) && parsedMenuCacheTtl > 0
   ? parsedMenuCacheTtl
   : DEFAULT_MENU_CACHE_TTL_MS;
-
-let serverCache = {
-  data: null,
-  expiresAt: 0,
-  fetchPromise: null,
-};
 
 const getApiBaseUrl = () => String(process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || '').trim();
 
@@ -224,6 +220,8 @@ async function fetchMainMenuFromApi() {
       },
     });
 
+    if (response.status === 404) return { slug: menuSlug, updatedAt: null, items: [] };
+
     if (!response.ok) {
       throw new Error(`Main menu API error: ${response.status}`);
     }
@@ -243,42 +241,11 @@ async function fetchMainMenuFromApi() {
   }
 }
 
-export function invalidateServerMainMenuCache() {
-  serverCache = {
-    data: null,
-    expiresAt: 0,
-    fetchPromise: null,
-  };
-  console.log('[MainMenuCache] Server cache invalidated');
-}
+const cache = createServerMenuCache({
+  key: `main:v1:${getApiBaseUrl()}:${getMainMenuSlug()}`,
+  load: fetchMainMenuFromApi,
+  ttlMs: MAIN_MENU_CACHE_TTL_MS,
+});
 
-export async function getServerMainMenu() {
-  const now = Date.now();
-
-  if (serverCache.data && serverCache.expiresAt > now) {
-    return serverCache.data;
-  }
-
-  if (serverCache.fetchPromise) {
-    return serverCache.fetchPromise;
-  }
-
-  serverCache.fetchPromise = (async () => {
-    const data = await fetchMainMenuFromApi();
-
-    if (data !== null) {
-      serverCache.data = data;
-      serverCache.expiresAt = now + MAIN_MENU_CACHE_TTL_MS;
-    }
-
-    serverCache.fetchPromise = null;
-
-    return serverCache.data || {
-      slug: getMainMenuSlug(),
-      updatedAt: null,
-      items: [],
-    };
-  })();
-
-  return serverCache.fetchPromise;
-}
+export const invalidateServerMainMenuCache = () => cache.invalidate();
+export const getServerMainMenu = () => cache.get();

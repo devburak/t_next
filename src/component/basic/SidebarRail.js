@@ -23,7 +23,6 @@ const Campaign = dynamic(() => import('../campaign'), { ssr: false });
 function SidebarRail({
   pageType = 'detail',
   initialRightMenuItems = null,
-  disableRightMenuFetch = false,
 }) {
   return (
     <>
@@ -55,7 +54,6 @@ function SidebarRail({
       <Box sx={{ backgroundColor: 'inherit', p: '16px 4px' }}>
         <QuickAccessMenu
           initialMenuItems={initialRightMenuItems}
-          disableClientFetch={disableRightMenuFetch}
         />
       </Box>
     </>

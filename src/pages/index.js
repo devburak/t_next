@@ -180,8 +180,8 @@ export async function getStaticProps() {
         props: {
           campaigns: [],
           initialSlides: [],
-          initialMainMenuItems: [],
-          initialRightMenuItems: [],
+          initialMainMenuItems: null,
+          initialRightMenuItems: null,
           initialNewsData: {},
           initialPublicationData: {},
           initialVideoData: [],
@@ -213,12 +213,12 @@ export async function getStaticProps() {
         campaigns: toSerializable(campaigns || [], []),
         initialSlides: toSerializable(initialSlides, []),
         initialMainMenuItems: toSerializable(
-          Array.isArray(mainMenu?.items) ? mainMenu.items : [],
-          []
+          Array.isArray(mainMenu?.items) ? mainMenu.items : null,
+          null
         ),
         initialRightMenuItems: toSerializable(
-          Array.isArray(rightMenu?.items) ? rightMenu.items : [],
-          []
+          Array.isArray(rightMenu?.items) ? rightMenu.items : null,
+          null
         ),
         initialNewsData: toSerializable(initialNewsData, {}),
         initialPublicationData: toSerializable(initialPublicationData, {}),
@@ -232,8 +232,8 @@ export async function getStaticProps() {
       props: {
         campaigns: [],
         initialSlides: [],
-        initialMainMenuItems: [],
-        initialRightMenuItems: [],
+        initialMainMenuItems: null,
+        initialRightMenuItems: null,
         initialNewsData: {},
         initialPublicationData: {},
         initialVideoData: [],

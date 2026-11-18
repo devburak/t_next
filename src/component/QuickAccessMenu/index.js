@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import useMenu from '../../hooks/useMenu';
 import styles from './QuickAccessMenu.module.css';
 
-const RIGHT_MENU_API_ENDPOINT = '/api/menu/right';
 const EXTERNAL_URL_REGEX = /^(https?:\/\/|\/\/)/i;
 
 const DEFAULT_MENU_ITEMS = [
@@ -125,48 +125,8 @@ const renderItemVisual = (item) => {
   );
 };
 
-const QuickAccessMenu = ({ initialMenuItems = null, disableClientFetch = false }) => {
-  const hasInitialMenuItems = Array.isArray(initialMenuItems) && initialMenuItems.length > 0;
-  const [menuItems, setMenuItems] = useState(hasInitialMenuItems ? initialMenuItems : DEFAULT_MENU_ITEMS);
-
-  useEffect(() => {
-    if (disableClientFetch && hasInitialMenuItems) {
-      return undefined;
-    }
-
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const loadRightMenu = async () => {
-      try {
-        const response = await fetch(RIGHT_MENU_API_ENDPOINT, {
-          signal: controller.signal,
-        });
-        if (!response.ok) {
-          return;
-        }
-
-        const payload = await response.json();
-        if (!isMounted || !Array.isArray(payload?.items) || payload.items.length === 0) {
-          return;
-        }
-
-        setMenuItems(payload.items);
-      } catch (error) {
-        if (error?.name === 'AbortError') {
-          return;
-        }
-        console.error('[QuickAccessMenu] Failed to load right menu:', error);
-      }
-    };
-
-    loadRightMenu();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [disableClientFetch, hasInitialMenuItems]);
+const QuickAccessMenu = ({ initialMenuItems = null }) => {
+  const menuItems = useMenu('right', initialMenuItems, DEFAULT_MENU_ITEMS);
 
   return (
     <section id="block-menu-menu-sag-meu" className={`${styles.block} ${styles.menu} clearfix`}>

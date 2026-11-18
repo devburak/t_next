@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -22,11 +22,11 @@ import {
 } from '@mui/icons-material';
 import dynamic from 'next/dynamic';
 
+import useMenu from '../../hooks/useMenu';
 import { StyledListItem, StyledListItemText } from './StyledListItem';
 
 const SearchInput = dynamic(() => import('./searchInput'), { ssr: false });
 
-const MAIN_MENU_API_ENDPOINT = '/api/menu/main';
 const EXTERNAL_PATH_REGEX = /^(https?:\/\/|mailto:|tel:|\/\/)/i;
 
 const DEFAULT_MENU_ITEMS = [
@@ -90,9 +90,8 @@ const DEFAULT_MENU_ITEMS = [
   { name: 'İKKLAR', prfx: '/ikk', path: '/ikk' },
 ];
 
-function TopMenu({ initialMenuItems = null, disableClientFetch = false }) {
-  const hasInitialMenuItems = Array.isArray(initialMenuItems) && initialMenuItems.length > 0;
-  const [menuItems, setMenuItems] = useState(hasInitialMenuItems ? initialMenuItems : DEFAULT_MENU_ITEMS);
+function TopMenu({ initialMenuItems = null }) {
+  const menuItems = useMenu('main', initialMenuItems, DEFAULT_MENU_ITEMS);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [mobileOpenMenus, setMobileOpenMenus] = useState({});
   const [desktopOpenMenu, setDesktopOpenMenu] = useState(null);
@@ -100,45 +99,6 @@ function TopMenu({ initialMenuItems = null, disableClientFetch = false }) {
   const router = useRouter();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-  useEffect(() => {
-    if (disableClientFetch && hasInitialMenuItems) {
-      return undefined;
-    }
-
-    let isMounted = true;
-    const controller = new AbortController();
-
-    const loadMainMenu = async () => {
-      try {
-        const response = await fetch(MAIN_MENU_API_ENDPOINT, {
-          signal: controller.signal,
-        });
-        if (!response.ok) {
-          return;
-        }
-
-        const payload = await response.json();
-        if (!isMounted || !Array.isArray(payload?.items) || payload.items.length === 0) {
-          return;
-        }
-
-        setMenuItems(payload.items);
-      } catch (error) {
-        if (error?.name === 'AbortError') {
-          return;
-        }
-        console.error('[TopMenu] Failed to load main menu:', error);
-      }
-    };
-
-    loadMainMenu();
-
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
-  }, [disableClientFetch, hasInitialMenuItems]);
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
