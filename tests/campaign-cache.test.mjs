@@ -111,6 +111,8 @@ async function loadHandler(path) {
     `data:text/javascript;base64,${Buffer.from(sigSource).toString('base64')}`
   );
   return new Function(
+    'affectsDiscovery',
+    'invalidateDiscoveryCache',
     'verifySignature',
     'invalidateServerMainMenuCache',
     'invalidateServerRightMenuCache',
@@ -122,6 +124,8 @@ async function loadHandler(path) {
         .trim() +
       ')'
   )(
+    () => false,
+    async () => {},
     verifySignature,
     () => {},
     () => {},

@@ -109,7 +109,7 @@ async function handler(file, refresh) {
   const source=await readFile(new URL(file,import.meta.url),'utf8');
   const sig=await readFile(new URL('../src/lib/webhookSignature.js',import.meta.url),'utf8');
   const {verifySignature}=await import(`data:text/javascript;base64,${Buffer.from(sig).toString('base64')}`);
-  return new Function('refreshMenuCaches','verifySignature','invalidateServerSettingsCache','return ('+source.replace(/^import .*;\n/gm,'').replace('export default ','').trim()+')')(refresh,verifySignature,()=>{});
+  return new Function('affectsDiscovery','invalidateDiscoveryCache','refreshMenuCaches','verifySignature','invalidateServerSettingsCache','return ('+source.replace(/^import .*;\n/gm,'').replace('export default ','').trim()+')')(()=>false,async()=>{},refresh,verifySignature,()=>{});
 }
 for(const file of ['../src/pages/api/webhooks.js','../src/pages/api/webhook/settings.js']){
  test(file+' authenticates menu invalidation and propagates refresh failures for retry',async()=>{

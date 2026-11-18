@@ -6,10 +6,10 @@ import { createHash, randomUUID } from 'node:crypto';
 export const MAX_MENU_CACHE_ENTRY_BYTES = 512 * 1024;
 const pendingKey = Symbol.for('tmmob.menu-cache.pending.v1');
 const pending = globalThis[pendingKey] ||= new Map();
-export function createServerMenuCache({ key, load, ttlMs, directory }) {
+export function createServerMenuCache({ key, load, ttlMs, directory, maxEntryBytes = MAX_MENU_CACHE_ENTRY_BYTES, sharedRevisionFile }) {
   const folder = directory || path.join(process.cwd(), process.env.NEXT_DIST_DIR || '.next', 'cache', 'site-menus');
   const file = path.join(folder, `${createHash('sha256').update(key).digest('hex')}.json`);
-  const revisionFile = `${file}.revision`;
+  const revisionFile = sharedRevisionFile || `${file}.revision`;
   const readRevision = async () => {
     try { return await readFile(revisionFile, 'utf8'); }
     catch (error) { if (error.code !== 'ENOENT') throw error; return 'initial'; }
@@ -17,7 +17,7 @@ export function createServerMenuCache({ key, load, ttlMs, directory }) {
   const read = async () => {
     const revision = await readRevision();
     try {
-      if ((await stat(file)).size > MAX_MENU_CACHE_ENTRY_BYTES) return { revision, data: null, expiresAt: 0 };
+      if ((await stat(file)).size > maxEntryBytes) return { revision, data: null, expiresAt: 0 };
       const entry = JSON.parse(await readFile(file, 'utf8'));
       if (entry?.revision === revision && Number.isFinite(entry.expiresAt) && (entry.data === null || Array.isArray(entry.data?.items))) return entry;
     } catch (error) { if (error.code !== 'ENOENT' && !(error instanceof SyntaxError)) throw error; }
@@ -27,7 +27,7 @@ export function createServerMenuCache({ key, load, ttlMs, directory }) {
     await mkdir(folder, { recursive: true });
     const temporary = `${file}.${randomUUID()}.tmp`;
     const serialized = JSON.stringify(entry);
-    if (Buffer.byteLength(serialized) > MAX_MENU_CACHE_ENTRY_BYTES) throw new Error('Menu cache entry exceeds size limit');
+    if (Buffer.byteLength(serialized) > maxEntryBytes) throw new Error('Menu cache entry exceeds size limit');
     try {
       await writeFile(temporary, serialized, { mode: 0o600 });
       await rename(temporary, file);

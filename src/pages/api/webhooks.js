@@ -1,3 +1,4 @@
+import { affectsDiscovery, invalidateDiscoveryCache } from '../../lib/siteDiscovery';
 import { refreshMenuCaches } from '../../lib/refreshMenus';
 import { verifySignature } from '../../lib/webhookSignature';
 import { invalidateServerSettingsCache } from '../../lib/settingsCache';
@@ -22,6 +23,7 @@ export default async function handler(req, res) {
   console.log(`[Webhook] Received event: ${event}`);
 
   try {
+    if (affectsDiscovery(event)) await invalidateDiscoveryCache();
     // Event türüne göre cache invalidate et
     if (typeof event === 'string' && event.startsWith('campaign.')) {
       await res.revalidate('/');

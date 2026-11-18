@@ -1,4 +1,6 @@
 import React from 'react';
+import Head from 'next/head';
+import { buildCanonicalUrl } from '../lib/seo';
 import { CampaignProvider } from '../component/campaign/CampaignContext';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -28,6 +30,7 @@ import "../styles/custom.css";
 export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
+      <Head><link rel="alternate" type="application/rss+xml" title="TMMOB RSS" href={buildCanonicalUrl('/rss.xml')} /></Head>
       <CampaignProvider initialCampaigns={pageProps.campaigns}>
       {/* CssBaseline, tarayıcı stil sıfırlaması ve temel stilleri ekler */}
       <CssBaseline />

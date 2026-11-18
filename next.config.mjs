@@ -154,7 +154,7 @@ const nextConfig = {
   agentRules: false,
   poweredByHeader: false,
   async headers() {
-    return [{ source: '/:path*', headers: [
+    return [{ source: '/:path*', has: [{ type: 'host', value: 'newt6491032g\\.tmmob\\.org\\.tr' }], headers: [{ key: 'X-Robots-Tag', value: 'noindex, follow' }] }, { source: '/:path*', headers: [
       { key: 'X-Content-Type-Options', value: 'nosniff' },
       { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
@@ -167,6 +167,7 @@ const nextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
+      ...['/feed', '/rss', '/sitemap_index.xml', '/wp-sitemap.xml'].map(source => ({ source, destination: source.includes('sitemap') ? '/sitemap.xml' : '/rss.xml', permanent: true })),
       // /icerik/:slug -> /:slug (301 permanent redirect for SEO)
       {
         source: '/icerik/:slug*',

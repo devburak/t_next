@@ -1,6 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /preview/
-Disallow: /search
-
-Sitemap: https://tmmob.org.tr/sitemap.xml
