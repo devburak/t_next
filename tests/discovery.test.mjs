@@ -58,7 +58,7 @@ function publicApi({missing=false,fail=false}={}){
 }
 test('catalog includes categoryless published contents through metadata, excludes legacy aliases, and validates completeness',async()=>{
  publicApi();let api=await discovery();let catalog=await api.getDiscoveryCatalog();
- assert.equal(catalog.publicContentCount,2);assert(catalog.items.some(i=>i.path==='/kategorisiz'));
+ assert.equal(catalog.publicContentCount,2);assert(!catalog.items.some(i=>i.path==='/yayinlar'));assert(catalog.items.some(i=>i.path==='/kategorisiz'));
  assert(catalog.items.some(i=>i.path==='/kategori/haberler'));assert(catalog.items.some(i=>i.path==='/oda-kurullari/emo'));
  assert.equal(new Set(catalog.items.map(i=>i.path)).size,catalog.items.length);
  publicApi({missing:true});api=await discovery();await assert.rejects(()=>api.getDiscoveryCatalog(),/coverage incomplete/);

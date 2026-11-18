@@ -85,7 +85,7 @@ const catalogCache = cached('catalog', async () => {
     const previous = rows.get(route);
     if (!previous || (next.lastmod || '') > (previous.lastmod || '')) rows.set(route, next);
   };
-  for (const route of ['/', '/odalar', '/oda-kurullari', '/ikk', '/yayinlar', '/video-galeri', '/takvim', '/tmmob/yonetim-kurulu', '/tmmob/denetleme-kurulu', '/tmmob/yuksek-onur-kurulu', '/belgeler/calisma-programi', '/belgeler/calisma-raporu', '/belgeler/genel-kurul-sonuc-bildirgesi', '/belgeler/calisma-gruplari']) add('pages', route);
+  for (const route of ['/', '/odalar', '/oda-kurullari', '/ikk', '/video-galeri', '/takvim', '/tmmob/yonetim-kurulu', '/tmmob/denetleme-kurulu', '/tmmob/yuksek-onur-kurulu', '/belgeler/calisma-programi', '/belgeler/calisma-raporu', '/belgeler/genel-kurul-sonuc-bildirgesi', '/belgeler/calisma-gruplari']) add('pages', route);
   for (const category of categories) add('categories', categoryPage(category, categories), category.updatedAt);
   const addContent = row => {
     if (!row.slug || (row.status && row.status !== 'published') || !isoDate(row.publishDate)) return;
