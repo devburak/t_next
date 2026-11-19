@@ -3515,3 +3515,7 @@
     color: #ff0;
     -moz-appearance: none
 }
+.legacyContent {
+  /* Keep historical z-index values below the site's portal overlays. */
+  isolation: isolate;
+}

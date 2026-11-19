@@ -29,6 +29,11 @@ body {
   overflow-x: hidden;
 }
 
+/* MUI's modal manager must lock the document's scrolling element. */
+html {
+  overflow-y: scroll;
+}
+
 body {
   color: var(--site-ink);
   background: linear-gradient(180deg, #eef2f6 0%, #f8fafc 180px, #edf2f7 100%);
