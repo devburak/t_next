@@ -14,10 +14,11 @@ export const cardGroupSx = (columns) => ({
 
 // The in-flow pseudo element reserves the media's 4:3 space even before images,
 // data or the deferred carousel arrive. No image load/resize measurement is needed.
-export default function CardCarouselFrame({ columns = 1, controls = true, children }) {
+export default function CardCarouselFrame({ columns = 1, controls = true, viewportRef, children }) {
   const controlsHeight = controls ? CAROUSEL_CONTROLS_HEIGHT : 0;
   return (
     <Box
+      ref={viewportRef}
       data-card-carousel-frame
       sx={{
         position: 'relative',

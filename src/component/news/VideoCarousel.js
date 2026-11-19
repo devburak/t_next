@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import useViewportActivation from '../../hooks/useViewportActivation';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
@@ -24,7 +25,7 @@ export default function VideoCarousel({
   const [loading, setLoading] = useState(!hasInitialVideos);
   const [open, setOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
+  const { viewportRef, ready: carouselReady } = useViewportActivation({ defer: deferCarousel, disabled: disableCarousel });
 
   useEffect(() => {
     if (hasInitialVideos) {
@@ -64,34 +65,10 @@ export default function VideoCarousel({
     };
   }, [limit, hasInitialVideos]); 
 
-  useEffect(() => {
-    if (!deferCarousel || disableCarousel) {
-      return undefined;
-    }
 
-    let timeoutId = null;
-    let idleId = null;
-
-    const markReady = () => setCarouselReady(true);
-
-    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
-      idleId = window.requestIdleCallback(markReady, { timeout: 2000 });
-    } else {
-      timeoutId = setTimeout(markReady, 800);
-    }
-
-    return () => {
-      if (idleId && typeof window !== 'undefined' && typeof window.cancelIdleCallback === 'function') {
-        window.cancelIdleCallback(idleId);
-      }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [deferCarousel, disableCarousel]);
 
   if (loading) return (
-    <CardCarouselFrame controls={!disableCarousel}>
+    <CardCarouselFrame viewportRef={viewportRef} controls={!disableCarousel}>
       <Box role="status" aria-label="Videolar yükleniyor" sx={{ height: '100%', bgcolor: 'grey.100' }} />
     </CardCarouselFrame>
   );
@@ -126,7 +103,7 @@ export default function VideoCarousel({
 
   return (
     <>
-      <CardCarouselFrame controls={!disableCarousel}>
+      <CardCarouselFrame viewportRef={viewportRef} controls={!disableCarousel}>
       {shouldRenderStatic ? (
         <Box sx={{ height: disableCarousel ? '100%' : CAROUSEL_ITEM_HEIGHT, overflow: 'hidden' }}>
           {firstVideo ? renderVideoItem(firstVideo, 'video-static') : null}

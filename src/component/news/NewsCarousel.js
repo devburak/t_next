@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import useViewportActivation from '../../hooks/useViewportActivation';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import NewsCard from './NewsCard';
@@ -23,7 +24,7 @@ export default function NewsCarousel({
   const hasInitialNewsData = Array.isArray(initialNewsData);
   const [newsData, setNewsData] = useState(hasInitialNewsData ? initialNewsData : []);
   const [loading, setLoading] = useState(!hasInitialNewsData);
-  const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
+  const { viewportRef, ready: carouselReady } = useViewportActivation({ defer: deferCarousel, disabled: disableCarousel });
 
   // Ekran boyutuna göre limit ayarlaması
   const matches = useMediaQuery('(max-width:599.95px)');
@@ -80,35 +81,11 @@ export default function NewsCarousel({
     };
   }, [categorySlug, newsLimit, hasInitialNewsData]);
 
-  useEffect(() => {
-    if (!deferCarousel || disableCarousel) {
-      return undefined;
-    }
 
-    let timeoutId = null;
-    let idleId = null;
-
-    const markReady = () => setCarouselReady(true);
-
-    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
-      idleId = window.requestIdleCallback(markReady, { timeout: 2000 });
-    } else {
-      timeoutId = setTimeout(markReady, 800);
-    }
-
-    return () => {
-      if (idleId && typeof window !== 'undefined' && typeof window.cancelIdleCallback === 'function') {
-        window.cancelIdleCallback(idleId);
-      }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [deferCarousel, disableCarousel]);
 
   if (loading) {
     return (
-      <CardCarouselFrame columns={one ? 1 : itemsPerSlide} controls={!disableCarousel}>
+      <CardCarouselFrame viewportRef={viewportRef} columns={one ? 1 : itemsPerSlide} controls={!disableCarousel}>
         <Box role="status" aria-label="Haberler yükleniyor" sx={{ height: '100%', bgcolor: 'grey.100' }} />
       </CardCarouselFrame>
     );
@@ -142,7 +119,7 @@ export default function NewsCarousel({
       : groupedNews[0] || [];
 
     return (
-      <CardCarouselFrame columns={one ? 1 : itemsPerSlide} controls={!disableCarousel}>
+      <CardCarouselFrame viewportRef={viewportRef} columns={one ? 1 : itemsPerSlide} controls={!disableCarousel}>
         <Box sx={{ height: disableCarousel ? '100%' : CAROUSEL_ITEM_HEIGHT, overflow: 'hidden' }}>
           {firstGroup.length > 0 ? renderNewsGroup(firstGroup, 'news-static', true) : null}
         </Box>
@@ -151,7 +128,7 @@ export default function NewsCarousel({
   }
 
   return (
-    <CardCarouselFrame columns={one ? 1 : itemsPerSlide}>
+    <CardCarouselFrame viewportRef={viewportRef} columns={one ? 1 : itemsPerSlide}>
       <Carousel height={CAROUSEL_ITEM_HEIGHT} sx={{ height: '100%' }} navButtonsAlwaysVisible={true}>
         {/* Geniş ekranda her kaydırma için itemsPerSlide haber, dar ekranda her kaydırma için bir haber */}
         {isMobile

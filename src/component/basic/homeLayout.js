@@ -7,7 +7,7 @@ import TopMenu from './topMenu';
 // import CustomCalendar from '../calendar'
 import VideoCarousel from '../news/VideoCarousel';
 // import Campaign from '../campaign'
-import dynamic from 'next/dynamic';
+import Campaign from '../campaign';
 import TitleComponent from './TitleComponent';
 import HomeSlider from '../HomeSlider';
 import NewsCarousel from '../news/NewsCarousel';
@@ -23,8 +23,7 @@ import AltMenu from '../Altmenu';
 import PublicationCarousel from '../publications/PublicationCarusel';
 import SidebarRail from './SidebarRail';
 
-// Dynamically import Campaign with SSR disabled
-const Campaign = dynamic(() => import('../campaign'), { ssr: false });
+
 
 function HomePage({
   initialSlides = [],

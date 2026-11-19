@@ -1,15 +1,33 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
 import createEmotionCache from '../lib/createEmotionCache';
+import { Children, cloneElement, createElement, isValidElement } from 'react';
+
+// Next already schedules its runtime. Keep Rocket Loader from rescheduling it.
+function frameworkScripts(nodes) {
+  return Children.map(nodes, node => {
+    if (!isValidElement(node)) return node;
+    if (node.type === 'script') {
+      return createElement('script', { 'data-cfasync': 'false', ...node.props, key: node.key });
+    }
+    return node.props.children === undefined ? node : cloneElement(node, undefined, frameworkScripts(node.props.children));
+  });
+}
+class FrameworkHead extends Head {
+  render() { return frameworkScripts(super.render()); }
+}
+class FrameworkScripts extends NextScript {
+  render() { return frameworkScripts(super.render()); }
+}
 
 export default function SiteDocument({ emotionStyleTags }) {
   return (
     <Html lang="tr">
-      <Head>
+      <FrameworkHead>
         <meta name="emotion-insertion-point" content="" />
         {emotionStyleTags}
-      </Head>
-      <body><Main /><NextScript /></body>
+      </FrameworkHead>
+      <body><Main /><FrameworkScripts /></body>
     </Html>
   );
 }

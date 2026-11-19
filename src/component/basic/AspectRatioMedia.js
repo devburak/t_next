@@ -34,6 +34,7 @@ function AspectRatioMedia({
   objectPosition = 'center',
   sizes = '100vw',
   priority = false,
+  quality = 90,
   fallbackSrc = DEFAULT_OG_IMAGE,
   sx = {},
   imageStyle = {},
@@ -59,6 +60,7 @@ function AspectRatioMedia({
         alt={alt || ''}
         fill
         priority={priority}
+        quality={quality}
         sizes={sizes}
         style={{
           objectFit,

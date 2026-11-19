@@ -1,6 +1,7 @@
 import React from 'react';
 import useMenu from '../../hooks/useMenu';
 import styles from './QuickAccessMenu.module.css';
+import { getImageProps } from 'next/image';
 
 const EXTERNAL_URL_REGEX = /^(https?:\/\/|\/\/)/i;
 
@@ -81,6 +82,19 @@ const isRenderableSvgUrl = (value) => {
   return rawValue.startsWith('/') || EXTERNAL_URL_REGEX.test(rawValue);
 };
 
+function responsiveMenuImage(src, alt) {
+  try {
+    const url = new URL(src);
+    if (url.protocol !== 'https:' || !['storage.ikon-x.com.tr', 'www.tmmob.org.tr', 'img.youtube.com'].includes(url.hostname) || /\.svg$/i.test(url.pathname)) return {};
+    // Retain natural image geometry; only use Next's responsive URL generation.
+    const { props } = getImageProps({ src, alt, fill: true, quality: 100,
+      sizes: '(max-width: 1199px) calc(100vw - 40px), (max-width: 1359px) 31vw, 420px' });
+    return { src: props.src, srcSet: props.srcSet, sizes: props.sizes };
+  } catch {
+    return {};
+  }
+}
+
 const renderIconVisual = (icon) => {
   if (!icon?.value) {
     return null;
@@ -108,6 +122,9 @@ const renderItemVisual = (item) => {
       <img
         alt={imageAlt}
         src={imageUrl}
+        {...responsiveMenuImage(imageUrl, imageAlt)}
+        loading="lazy"
+        decoding="async"
         className={styles.menuImage}
       />
     );

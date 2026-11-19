@@ -30,6 +30,6 @@ function CampaignVideo({ media, title }) {
 export default function CampaignMedia({ media, title = '', link = '', sizes = '100vw', loading = 'lazy', fit = 'contain' }) {
   if (!media?.url) return null;
   if (media.mediaType === 'video') return <CampaignVideo key={media.url} media={media} title={title} />;
-  const image = <Image src={media.url} alt={title} fill sizes={sizes} loading={loading} style={{ objectFit: fit }} />;
+  const image = <Image src={media.url} alt={title} fill quality={90} sizes={sizes} loading={loading} style={{ objectFit: fit }} />;
   return link ? <a href={link} target="_blank" rel="noopener noreferrer" style={{ position: 'absolute', inset: 0 }}>{image}</a> : image;
 }

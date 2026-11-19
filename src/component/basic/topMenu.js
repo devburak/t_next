@@ -11,15 +11,11 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
-import {
-  Menu as MenuIcon,
-  Close as CloseIcon,
-  ExpandLess,
-  ExpandMore,
-} from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
 import dynamic from 'next/dynamic';
 
 import { styled } from '@mui/material/styles';
@@ -111,8 +107,6 @@ function TopMenu({ initialMenuItems = null }) {
   const [desktopOpenMenu, setDesktopOpenMenu] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const router = useRouter();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
@@ -171,7 +165,7 @@ function TopMenu({ initialMenuItems = null }) {
 
   return (
     <Box className="topMenuBackground">
-      {isMobile ? (
+      {(
         <>
           <Box
             className="site-shell topMenuShell topMenuShell--mobile"
@@ -202,7 +196,7 @@ function TopMenu({ initialMenuItems = null }) {
             open={drawerOpen}
             onClose={handleDrawerToggle}
             ModalProps={{
-              keepMounted: true,
+              keepMounted: false,
             }}
           >
             <Box
@@ -275,9 +269,10 @@ function TopMenu({ initialMenuItems = null }) {
             </Box>
           </Drawer>
         </>
-      ) : (
+      )}
+      {(
         <Box
-          className="site-shell topMenuShell"
+          className="site-shell topMenuShell topMenuShell--desktop"
           sx={{
             display: 'flex',
             justifyContent: 'space-between',

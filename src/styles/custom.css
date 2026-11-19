@@ -438,3 +438,12 @@
   color: inherit;
   text-decoration: none;
 }
+
+/* Both navigation layouts are rendered by SSR; CSS selects the first-paint layout. */
+.topMenuShell.topMenuShell--mobile {
+  display: none;
+}
+@media (max-width: 599.95px) {
+  .topMenuShell.topMenuShell--desktop { display: none; }
+  .topMenuShell.topMenuShell--mobile { display: flex; }
+}

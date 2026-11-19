@@ -85,7 +85,10 @@ async function getServerHomeSlides(apiBaseUrl, limit = 5) {
     { contents: [] },
     "home-slides"
   );
-  return Array.isArray(payload?.contents) ? payload.contents : [];
+  return (Array.isArray(payload?.contents) ? payload.contents : []).map(item => ({
+    _id: item._id, title: item.title, slug: item.slug, spot: item.spot || '',
+    featuredMedia: { url: getMediaUrl(item.featuredMedia) },
+  }));
 }
 
 async function getServerHomeNews(apiBaseUrl) {
@@ -119,8 +122,12 @@ async function getServerHomePublications(apiBaseUrl) {
         `publication:${slug}`
       );
 
-      const data = Array.isArray(payload?.data) ? payload.data : [];
-      return [key, { ...payload, data }];
+      const data = (Array.isArray(payload?.data) ? payload.data : []).map(item => ({
+        _id: item._id, title: item.title, slug: item.slug, publishDate: item.publishDate || null, createdAt: item.createdAt || null,
+        coverFile: item.coverFile?.url ? { url: item.coverFile.url } : null,
+        files: (item.files || []).map(file => ({ type: file?.type || '', link: file?.link || '' })),
+      }));
+      return [key, { data }];
     })
   );
 

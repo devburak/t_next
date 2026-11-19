@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import QuickAccessMenu from '../QuickAccessMenu';
+import useViewportActivation from '../../hooks/useViewportActivation';
+import Campaign from '../campaign';
 
-const DynamicCalendar = dynamic(() => import('../calendar'), {
-  ssr: false,
-  loading: () => (
+const CalendarPlaceholder = () => (
     <Box
       aria-label="Etkinlikler yükleniyor"
       sx={{ height: { xs: 436, sm: 444 }, p: 2, border: '1px solid var(--site-border)', borderRadius: 4 }}
@@ -16,9 +16,15 @@ const DynamicCalendar = dynamic(() => import('../calendar'), {
       <Skeleton height={300} />
       <Skeleton height={32} />
     </Box>
-  ),
-});
-const Campaign = dynamic(() => import('../campaign'), { ssr: false });
+  );
+const DynamicCalendar = dynamic(() => import('../calendar'), { ssr: false, loading: CalendarPlaceholder });
+
+function ViewportCalendar() {
+  const { viewportRef, ready } = useViewportActivation({ defer: true });
+  return <Box ref={viewportRef} sx={{ minHeight: { xs: 436, sm: 444 } }}>
+    {ready ? <DynamicCalendar /> : <CalendarPlaceholder />}
+  </Box>;
+}
 
 function SidebarRail({
   pageType = 'detail',
@@ -48,7 +54,7 @@ function SidebarRail({
               Etkinlikler
             </Typography>
           </Stack>
-          <DynamicCalendar />
+          <ViewportCalendar />
         </Box>
       </Box>
       <Box sx={{ backgroundColor: 'inherit', p: '16px 4px' }}>

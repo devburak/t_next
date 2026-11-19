@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import useViewportActivation from '../../hooks/useViewportActivation';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PublicationCard from './PublicationCard';
@@ -23,7 +24,7 @@ export default function PublicationCarousel({
 }) {
   const [data, setData] = useState(initialData ? initialData.data : []);
   const [loading, setLoading] = useState(!initialData);
-  const [carouselReady, setCarouselReady] = useState(!(deferCarousel || disableCarousel));
+  const { viewportRef, ready: carouselReady } = useViewportActivation({ defer: deferCarousel, disabled: disableCarousel });
 
   // Ekran boyutuna göre limit ve görünüm ayarlama
   const matches = useMediaQuery('(max-width:599.95px)');
@@ -74,34 +75,10 @@ export default function PublicationCarousel({
     };
   }, [page, itemLimit, search, period, category, categorySlug, initialData]);
 
-  useEffect(() => {
-    if (!deferCarousel || disableCarousel) {
-      return undefined;
-    }
 
-    let timeoutId = null;
-    let idleId = null;
-
-    const markReady = () => setCarouselReady(true);
-
-    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
-      idleId = window.requestIdleCallback(markReady, { timeout: 2000 });
-    } else {
-      timeoutId = setTimeout(markReady, 800);
-    }
-
-    return () => {
-      if (idleId && typeof window !== 'undefined' && typeof window.cancelIdleCallback === 'function') {
-        window.cancelIdleCallback(idleId);
-      }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [deferCarousel, disableCarousel]);
 
   if (loading) return (
-    <CardCarouselFrame columns={one ? 1 : 3} controls={!disableCarousel}>
+    <CardCarouselFrame viewportRef={viewportRef} columns={one ? 1 : 3} controls={!disableCarousel}>
       <Box role="status" aria-label="Yayınlar yükleniyor" sx={{ height: '100%', bgcolor: 'grey.100' }} />
     </CardCarouselFrame>
   );
@@ -128,7 +105,7 @@ export default function PublicationCarousel({
   if (shouldRenderStatic) {
     const firstGroup = isMobile ? data.slice(0, 1) : (groupedPublications[0] || []);
     return (
-      <CardCarouselFrame columns={one ? 1 : 3} controls={!disableCarousel}>
+      <CardCarouselFrame viewportRef={viewportRef} columns={one ? 1 : 3} controls={!disableCarousel}>
         <Box sx={{ height: disableCarousel ? '100%' : CAROUSEL_ITEM_HEIGHT, overflow: 'hidden' }}>
           {firstGroup.length > 0 ? renderPublicationGroup(firstGroup, 'publication-static') : null}
         </Box>
@@ -137,7 +114,7 @@ export default function PublicationCarousel({
   }
 
   return (
-    <CardCarouselFrame columns={one ? 1 : 3}>
+    <CardCarouselFrame viewportRef={viewportRef} columns={one ? 1 : 3}>
       <Carousel height={CAROUSEL_ITEM_HEIGHT} sx={{ height: '100%' }} navButtonsAlwaysVisible={true}>
         {isMobile
           ? data.map((publication, index) => renderPublicationGroup([publication], `publication-mobile-${index}`))

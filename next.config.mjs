@@ -182,7 +182,7 @@ const nextConfig = {
     // Bound the optimized image disk cache per running site instance (2 GB).
     maximumDiskCacheSize: 2_000_000_000,
     formats: ['image/webp'],
-    qualities: [75, 100],
+    qualities: [75, 90, 100],
     minimumCacheTTL: 604800,
     remotePatterns:[
       {
