@@ -1,10 +1,11 @@
-import Head from "next/head";
+import PageMetadata from "../component/basic/PageMetadata";
+import { SITE_NAME, homeStructuredData } from "../lib/pageMetadata.mjs";
+import { getSiteUrl } from "../lib/seo";
 import HomePage from "@/component/basic/homeLayout";
-import { buildCanonicalUrl, DEFAULT_META_DESCRIPTION } from "@/lib/seo";
+import { DEFAULT_META_DESCRIPTION, DEFAULT_OG_IMAGE } from "@/lib/seo";
 import { getServerCampaigns } from "@/lib/campaignCache";
 import { getServerMainMenu } from "@/lib/mainMenuCache";
 import { getServerRightMenu } from "@/lib/rightMenuCache";
-// import fs from "../styles/fs.css"
 
 const HOME_NEWS_CONFIG = [
   { key: "haberler", slug: "haberler", limit: 6 },
@@ -144,21 +145,10 @@ export default function Home({
   initialPublicationData = {},
   initialVideoData = null,
 }) {
-  const canonicalUrl = buildCanonicalUrl();
 
   return (
     <>
-      <Head>
-        <title>TMMOB | Türk Mühendis ve Mimar Odaları Birliği</title>
-        <meta name="description" content={DEFAULT_META_DESCRIPTION} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href={canonicalUrl} />
-        <meta property="og:title" content="TMMOB | Türk Mühendis ve Mimar Odaları Birliği" />
-        <meta property="og:description" content={DEFAULT_META_DESCRIPTION} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonicalUrl} />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageMetadata title={`TMMOB | ${SITE_NAME}`} description={DEFAULT_META_DESCRIPTION} path="/" image={initialSlides[0]?.featuredMedia?.url || DEFAULT_OG_IMAGE} jsonLd={homeStructuredData(getSiteUrl())} />
       <HomePage
         initialSlides={initialSlides}
         initialMainMenuItems={initialMainMenuItems}

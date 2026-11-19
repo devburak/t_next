@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Chip, Container, Typography, Box, Link, Stack, Divider } from '@mui/material';
+import PageMetadata from '../component/basic/PageMetadata';
 import Layout from '@/component/basic/layout';
 import { slugifyText } from '@/lib/boardDirectory';
 
@@ -28,10 +29,12 @@ const socialList = [
 export default function IKKPage({ ikkList }) {
   return (
     <Layout>
+      <PageMetadata title="İl Koordinasyon Kurulları" description="TMMOB İl Koordinasyon Kurulları, sekreterler, iletişim bilgileri ve il bağlantıları." path="/ikk" />
       <Container maxWidth="md" sx={{ mt: 6 }}>
+        <Typography component="h1" variant="h4" sx={{ mb: 3, fontWeight: 700 }}>İl Koordinasyon Kurulları</Typography>
         {ikkList.map((ikk, idx) => (
           <Box key={ikk._id} id={slugifyText(ikk.title)} sx={{ mb: 2, scrollMarginTop: '100px' }}>
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, fontSize: '1.5rem' }}>
+            <Typography component="h2" variant="h4" gutterBottom sx={{ fontWeight: 600, fontSize: '1.5rem' }}>
               {ikk.title}
             </Typography>
             {/* Sekreter isimleri ve oda chip'leri */}

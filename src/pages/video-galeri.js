@@ -1,14 +1,12 @@
-import Layout from '../component/basic/layout';  // Layout bileşeninin yolu
-import ContentContainer from '../component/ContentContainer';
-import Script from 'next/script';
-import Head from 'next/head';
-import dayjs from 'dayjs';
-import ContentPageRenderer from '../component/basic/ContentPageRenderer';
+import Layout from '../component/basic/layout';
+import PageMetadata from '../component/basic/PageMetadata';
 import VideoGrid from '../component/VideoGrid';
+import { canonicalPagePath } from '../lib/pageMetadata.mjs';
 
 function DynamicContentPage({ data, page, limit }) {
   return (
     <Layout>
+        <PageMetadata title="Video Galeri" description="TMMOB açıklamaları, etkinlikleri ve çalışmalarından videoları izleyin." path={canonicalPagePath('/video-galeri', page)} />
         <h1>Video Galeri</h1>
          <VideoGrid videos={data.videos} page={page} limit={limit} /> 
     </Layout>
@@ -32,7 +30,7 @@ export async function getServerSideProps({ query }) {
     }
 
     const data = await res.json();
-    console.log(data);
+
     return {
       props: { data, page, limit },  // Sayfa bileşenine veriyi aktar
     };

@@ -1,8 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { initContentCarousels } from '../lib/contentCarousels.mjs';
+import dynamic from 'next/dynamic';
 
-export default function ContentHtml({ html = '', style }) {
-  const root = useRef(null);
-  useEffect(() => initContentCarousels(root.current), [html]);
-  return <div ref={root} style={style} dangerouslySetInnerHTML={{ __html: html }} />;
-}
+// Keep the large Drupal compatibility stylesheet in its own async CSS entry.
+// SSR stays enabled so CMS content and its styles are present without JavaScript.
+export default dynamic(() => import('./LegacyContentBody'));

@@ -22,6 +22,7 @@ import {
 } from '@mui/icons-material';
 import dynamic from 'next/dynamic';
 
+import { styled } from '@mui/material/styles';
 import useMenu from '../../hooks/useMenu';
 import { StyledListItem, StyledListItemText } from './StyledListItem';
 
@@ -89,6 +90,19 @@ const DEFAULT_MENU_ITEMS = [
   { name: 'ODALAR', prfx: '/odalar', path: '/odalar' },
   { name: 'İKKLAR', prfx: '/ikk', path: '/ikk' },
 ];
+
+const NavigationButton = styled(Button)({
+  color: 'inherit',
+  textTransform: 'none',
+  margin: '0 4px',
+  padding: '6px 10px',
+  minHeight: 36,
+  borderRadius: 4,
+  '&:hover, &[data-active="true"]': {
+    backgroundColor: 'var(--tmmob-red)',
+    color: '#fff',
+  },
+});
 
 function TopMenu({ initialMenuItems = null }) {
   const menuItems = useMenu('main', initialMenuItems, DEFAULT_MENU_ITEMS);
@@ -278,7 +292,7 @@ function TopMenu({ initialMenuItems = null }) {
                   key={item.id || item.name}
                   sx={{ position: 'relative', display: 'flex', alignItems: 'center' }}
                 >
-                  <Button
+                  <NavigationButton
                     onClick={(e) => {
                       if (desktopOpenMenu === item.name) {
                         handleCloseDesktopMenu();
@@ -287,28 +301,14 @@ function TopMenu({ initialMenuItems = null }) {
                       }
                     }}
                     variant="text"
-                    sx={{
-                      color: isActive(item.path) ? '#ffffff' : 'inherit',
-                      bgcolor: isActive(item.path) ? 'var(--tmmob-red)' : 'transparent',
-                      '&:hover': {
-                        bgcolor: 'var(--tmmob-red)',
-                        color: '#ffffff',
-                      },
-                      textTransform: 'none',
-                      mx: 0.5,
-                      px: 1.25,
-                      minHeight: 36,
-                      borderRadius: 1,
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
+                    data-active={isActive(item.path)}
                     aria-controls={desktopOpenMenu === item.name ? `${item.name}-menu` : undefined}
                     aria-haspopup="true"
                     aria-expanded={desktopOpenMenu === item.name ? 'true' : undefined}
                   >
                     {item.name}
                     {desktopOpenMenu === item.name ? <ExpandLess sx={{ fontSize: 14 }} /> : <ExpandMore sx={{ fontSize: 14 }} />}
-                  </Button>
+                  </NavigationButton>
                   <Menu
                     id={`${item.name}-menu`}
                     anchorEl={anchorEl}
@@ -350,26 +350,14 @@ function TopMenu({ initialMenuItems = null }) {
                   </Menu>
                 </Box>
               ) : (
-                <Button
+                <NavigationButton
                   key={item.id || item.name}
                   onClick={() => handleMenuClick(item.path, item.target)}
                   variant="text"
-                  sx={{
-                    color: isActive(item.path) ? '#ffffff' : 'inherit',
-                    bgcolor: isActive(item.path) ? 'var(--tmmob-red)' : 'transparent',
-                    '&:hover': {
-                      bgcolor: 'var(--tmmob-red)',
-                      color: '#ffffff',
-                    },
-                    textTransform: 'none',
-                    mx: 0.5,
-                    px: 1.25,
-                    minHeight: 36,
-                    borderRadius: 1,
-                  }}
+                    data-active={isActive(item.path)}
                 >
                   {item.name}
-                </Button>
+                </NavigationButton>
               )
             )}
           </Box>

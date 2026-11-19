@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Head from 'next/head';
+import PageMetadata from '../../component/basic/PageMetadata';
 import dynamic from 'next/dynamic';
 import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
 import ChevronLeftRounded from '@mui/icons-material/ChevronLeftRounded';
@@ -23,7 +23,6 @@ import Header from '../../component/basic/header';
 import TopMenu from '../../component/basic/topMenu';
 import Chambers from '../../component/basic/chambers';
 import Footer from '../../component/basic/footer';
-import { buildCanonicalUrl } from '../../lib/seo';
 
 const DynamicCalendar = dynamic(() => import('../../component/calendar'), { ssr: false });
 function CalendarPage({ initialEvents, initialError, initialView, initialSelectedDate }) {
@@ -46,17 +45,7 @@ function CalendarPage({ initialEvents, initialError, initialView, initialSelecte
         : currentDate.format('MMMM YYYY');
   return (
     <>
-      <Head>
-        <title>{`${heading} Etkinlik Takvimi | TMMOB`}</title>
-        <meta
-          name="description"
-          content="TMMOB etkinliklerini gün, hafta ve ay görünümünde inceleyin; kendi takviminize ekleyin."
-        />
-        <link
-          rel="canonical"
-          href={buildCanonicalUrl(`/takvim/${currentDate.format('YYYY/MM')}`)}
-        />
-      </Head>
+      <PageMetadata title={`${heading} Etkinlik Takvimi`} description="TMMOB etkinliklerini gün, hafta ve ay görünümünde inceleyin; kendi takviminize ekleyin." path={`/takvim/${currentDate.format('YYYY/MM')}`} />
       <Header />
       <TopMenu />
       <Box className="site-shell site-shell--content" sx={calendarUiSx}>

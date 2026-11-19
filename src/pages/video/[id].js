@@ -1,16 +1,13 @@
-import Head from 'next/head';
+import PageMetadata from '../../component/basic/PageMetadata';
+import { videoThumbnail } from '../../lib/video.mjs';
+import { DEFAULT_OG_IMAGE } from '../../lib/seo';
 import Layout from '../../component/basic/layout';
 import { Box } from '@mui/material';
 import VideoPlayer from '../../component/VideoPlayer';
-import { buildCanonicalUrl } from '../../lib/seo';
 
 const VideoPage = ({ video }) => (
   <Layout>
-    <Head>
-      <title>{video.title} | TMMOB</title>
-      <meta name="description" content={video.title} />
-      <link rel="canonical" href={buildCanonicalUrl(`/video/${video._id}`)} />
-    </Head>
+    <PageMetadata title={video.title} description={video.description || video.title} path={`/video/${video._id}`} image={videoThumbnail(video, DEFAULT_OG_IMAGE)} type="video.other" />
     <Box sx={{ p: 2, bgcolor: "background.paper" }}>
       <h1>{video.title}</h1>
       <VideoPlayer video={video} />

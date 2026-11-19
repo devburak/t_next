@@ -1,4 +1,6 @@
 import React from 'react';
+import { CacheProvider } from '@emotion/react';
+import createEmotionCache from '../lib/createEmotionCache';
 import Head from 'next/head';
 import { buildCanonicalUrl } from '../lib/seo';
 import { CampaignProvider } from '../component/campaign/CampaignContext';
@@ -6,36 +8,20 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../theme';
 import "@/styles/globals.css";
-import "../styles/fs.css";
 import "../styles/custom.css";
-// // import 'leaflet/dist/leaflet.css';
-// import '../component/editor/themes/PlaygroundEditorTheme.css';
-// import '../component/LX/nodes/ImageNode.css'; // Diğer stil dosyaları
-// import '../component/LX/nodes/InlineImageNode.css' // Diğer stil dosyaları
-// import '../component/LX/nodes/PageBreakNode/index.css'
-// import 'react-calendar/dist/Calendar.css';
-// import '../component/LX/nodes/PollNode.css';
-// import '../component/LX/nodes/StickyNode.css';
-// import '../component/LX/plugins/FloatingLinkEditorPlugin/index.css';
-// import '../component/LX/plugins/FloatingTextFormatToolbarPlugin/index.css';
-// import '../component/LX/themes/PlaygroundEditorTheme.css';
-// import '../component/LX/themes/StickyEditorTheme.css';
-// import '../component/LX/ui/Button.css';
-// import '../component/LX/ui/ContentEditable.css';
-// import '../component/LX/ui/Placeholder.js';
-// import '../component/LX/ui/Input.css';
-// import '../component/LX/ui/Select.css';
+const clientEmotionCache = createEmotionCache();
 
-
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps, emotionCache = clientEmotionCache }) {
   return (
+    <CacheProvider value={emotionCache}>
     <ThemeProvider theme={theme}>
-      <Head><link rel="alternate" type="application/rss+xml" title="TMMOB RSS" href={buildCanonicalUrl('/rss.xml')} /></Head>
+      <Head><meta name="viewport" content="width=device-width, initial-scale=1" /><meta property="og:site_name" content="TMMOB" /><meta property="og:locale" content="tr_TR" /><meta name="twitter:card" content="summary_large_image" /><link rel="icon" href="/favicon.ico" /><link rel="alternate" type="application/rss+xml" title="TMMOB RSS" href={buildCanonicalUrl('/rss.xml')} /></Head>
       <CampaignProvider initialCampaigns={pageProps.campaigns}>
       {/* CssBaseline, tarayıcı stil sıfırlaması ve temel stilleri ekler */}
-      <CssBaseline />
+      <CssBaseline enableColorScheme />
       <Component {...pageProps} />
       </CampaignProvider>
     </ThemeProvider>
+    </CacheProvider>
   );
 }

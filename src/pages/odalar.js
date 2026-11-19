@@ -19,6 +19,7 @@ import XIcon from "@mui/icons-material/X";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import PublicIcon from "@mui/icons-material/Public";
+import PageMetadata from '../component/basic/PageMetadata';
 import Layout from '../component/basic/layout';
 import { getChamberSlug } from "../lib/boardDirectory";
 
@@ -87,8 +88,9 @@ export async function getServerSideProps() {
 export default function OdalarPage({ chambers }) {
   return (
     <Layout>
+    <PageMetadata title="Odalar" description="TMMOB üyesi odalar, oda kurulları, iletişim bilgileri ve resmi bağlantılar." path="/odalar" />
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+      <Typography component="h1" variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
         Odalar
       </Typography>
       <Divider sx={{ mb: 2 }} />

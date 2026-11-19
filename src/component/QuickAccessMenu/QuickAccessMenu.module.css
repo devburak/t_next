@@ -17,7 +17,7 @@
 .leaf {
   list-style: none;
   box-shadow: 0 7px 7px -4px rgba(0, 0, 0, 0.44);
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .menuLink {
@@ -33,7 +33,7 @@
 
 .menuLinkText {
   background: #ffffff;
-  padding: 12px 10px;
+  padding: 0;
 }
 
 .menuImage {

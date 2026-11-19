@@ -47,7 +47,7 @@ function HomePage({
 
   return (
     <>
-      <Header />
+      <Header homeHeading />
       <TopMenu
         initialMenuItems={mainMenuItems}
       />

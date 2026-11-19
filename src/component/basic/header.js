@@ -8,18 +8,17 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import { useRouter } from 'next/router';
 
-function Header() {
+import { SITE_NAME } from '../../lib/pageMetadata.mjs';
+
+function Header({ homeHeading = false }) {
     const router = useRouter();
 
     const handleGoHome = () => {
         router.push('/');
     };
 
-    return (
-        <div className="headerBackground">
-            <div className="site-shell headerShell">
-                <div className="logo">
-                    <button type="button" className="logoButton" onClick={handleGoHome} aria-label="Anasayfaya git">
+    const logo = (
+      <button type="button" className="logoButton" onClick={handleGoHome} aria-label="Anasayfaya git">
                         <Image
                             src="https://storage.ikon-x.com.tr/2024/02/tmmob.png"
                             alt="TMMOB Logo"
@@ -31,6 +30,18 @@ function Header() {
                             style={{ width: '100%', height: 'auto', maxWidth: '100%' }}
                         />
                     </button>
+    );
+
+    return (
+        <div className="headerBackground">
+            <div className="site-shell headerShell">
+                <div className="logo">
+                    {homeHeading ? (
+                      <h1 className="site-brand-heading" aria-label={SITE_NAME}>
+                        <span className="visually-hidden">{SITE_NAME}</span>
+                        {logo}
+                      </h1>
+                    ) : logo}
                 </div>
 
                 <div className="socialIcons">

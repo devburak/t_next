@@ -129,7 +129,7 @@ const QuickAccessMenu = ({ initialMenuItems = null }) => {
   const menuItems = useMenu('right', initialMenuItems, DEFAULT_MENU_ITEMS);
 
   return (
-    <section id="block-menu-menu-sag-meu" className={`${styles.block} ${styles.menu} clearfix`}>
+    <section id="block-menu-menu-sag-meu" className={styles.menu}>
       <ul className={`${styles.nav} menu`}>
         {menuItems.map((item, index) => {
           const key = item?.id || `right-menu-item-${index}`;

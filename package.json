@@ -14,7 +14,9 @@
     "prestart": "node scripts/check-runtime.cjs"
   },
   "dependencies": {
+    "@emotion/cache": "11.11.0",
     "@emotion/react": "^11.11.3",
+    "@emotion/server": "11.11.0",
     "@emotion/styled": "^11.11.0",
     "@lexical/html": "^0.13.1",
     "@lexical/react": "^0.13.1",

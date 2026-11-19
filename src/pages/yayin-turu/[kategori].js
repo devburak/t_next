@@ -4,6 +4,8 @@ import PublicationCard from "../../component/publications/PublicationCard";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Pagination from "@mui/material/Pagination";
+import PageMetadata from '../../component/basic/PageMetadata';
+import { canonicalPagePath } from '../../lib/pageMetadata.mjs';
 import Layout from '../../component/basic/layout';
 
 export async function getServerSideProps({ params, query }) {
@@ -26,10 +28,13 @@ export async function getServerSideProps({ params, query }) {
 
 export default function KategoriYayinlari({ kategori, page, limit, data }) {
   const router = useRouter();
+  const categoryName = data?.data?.flatMap(publication => publication.categories || []).find(category => category.slug === kategori)?.name || kategori.split('-').map(word => word.toLocaleUpperCase('tr-TR') === 'TMMOB' ? 'TMMOB' : word.charAt(0).toLocaleUpperCase('tr-TR') + word.slice(1)).join(' ');
+  const metadata = <PageMetadata title={`${categoryName} Yayınları`} description={`TMMOB ${categoryName} yayınları ve arşivi.`} path={canonicalPagePath(`/yayin-turu/${kategori}`, page)} />;
 
   if (!data || !data.data || data.data.length === 0) {
     return (
         <Layout>
+      {metadata}
             <Box
               sx={{
                 mt: 1,
@@ -40,7 +45,7 @@ export default function KategoriYayinlari({ kategori, page, limit, data }) {
                 boxShadow: '0 18px 42px rgba(15, 23, 42, 0.08)',
               }}
             >
-                <Typography variant="h5">Yayın bulunamadı.</Typography>
+                <Typography component="h1" variant="h5">{categoryName}: Yayın bulunamadı.</Typography>
             </Box>
         </Layout>
     );
@@ -52,6 +57,7 @@ export default function KategoriYayinlari({ kategori, page, limit, data }) {
 
   return (
     <Layout>
+      {metadata}
       <Box
         sx={{
           mt: 1,
@@ -62,8 +68,8 @@ export default function KategoriYayinlari({ kategori, page, limit, data }) {
           boxShadow: '0 18px 42px rgba(15, 23, 42, 0.08)',
         }}
       >
-        <Typography variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
-          Yayınlar
+        <Typography component="h1" variant="h4" sx={{ mb: 3, fontWeight: 700 }}>
+          {categoryName}
         </Typography>
         <Box
           sx={{

@@ -148,6 +148,8 @@ removeLegacyDynamicRouteFiles({
 normalizeProductionEnv();
 
 const nextConfig = {
+  // Keep one Emotion context across MUI and app code in the Pages SSR graph.
+  transpilePackages: ['@emotion/react', '@emotion/styled', '@emotion/cache', '@mui/material', '@mui/system', '@mui/styled-engine', '@mui/icons-material', 'react-material-ui-carousel'],
   // Each site is an independent repository; the workspace lockfile is unrelated.
   turbopack: { root: path.dirname(fileURLToPath(import.meta.url)) },
   // Workspace agent documentation is maintained at the root, outside site repos.
