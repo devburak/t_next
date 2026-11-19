@@ -195,6 +195,7 @@ a {
 [data-carousel-container] > div:first-child,
 [data-carousel-slides] {
   display: flex;
+  flex-wrap: nowrap;
   width: 100% !important; /* Each slide occupies one viewport, regardless of image count. */
   transition: transform 0.5s ease;
 }
@@ -209,7 +210,12 @@ a {
   margin: 0 auto;
 }
 .carousel-slide-div {
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  /* Slaytlar aynı noktada üst üste değil, kayan şeritte yan yana durur. */
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
 }
 #carousel-wrapper,
 [data-carousel-root] {
@@ -249,13 +255,6 @@ a {
 #carousel-next,
 [data-carousel-next] {
   right: 10px;
-}
-
-.carousel-slide-div {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transition: opacity 0.5s ease, z-index 0.5s ease;
 }
 
 .hidden-slide {
